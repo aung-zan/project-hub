@@ -1,0 +1,41 @@
+# base image
+FROM php:8.3-fpm
+
+# install some modules/dependencies
+RUN apt-get update && apt-get install -y \
+    curl \
+    git \
+    # for intl extension (international unicode)
+    libicu-dev \
+    # for gd extension (jpeg support)
+    libjpeg-dev \
+    # for mbstring extension
+    libonig-dev \
+    # for gd extension (png support)
+    libpng-dev \
+    # for postgresql
+    libpq-dev \
+    # for zip extension
+    libzip-dev \
+    # for system unzip command
+    unzip \
+    # for system zip command
+    zip \
+    # clean up install and remove cache
+    && apt-get clean && rm -rf /var/lib/apt/lists/* \
+    # open jpeg for gd
+    && docker-php-ext-configure gd --with-jpeg \
+    # install other php extensions
+    && docker-php-ext-install pdo pdo_pgsql mbstring exif pcntl bcmath gd intl zip opcache
+
+# install composer from composer image
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
+# workdir
+WORKDIR /var/www/html
+
+# copy files
+COPY . .
+
+# run commands
+CMD [ "php-fpm" ]
