@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Service;
+namespace App\Services;
 
-class TeamService
+class TaskService
 {
     /**
      * Create a new class instance.

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Service;
+namespace App\Services;
 
-class TaskService
+class CommentService
 {
     /**
      * Create a new class instance.
