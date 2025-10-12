@@ -1,0 +1,9 @@
+GET http://localhost/api/profile
+###
+PUT http://localhost/api/profile
+Content-Type: application/json
+
+{
+    "name": "testing",
+}
+###

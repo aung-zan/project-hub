@@ -6,11 +6,11 @@ use Illuminate\Http\Request;
 
 class CommentController extends Controller
 {
-    public function create()
+    public function store()
     {
         return response()->json([
             'success' => true,
-            'message' => 'create',
+            'message' => 'store',
         ]);
     }
 
@@ -22,11 +22,11 @@ class CommentController extends Controller
         ]);
     }
 
-    public function delete()
+    public function destroy()
     {
         return response()->json([
             'success' => true,
-            'message' => 'delete',
+            'message' => 'destroy',
         ]);
     }
 }

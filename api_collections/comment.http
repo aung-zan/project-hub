@@ -1,0 +1,15 @@
+POST http://localhost/api/tasks/1/comments
+Content-Type: application/json
+
+{
+    "name": "testing"
+}
+###
+PUT http://localhost/api/tasks/1/comments/1
+Content-Type: application/json
+
+{
+    "name": "Testing"
+}
+###
+DELETE http://localhost/api/tasks/1/comments/1
