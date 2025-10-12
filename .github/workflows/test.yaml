@@ -13,7 +13,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Build docker images based on docker compose file
-        uses: docker compose build
+        run: docker compose build
 
       - name: Run a test command in temp container
-        uses: docker compose run --rm -e CI=true laravel_app php artisan test
+        run: docker compose run --rm -e CI=true laravel_app php artisan test
