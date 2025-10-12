@@ -1,0 +1,19 @@
+GET http://localhost/api/projects
+###
+POST http://localhost/api/projects
+Content-Type: application/json
+
+{
+    "name": "testing"
+}
+###
+GET http://localhost/api/projects/1
+###
+PUT http://localhost/api/projects/1
+Content-Type: application/json
+
+{
+    "name": "Testing"
+}
+###
+DELETE http://localhost/api/projects/1

@@ -1,0 +1,19 @@
+GET http://localhost/api/teams
+###
+POST http://localhost/api/teams
+Content-Type: application/json
+
+{
+    "name": "testing"
+}
+###
+GET http://localhost/api/teams/1
+###
+PUT http://localhost/api/teams/1
+Content-Type: application/json
+
+{
+    "name": "Testing"
+}
+###
+DELETE http://localhost/api/teams/1
