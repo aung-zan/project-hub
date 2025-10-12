@@ -1,0 +1,19 @@
+name: Test
+on:
+  pull_request:
+    branches: ['main']
+
+jobs:
+  test:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Build docker images based on docker compose file
+        uses: docker compose build
+
+      - name: Run a test command in temp container
+        uses: docker compose run --rm -e CI=true laravel_app php artisan test
