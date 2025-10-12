@@ -16,4 +16,9 @@ jobs:
         run: docker compose -f docker-compose-dev.yaml build
 
       - name: Run a test command in temp container
-        run: docker compose -f docker-compose-dev.yaml run --rm -e CI=true laravel_app php artisan test
+        run: docker compose -f docker-compose-dev.yaml run --rm -e CI=true laravel_app bash -c "
+            composer install &&
+            cp .env.example .env &&
+            php artisan key:generate &&
+            php artisan test
+          "
