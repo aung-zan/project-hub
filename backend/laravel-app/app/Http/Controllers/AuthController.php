@@ -49,6 +49,7 @@ class AuthController extends Controller
         if (!$token = auth()->guard('api')->attempt($credentails)) {
             return response()->json([
                 'success' => false,
+                'error' => 'UNAUTHORIZED_ACCESS',
                 'message' => 'Email or password is wrong.',
             ], 401);
         }

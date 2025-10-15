@@ -31,7 +31,7 @@ class BaseRequest extends FormRequest
 
         $response = $this->customizedResponse($errors);
 
-        throw new HttpResponseException(response()->json($response));
+        throw new HttpResponseException(response()->json($response, 422));
     }
 
     /**

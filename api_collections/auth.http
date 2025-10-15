@@ -5,9 +5,9 @@ Content-Type: application/json
 Accept: application/json
 
 {
-    "name": "test 1",
-    "username": "tester1",
-    "email": "test1@mail.com",
+    "name": "test",
+    "username": "tester",
+    "email": "test@mail.com",
     "password": "password",
     "confirm_password": "password"
 }
@@ -17,8 +17,8 @@ Content-Type: application/json
 Accept: application/json
 
 {
-    "email": "",
-    "password": "pa"
+    "email": "test@mail.com",
+    "password": "password"
 }
 ###
 POST http://localhost/api/logout
