@@ -75,6 +75,8 @@ class JWTService
                     'message' => 'Token signature is invalid.'
                 ];
             } else {
+                \Log::info($th);
+
                 $result = [
                     'valid' => false,
                     'error' => 'INVALID_TOKEN',
