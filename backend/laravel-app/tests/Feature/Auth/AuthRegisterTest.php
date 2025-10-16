@@ -73,9 +73,9 @@ class AuthRegisterTest extends TestCase
     }
 
     /**
-     * Test for creating a user with the same email address.
+     * Test for creating a user with the Existing email address.
      */
-    public function testUserCannotRegisterWithSameEmail(): void
+    public function testUserCannotRegisterWithExistingEmail(): void
     {
         $request = $this->request;
 
@@ -94,9 +94,9 @@ class AuthRegisterTest extends TestCase
     }
 
     /**
-     * Test for creating a user with the same username.
+     * Test for creating a user with the Existing username.
      */
-    public function testUserCannotRegisterWithSameUsername(): void
+    public function testUserCannotRegisterWithExistingUsername(): void
     {
         $request = $this->request;
 
