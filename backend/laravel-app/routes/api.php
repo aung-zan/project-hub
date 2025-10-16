@@ -18,19 +18,22 @@ Route::get('test', function () {
 Route::controller(AuthController::class)->group(function () {
     Route::post('register', 'register');
     Route::post('login', 'login');
-    Route::post('logout', 'logout');
+    Route::post('logout', 'logout')->middleware('jwt.auth');
 });
 
-Route::prefix('profile')->controller(UserController::class)->group(function () {
-    Route::get('', 'show');
-    Route::put('update', 'update');
-});
+Route::prefix('profile')->controller(UserController::class)
+    ->middleware('jwt.auth')
+    ->group(function () {
+        Route::get('', 'show');
+        Route::put('', 'update');
+    });
 
-Route::apiResource('teams', TeamController::class);
+Route::apiResource('teams', TeamController::class)->middleware('jwt.auth');
 
-Route::apiResource('projects', ProjectController::class);
+Route::apiResource('projects', ProjectController::class)->middleware('jwt.auth');
 
-Route::apiResource('projects.tasks', TaskController::class);
+Route::apiResource('projects.tasks', TaskController::class)->middleware('jwt.auth');
 
 Route::apiResource('tasks.comments', CommentController::class)->shallow()
-    ->except(['index', 'show']);
+    ->except(['index', 'show'])
+    ->middleware('jwt.auth');

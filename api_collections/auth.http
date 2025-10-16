@@ -1,19 +1,28 @@
+@token=abc
+
 POST http://localhost/api/register
 Content-Type: application/json
+Accept: application/json
 
 {
     "name": "test",
+    "username": "tester",
     "email": "test@mail.com",
     "password": "password",
+    "confirm_password": "password"
 }
 ###
 POST http://localhost/api/login
 Content-Type: application/json
+Accept: application/json
 
 {
     "email": "test@mail.com",
-    "password": "password",
+    "password": "password"
 }
 ###
 POST http://localhost/api/logout
+Authorization: Bearer {{token}}
+Content-Type: application/json
+Accept: application/json
 ###

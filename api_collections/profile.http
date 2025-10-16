@@ -1,9 +1,12 @@
+@token=abc
+
 GET http://localhost/api/profile
 ###
 PUT http://localhost/api/profile
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-    "name": "testing",
+    "name": "testing"
 }
 ###
