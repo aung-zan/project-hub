@@ -14,7 +14,7 @@ class UserUpdateRequest extends BaseRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:100'],
+            'name' => ['sometimes', 'required', 'string', 'max:100'],
             'password' => ['sometimes', 'required', 'min:8', 'max:255'],
             'confirm_password' => ['required_with:password', 'same:password'],
         ];

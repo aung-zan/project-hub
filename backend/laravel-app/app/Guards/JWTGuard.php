@@ -4,6 +4,7 @@ namespace App\Guards;
 
 use App\Services\JWTService;
 use Illuminate\Auth\GuardHelpers;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Http\Request;
@@ -82,6 +83,19 @@ class JWTGuard implements Guard
         }
 
         return false;
+    }
+
+    /**
+     * Generate token for user.
+     *
+     * @param \Illuminate\Contracts\Auth\Authenticatable  $user
+     * @return string
+     */
+    public function login(Authenticatable $user): string
+    {
+        $this->setUser($user);
+
+        return $this->jwtService->generateToken($user->id, $user->getJWTCustomClaims());
     }
 
     /**
