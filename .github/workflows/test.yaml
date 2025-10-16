@@ -16,11 +16,13 @@ jobs:
         run: docker compose -f docker-compose-dev.yaml up -d
 
       - name: Run a test command in laravel_app container
-        run: docker compose -f docker-compose-dev.yaml exec laravel_app bash -c "
+        run: docker compose -f docker-compose-dev.yaml exec -T laravel_app bash -c "
             composer install &&
             cp .env.example .env &&
             php artisan key:generate &&
+            echo \"JWT_SECRET=\$(openssl rand -base64 64)\" >> .env &&
             php artisan test"
 
       - name: Clean up and remove the container
-        run: docker compose -f docker-compose-dev.yaml down
+        if: always()
+        run: docker compose -f docker-compose-dev.yaml down -v
