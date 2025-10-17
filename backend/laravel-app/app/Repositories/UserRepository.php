@@ -17,7 +17,7 @@ class UserRepository
     }
 
     /**
-     * Save the data in the user table.
+     * Create a resource in the user table.
      *
      * @param array $data
      * @return User
@@ -28,8 +28,8 @@ class UserRepository
     }
 
     /**
-     * Find a user's data with requested id.
-     * if a user is not found, throws exception.
+     * Find a resource with requested id.
+     * if an id is not found, throws exception.
      *
      * @param int $id
      * @return ?User
@@ -42,8 +42,8 @@ class UserRepository
     }
 
     /**
-     * Find a user with requested id and update the data.
-     * if a user is not found, throws exception.
+     * Find a resource with requested id and update it.
+     * if an id is not found, throws exception.
      *
      * @param int $id
      * @param array $data

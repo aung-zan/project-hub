@@ -2,47 +2,71 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Http\Requests\Team\TeamCreateRequest;
+use App\Http\Requests\Team\TeamUpdateRequest;
+use App\Services\TeamService;
 
 class TeamController extends Controller
 {
+    private TeamService $teamService;
+
+    public function __construct(TeamService $teamService)
+    {
+        $this->teamService = $teamService;
+    }
+
     public function index()
     {
+        $teams = $this->teamService->getAllTeam();
+
         return response()->json([
             'success' => true,
-            'message' => 'index',
+            'data' => $teams,
         ]);
     }
 
-    public function store()
+    public function store(TeamCreateRequest $request)
     {
+        $data = $request->validated();
+        $data['created_by'] = auth()->guard('api')->id();
+
+        $team = $this->teamService->createTeam($data);
+
         return response()->json([
             'success' => true,
-            'message' => 'store',
+            'data' => $team,
         ]);
     }
 
-    public function show()
+    public function show(int $id)
     {
+        $team = $this->teamService->getTeam($id);
+
         return response()->json([
             'success' => true,
-            'message' => 'show',
+            'data' => $team,
         ]);
     }
 
-    public function update()
+    public function update(int $id, TeamUpdateRequest $request)
     {
+        $data = $request->validated();
+
+        $team = $this->teamService->updateTeam($id, $data);
+
         return response()->json([
             'success' => true,
-            'message' => 'update',
+            'data' => $team,
         ]);
     }
 
-    public function destroy()
+    public function destroy(int $id)
     {
+        $team = $this->teamService->deleteTeam($id);
+
         return response()->json([
             'success' => true,
-            'message' => 'destroy',
+            'data' => $team,
         ]);
     }
 }

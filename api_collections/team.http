@@ -1,19 +1,28 @@
+@token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImlhdCI6MTc2MDcwNzQ2MCwiZXhwIjoxNzYwNzExMDYwLCJuYmYiOjE3NjA3MDc0NjB9.JQI5NFLqMlNxC_MLbLywiV3PhqFSLuRv2-wVc-luMdY
+
 GET http://localhost/api/teams
+Authorization: Bearer {{token}}
 ###
 POST http://localhost/api/teams
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-    "name": "testing"
+    "name": "testing",
+    "description": "A testing team"
 }
 ###
 GET http://localhost/api/teams/1
+Authorization: Bearer {{token}}
 ###
 PUT http://localhost/api/teams/1
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-    "name": "Testing"
+    "name": "Testing",
+    "description": "A testing team"
 }
 ###
 DELETE http://localhost/api/teams/1
+Authorization: Bearer {{token}}
