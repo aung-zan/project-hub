@@ -1,4 +1,4 @@
-@token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImlhdCI6MTc2MDcwNzQ2MCwiZXhwIjoxNzYwNzExMDYwLCJuYmYiOjE3NjA3MDc0NjB9.JQI5NFLqMlNxC_MLbLywiV3PhqFSLuRv2-wVc-luMdY
+@token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImlhdCI6MTc2MDkzNDI5NSwiZXhwIjoxNzYwOTM3ODk1LCJuYmYiOjE3NjA5MzQyOTV9.UPyzAJ3nlPfF0UN-Fb8YluH-JFMcjpBcmHGxF9NAJZQ
 
 GET http://localhost/api/teams
 Authorization: Bearer {{token}}
