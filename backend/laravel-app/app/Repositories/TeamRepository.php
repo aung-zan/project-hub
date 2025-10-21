@@ -7,14 +7,11 @@ use Illuminate\Database\Eloquent\Collection;
 
 class TeamRepository
 {
-    private Team $team;
-
     /**
      * Create a new class instance.
      */
-    public function __construct(Team $team)
+    public function __construct(private Team $team)
     {
-        $this->team = $team;
     }
 
     /**
@@ -50,47 +47,37 @@ class TeamRepository
      * if an id is not found, throws exception.
      *
      * @param int $id
-     * @return ?Team
+     * @return Team
      *
      * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
      */
-    public function getById(int $id): ?Team
+    public function getById(int $id): Team
     {
         return $this->team->findOrFail($id);
     }
 
     /**
-     * Find a resource with requested id and update it.
-     * if an id is not found, throws exception.
+     * Update the resource.
      *
-     * @param int $id
+     * @param Team $team
      * @param array $data
-     * @return ?Team
-     *
-     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
+     * @return Team
      */
-    public function update(int $id, array $data): ?Team
+    public function update(Team $team, array $data): Team
     {
-        $team = $this->getById($id);
-
         $team->update($data);
 
         return $team;
     }
 
     /**
-     * Find a resouce with requested id and delete it.
-     * if an id is not found, throws exception.
+     * Delete the resource.
      *
-     * @param int $id
-     * @return ?Team
-     *
-     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
+     * @param Team $team
+     * @return Team
      */
-    public function delete(int $id): ?Team
+    public function delete(Team $team): Team
     {
-        $team = $this->getById($id);
-
         $team->delete();
 
         return $team;

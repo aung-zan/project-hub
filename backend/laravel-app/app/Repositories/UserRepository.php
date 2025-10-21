@@ -6,14 +6,11 @@ use App\Models\User;
 
 class UserRepository
 {
-    private User $user;
-
     /**
      * Create a new class instance.
      */
-    public function __construct(User $user)
+    public function __construct(private User $user)
     {
-        $this->user = $user;
     }
 
     /**
@@ -42,19 +39,14 @@ class UserRepository
     }
 
     /**
-     * Find a resource with requested id and update it.
-     * if an id is not found, throws exception.
+     * Update the resource.
      *
-     * @param int $id
+     * @param User $user
      * @param array $data
-     * @return ?User
-     *
-     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
+     * @return User
      */
-    public function update(int $id, array $data): ?User
+    public function update(User $user, array $data): User
     {
-        $user = $this->getById($id);
-
         $user->update($data);
 
         return $user;

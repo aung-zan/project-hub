@@ -1,4 +1,4 @@
-@token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImlhdCI6MTc2MDkzNDI5NSwiZXhwIjoxNzYwOTM3ODk1LCJuYmYiOjE3NjA5MzQyOTV9.UPyzAJ3nlPfF0UN-Fb8YluH-JFMcjpBcmHGxF9NAJZQ
+@token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjIsImlhdCI6MTc2MTAzMTc3NCwiZXhwIjoxNzYxMDM1Mzc0LCJuYmYiOjE3NjEwMzE3NzR9.dcoN0VTZ94-oxMJPByhy1f6EFQ_75ffIZnzsWuU7y0E
 
 GET http://localhost/api/teams
 Authorization: Bearer {{token}}
@@ -14,6 +14,7 @@ Content-Type: application/json
 ###
 GET http://localhost/api/teams/1
 Authorization: Bearer {{token}}
+Accept: application/json
 ###
 PUT http://localhost/api/teams/1
 Authorization: Bearer {{token}}

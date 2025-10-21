@@ -18,7 +18,7 @@ class UserService
     }
 
     /**
-     * Modify the array data to easily save in the table.
+     * Create the resource.
      *
      * @param array $data
      * @return User
@@ -29,7 +29,7 @@ class UserService
     }
 
     /**
-     * Get a user data with requested id.
+     * Find the resource.
      *
      * @param int $id
      * @return ?User
@@ -40,7 +40,7 @@ class UserService
     }
 
     /**
-     * Update a user data with requested id.
+     * Find the resource and update it.
      *
      * @param int $id
      * @param array $data
@@ -48,6 +48,8 @@ class UserService
      */
     public function updateUser(int $id, array $data): ?User
     {
-        return $this->userRepo->update($id, $data);
+        $user = $this->userRepo->getById($id);
+
+        return $this->userRepo->update($user, $data);
     }
 }

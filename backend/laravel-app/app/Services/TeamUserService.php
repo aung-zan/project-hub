@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Repositories\TeamRepository;
 use App\Repositories\TeamUserRepository;
+use Illuminate\Support\Facades\Gate;
 
 class TeamUserService
 {
@@ -34,11 +35,16 @@ class TeamUserService
      *
      * @param int $id
      * @param array $data
-     * @return array
+     * @return ?array
+     *
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
      */
-    public function createTeamUser(int $id, array $data): array
+    public function createTeamUser(int $id, array $data): ?array
     {
         $team = $this->teamRepository->getById($id);
+
+        Gate::authorize('view', $team);
 
         $data = array_fill_keys($data['member_id'], $this->getPivotData($data));
 
