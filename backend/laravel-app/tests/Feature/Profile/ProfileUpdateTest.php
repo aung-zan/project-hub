@@ -13,10 +13,14 @@ class ProfileUpdateTest extends TestCase
     use TestHelper;
 
     private string $profileURL = 'http://localhost/api/profile';
-    private array $request = [
+    private array $userData = [
         'name' => 'test',
         'username' => 'tester',
         'email' => 'test@mail.com',
+        'password' => 'password',
+    ];
+    private array $request = [
+        'name' => 'Test',
         'password' => 'password',
     ];
 
@@ -61,7 +65,7 @@ class ProfileUpdateTest extends TestCase
     public function testUserCanSendEmptyRequestToUpdate(): void
     {
         $request = [];
-        $token = $this->login();
+        list($token) = $this->login($this->userData);
 
         $response = $this->withHeader('Authorization', "Bearer $token")
             ->putJson($this->profileURL, $request);
@@ -70,9 +74,9 @@ class ProfileUpdateTest extends TestCase
             ->assertJson([
                 'success' => true,
                 'data' => [
-                    'name' => $this->request['name'],
-                    'username' => $this->request['username'],
-                    'email' => $this->request['email'],
+                    'name' => $this->userData['name'],
+                    'username' => $this->userData['username'],
+                    'email' => $this->userData['email'],
                 ]
             ]);
     }
@@ -82,12 +86,15 @@ class ProfileUpdateTest extends TestCase
      */
     public function testUserCannotUpdateEmptyValueRequest(): void
     {
+        $userData = $this->userData;
         $request = [
             'name' => '',
             'password' => '',
         ];
 
-        $token = $this->login();
+        list($token) = $this->login($userData);
+
+        unset($userData['password']);
 
         $response = $this->withHeader('Authorization', "Bearer $token")
             ->putJson($this->profileURL, $request);
@@ -99,6 +106,8 @@ class ProfileUpdateTest extends TestCase
                 ['name' => ['The name field is required.']],
                 ['password' => ['The password field is required.']],
             ]);
+
+        $this->assertDatabaseHas('users', $userData);
     }
 
     /**
@@ -106,12 +115,15 @@ class ProfileUpdateTest extends TestCase
      */
     public function testUserCannotUpdatePasswordWithoutConfirmPassword(): void
     {
+        $userData = $this->userData;
         $request = [
             'name' => $this->request['name'],
             'password' => $this->request['password'],
         ];
 
-        $token = $this->login();
+        list($token) = $this->login($userData);
+
+        unset($userData['password']);
 
         $response = $this->withHeader('Authorization', "Bearer $token")
             ->putJson($this->profileURL, $request);
@@ -122,6 +134,8 @@ class ProfileUpdateTest extends TestCase
                 ['error' => 'VALIDATION_FALIED'],
                 ['confirm_password' => ['The confirm password field is required when password is present.']],
             ]);
+
+        $this->assertDatabaseHas('users', $userData);
     }
 
     /**
@@ -129,12 +143,15 @@ class ProfileUpdateTest extends TestCase
      */
     public function testUserCannotUpdateExceptFromNameAndPassword(): void
     {
+        $userData = $this->userData;
         $request = [
-            'username' => $this->request['username'] . '1',
+            'username' => $this->userData['username'] . '1',
             'email' => 'test1@mail.com',
         ];
 
-        $token = $this->login();
+        list($token) = $this->login($userData);
+
+        unset($userData['password']);
 
         $response = $this->withHeader('Authorization', "Bearer $token")
             ->putJson($this->profileURL, $request);
@@ -143,15 +160,12 @@ class ProfileUpdateTest extends TestCase
             ->assertJson([
                 'success' => 'true',
                 'data' => [
-                    'username' => $this->request['username'],
-                    'email' => $this->request['email'],
+                    'username' => $this->userData['username'],
+                    'email' => $this->userData['email'],
                 ],
             ]);
 
-        $this->assertDatabaseHas('users', [
-            'username' => $this->request['username'],
-            'email' => $this->request['email'],
-        ]);
+        $this->assertDatabaseHas('users', $userData);
     }
 
     /**
@@ -159,11 +173,12 @@ class ProfileUpdateTest extends TestCase
      */
     public function testUserCanUpdateNameOnly(): void
     {
+        $userData = $this->userData;
         $request = [
-            'name' => $this->request['name'] . '1'
+            'name' => $this->request['name'],
         ];
 
-        $token = $this->login();
+        list($token) = $this->login($userData);
 
         $response = $this->withHeader('Authorization', "Bearer $token")
             ->putJson($this->profileURL, $request);
@@ -173,8 +188,8 @@ class ProfileUpdateTest extends TestCase
                 'success' => 'true',
                 'data' => [
                     'name' => $request['name'],
-                    'username' => $this->request['username'],
-                    'email' => $this->request['email'],
+                    'username' => $userData['username'],
+                    'email' => $userData['email'],
                 ],
             ]);
 

@@ -9,17 +9,25 @@ trait TestHelper
     /**
      * Login and get JWT token
      *
-     * @return string JWT token
+     * @param array $credentails = []
+     * @return array [token, id]
      */
-    protected function login(): string
+    protected function login(array $credentails = []): array
     {
-        $request = $this->request;
+        if (empty($credentails)) {
+            $credentails = [
+                'email' => 'login@mail.com',
+                'password' => 'password'
+            ];
+        }
 
-        $user = User::factory()->create($request);
+        $user = User::factory()->create($credentails);
 
         /** @var string */
         $token = auth()->guard('api')->login($user);
 
-        return $token;
+        $this->actingAs($user, 'api');
+
+        return [$token, $user->id];
     }
 }
