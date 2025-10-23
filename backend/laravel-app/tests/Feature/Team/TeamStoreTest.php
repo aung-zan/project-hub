@@ -23,7 +23,7 @@ class TeamStoreTest extends TestCase
      */
     public function testUserCannotAccessStoreWithoutToken(): void
     {
-        $response = $this->getJson($this->teamURL);
+        $response = $this->postJson($this->teamURL, []);
 
         $response->assertStatus(401)
             ->assertJsonFragments([
@@ -41,7 +41,7 @@ class TeamStoreTest extends TestCase
         $token = 'abc';
 
         $response = $this->withHeader('Authorization', "Bearer $token")
-            ->getJson($this->teamURL);
+            ->postJson($this->teamURL, []);
 
         $response->assertStatus(401)
             ->assertJsonFragments([

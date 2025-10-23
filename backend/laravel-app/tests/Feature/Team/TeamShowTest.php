@@ -90,7 +90,7 @@ class TeamShowTest extends TestCase
         $response->assertStatus(404)
             ->assertJson([
                 'success' => false,
-                'message' => 'Resource not found'
+                'message' => 'Resource not found.'
             ]);
     }
 

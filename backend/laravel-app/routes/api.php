@@ -34,6 +34,7 @@ Route::prefix('teams/{id}')->controller(TeamUserController::class)
     ->middleware('jwt.auth')
     ->group(function () {
         Route::post('members', 'store');
+        Route::delete('members/{memberId}', 'destroy');
     });
 
 Route::apiResource('projects', ProjectController::class)->middleware('jwt.auth');

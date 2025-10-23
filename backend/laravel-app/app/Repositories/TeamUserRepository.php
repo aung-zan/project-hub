@@ -23,4 +23,16 @@ class TeamUserRepository
     {
         return $team->users()->sync($data);
     }
+
+    /**
+     * Remove a resource in the team_user table.
+     *
+     * @param Team $team
+     * @param int $id
+     * @return void
+     */
+    public function delete(Team $team, int $id): void
+    {
+        $team->users()->detach($id);
+    }
 }

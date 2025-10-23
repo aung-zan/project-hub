@@ -26,6 +26,16 @@ class TeamUserController extends Controller
             'data' => [
                 'members' => $memberIds
             ],
-        ]);
+        ], 200);
+    }
+
+    public function destroy(int $teamId, int $memberId)
+    {
+        $this->teamUserService->removeTeamUser($teamId, $memberId);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Successfully remove a member.'
+        ], 200);
     }
 }

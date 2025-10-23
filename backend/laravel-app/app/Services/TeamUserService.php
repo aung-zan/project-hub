@@ -55,4 +55,23 @@ class TeamUserService
 
         return $memberIds;
     }
+
+    /**
+     * Remove a user from a team.
+     *
+     * @param int $teamId
+     * @param int $memberId
+     * @return void
+     *
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
+     */
+    public function removeTeamUser(int $teamId, int $memberId): void
+    {
+        $team = $this->teamRepository->getById($teamId);
+
+        Gate::authorize('view', $team);
+
+        $this->teamUserRepository->delete($team, $memberId);
+    }
 }
