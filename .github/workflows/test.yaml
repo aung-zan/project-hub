@@ -20,7 +20,6 @@ jobs:
             composer install &&
             cp .env.example .env &&
             php artisan key:generate &&
-            docker compose -f docker-compose-dev.yaml exec -T laravel_app bash -c "
             SECRET=\$(openssl rand -base64 32) &&
             echo JWT_SECRET=\\\"\${SECRET}\\\" >> .env &&
             php artisan test --filter=Feature"
