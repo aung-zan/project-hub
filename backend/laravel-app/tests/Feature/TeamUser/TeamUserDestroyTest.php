@@ -82,9 +82,9 @@ class TeamUserDestroyTest extends TestCase
     }
 
     /**
-     * Test for user can send fake member_id to destroy.
+     * Test for user cannot send fake member_id to destroy.
      */
-    public function testUserCanSendFakeMemberIdToDestroy(): void
+    public function testUserCannotSendFakeMemberIdToDestroy(): void
     {
         list($token, $id) = $this->login();
 
@@ -97,10 +97,10 @@ class TeamUserDestroyTest extends TestCase
         $response = $this->withHeader('Authorization', "Bearer $token")
             ->deleteJson($this->getRealURL($team->id, 10));
 
-        $response->assertStatus(200)
+        $response->assertStatus(404)
             ->assertJson([
-                'success' => true,
-                'message' => 'Successfully remove a member.',
+                'success' => false,
+                'message' => 'Resource not found.',
             ]);
 
         $this->assertDatabaseHas('team_users', [

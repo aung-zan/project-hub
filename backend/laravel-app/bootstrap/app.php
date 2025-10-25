@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\JWTAuthenticate;
+use App\Http\Middleware\QueryLog;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -19,6 +20,13 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'jwt.auth' => JWTAuthenticate::class
         ]);
+
+        /**
+         * Global middleware
+         */
+        $middleware->append([
+            'query.log' => QueryLog::class
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         /**
@@ -28,7 +36,7 @@ return Application::configure(basePath: dirname(__DIR__))
             if ($request->expectsJson()) {
                 return response()->json([
                     'success' => false,
-                    'message' => $e->getMessage() . '.'
+                    'message' => $e->getMessage(),
                 ], 404);
             }
         });
@@ -39,7 +47,7 @@ return Application::configure(basePath: dirname(__DIR__))
             if ($request->expectsJson()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Resource not found.'
+                    'message' => 'Resource not found.',
                 ], 404);
             }
         });

@@ -12,8 +12,8 @@ class TeamUserService
      * Create a new class instance.
      */
     public function __construct(
-        private TeamRepository $teamRepository,
-        private TeamUserRepository $teamUserRepository
+        private TeamRepository $teamRepo,
+        private TeamUserRepository $teamUserRepo,
     ) {
     }
 
@@ -42,13 +42,13 @@ class TeamUserService
      */
     public function createTeamUser(int $id, array $data): ?array
     {
-        $team = $this->teamRepository->getById($id);
+        $team = $this->teamRepo->getById($id);
 
         Gate::authorize('view', $team);
 
         $data = array_fill_keys($data['member_id'], $this->getPivotData($data));
 
-        $savedData = $this->teamUserRepository->create($team, $data);
+        $savedData = $this->teamUserRepo->create($team, $data);
 
         $memberIds = array_merge($savedData['attached'], $savedData['updated']);
         sort($memberIds);
@@ -68,10 +68,12 @@ class TeamUserService
      */
     public function removeTeamUser(int $teamId, int $memberId): void
     {
-        $team = $this->teamRepository->getById($teamId);
+        $team = $this->teamRepo->getById($teamId);
 
         Gate::authorize('view', $team);
 
-        $this->teamUserRepository->delete($team, $memberId);
+        $this->teamUserRepo->checkExist($team, 'user_id', $memberId);
+
+        $this->teamUserRepo->delete($team, $memberId);
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Team;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class TeamUserRepository
 {
@@ -34,5 +35,22 @@ class TeamUserRepository
     public function delete(Team $team, int $id): void
     {
         $team->users()->detach($id);
+    }
+
+    /**
+     * Check whether the value of the column is exists in pivot_table or not.
+     *
+     * @param Team $team
+     * @param string $column
+     * @param int $id
+     * @return bool
+     */
+    public function checkExist(Team $team, string $column, int $id): bool
+    {
+        if (!$team->users()->wherePivot($column, $id)->exists()) {
+            throw new ModelNotFoundException('Resource not found.');
+        }
+
+        return true;
     }
 }

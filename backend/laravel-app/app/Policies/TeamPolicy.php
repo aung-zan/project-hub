@@ -8,7 +8,7 @@ use Illuminate\Auth\Access\Response;
 
 class TeamPolicy
 {
-    private $message = 'Resource not found';
+    private $message = 'Resource not found.';
     private $code = 404;
 
     /**
