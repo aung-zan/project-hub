@@ -7,18 +7,15 @@ use App\Repositories\UserRepository;
 
 class UserService
 {
-    private UserRepository $userRepo;
-
     /**
      * Create a new class instance.
      */
-    public function __construct(UserRepository $userRepository)
+    public function __construct(private UserRepository $userRepo)
     {
-        $this->userRepo = $userRepository;
     }
 
     /**
-     * Modify the array data to easily save in the table.
+     * Create the resource.
      *
      * @param array $data
      * @return User
@@ -29,25 +26,33 @@ class UserService
     }
 
     /**
-     * Get a user data with requested id.
+     * Find the resource.
      *
      * @param int $id
-     * @return ?User
+     * @return User
+     *
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
      */
-    public function getUser(int $id): ?User
+    public function getUser(int $id): User
     {
         return $this->userRepo->getById($id);
     }
 
     /**
-     * Update a user data with requested id.
+     * Find the resource and update it.
      *
      * @param int $id
      * @param array $data
-     * @return ?User
+     * @return User
+     *
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
      */
-    public function updateUser(int $id, array $data): ?User
+    public function updateUser(int $id, array $data): User
     {
-        return $this->userRepo->update($id, $data);
+        $user = $this->userRepo->getById($id);
+
+        return $this->userRepo->update($user, $data);
     }
 }
