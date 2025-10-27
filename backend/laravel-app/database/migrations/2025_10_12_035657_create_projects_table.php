@@ -13,6 +13,13 @@ return new class extends Migration
     {
         Schema::create('projects', function (Blueprint $table) {
             $table->id();
+            $table->string('name', 100);
+            $table->text('description')->nullable();
+            $table->enum('status', ['active', 'archived', 'completed'])->default('active');
+            $table->foreignId('created_by')->constrained('users', 'id')
+                ->onDelete('cascade');
+            $table->date('start_date')->nullable();
+            $table->date('end_date')->nullable();
             $table->timestamps();
         });
     }

@@ -1,19 +1,33 @@
+@token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImlhdCI6MTc2MTU0MDg2OCwiZXhwIjoxNzYxNTQ0NDY4LCJuYmYiOjE3NjE1NDA4Njh9.cWob0gf0hO0PySUlvJg26gHDOHE4j-u4W1GDrGpGacw
+
 GET http://localhost/api/projects
+Authorization: Bearer {{token}}
+Accept: application/json
 ###
 POST http://localhost/api/projects
+Authorization: Bearer {{token}}
 Content-Type: application/json
+Accept: application/json
 
 {
-    "name": "testing"
+    "name": "another testing",
+    "status": "active",
+    "start_date": "2025-10-27"
 }
 ###
 GET http://localhost/api/projects/1
+Authorization: Bearer {{token}}
+Accept: application/json
 ###
 PUT http://localhost/api/projects/1
+Authorization: Bearer {{token}}
 Content-Type: application/json
+Accept: application/json
 
 {
-    "name": "Testing"
+    "name": "Testing 1"
 }
 ###
-DELETE http://localhost/api/projects/1
+DELETE http://localhost/api/projects/4
+Authorization: Bearer {{token}}
+Accept: application/json
