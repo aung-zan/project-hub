@@ -16,7 +16,7 @@ class ProjectUpdateRequest extends BaseRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:100'],
+            'name' => ['sometimes', 'required', 'string', 'max:100'],
             'description' => ['string'],
             'status' => ['sometimes', 'required', new Enum(ProjectStatus::class)],
             'start_date' => ['sometimes', 'required', 'date', 'date_format:Y-m-d'],

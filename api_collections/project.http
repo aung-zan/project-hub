@@ -1,4 +1,4 @@
-@token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImlhdCI6MTc2MTU0MDg2OCwiZXhwIjoxNzYxNTQ0NDY4LCJuYmYiOjE3NjE1NDA4Njh9.cWob0gf0hO0PySUlvJg26gHDOHE4j-u4W1GDrGpGacw
+@token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjQsImlhdCI6MTc2MTU1NDM2NywiZXhwIjoxNzYxNTU3OTY3LCJuYmYiOjE3NjE1NTQzNjd9.kSOddlISze3smzPuXJyOubPTOO1k6cCXBgdhHVLbLtY
 
 GET http://localhost/api/projects
 Authorization: Bearer {{token}}
@@ -12,7 +12,8 @@ Accept: application/json
 {
     "name": "another testing",
     "status": "active",
-    "start_date": "2025-10-27"
+    "start_date": "2025-10-28",
+    "end_date": "2025-10-27"
 }
 ###
 GET http://localhost/api/projects/1

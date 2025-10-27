@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Project;
 use App\Repositories\ProjectRepository;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Gate;
 
 class ProjectService
 {
@@ -51,7 +52,11 @@ class ProjectService
      */
     public function getProject(int $id): Project
     {
-        return $this->projectRepo->getById($id);
+        $project = $this->projectRepo->getById($id);
+
+        Gate::authorize('view', $project);
+
+        return $project;
     }
 
     /**
@@ -69,6 +74,8 @@ class ProjectService
     {
         $project = $this->projectRepo->getById($id);
 
+        Gate::authorize('update', $project);
+
         return $this->projectRepo->update($project, $data);
     }
 
@@ -84,6 +91,8 @@ class ProjectService
     public function deleteProject(int $id): Project
     {
         $project = $this->projectRepo->getById($id);
+
+        Gate::authorize('delete', $project);
 
         return $this->projectRepo->delete($project);
     }
