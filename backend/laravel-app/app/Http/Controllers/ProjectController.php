@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Project\ProjectCreateRequest;
+use App\Http\Requests\Project\ProjectIndexRequest;
 use App\Http\Requests\Project\ProjectUpdateRequest;
 use App\Services\ProjectService;
 
@@ -12,10 +13,12 @@ class ProjectController extends Controller
     {
     }
 
-    public function index()
+    public function index(ProjectIndexRequest $request)
     {
+        $data = $request->validated();
         $id = auth()->guard('api')->id();
-        $projects = $this->projectService->getAllProject($id);
+
+        $projects = $this->projectService->getProjects($id, $data);
 
         return response()->json([
             'success' => true,
@@ -48,7 +51,7 @@ class ProjectController extends Controller
 
     public function update(int $id, ProjectUpdateRequest $request)
     {
-        $data = $request->toArray();
+        $data = $request->validated();
 
         $project = $this->projectService->updateProject($id, $data);
 

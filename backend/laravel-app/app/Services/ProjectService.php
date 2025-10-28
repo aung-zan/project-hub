@@ -19,15 +19,52 @@ class ProjectService
     /**
      * Find and filtered the resources.
      *
+     * @param int $id
+     * @param array $data
      * @return Collection
      */
-    public function getAllProject(int $id): Collection
+    public function getProjects(int $id, array $data): Collection
     {
-        $filters = [
-            'created_by' => $id,
-        ];
+        $search = '';
+        $filters['created_by'] = $id;
 
-        return $this->projectRepo->getAll($filters);
+        if (array_key_exists('search', $data)) {
+            $search = $data['search'];
+        }
+
+        if (array_key_exists('status', $data)) {
+            $filters['status'] = $data;
+        }
+
+        if (array_key_exists('start', $data)) {
+            # code...
+        }
+
+        if (array_key_exists('end', $data)) {
+            # code...
+        }
+
+        if (array_key_exists('sort', $data)) {
+            list($column, $direction) = explode('_', $data['sort']);
+
+            switch ($column) {
+                case 'start':
+                    $sort['start_date'] = $direction;
+                    break;
+
+                case 'end':
+                    $sort['end_date'] = $direction;
+                    break;
+
+                default:
+                    $sort[$column] = $direction;
+                    break;
+            }
+        } else {
+            $sort['id'] = 'asc';
+        }
+
+        return $this->projectRepo->getAll($search, $filters, $sort);
     }
 
     /**

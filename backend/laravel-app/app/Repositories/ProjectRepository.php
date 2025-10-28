@@ -15,20 +15,33 @@ class ProjectRepository
     }
 
     /**
-     * Get all the resources filtered by $filters.
+     * Search, filter and sort the resources.
      *
+     * @param string $search
      * @param array $filters
+     * @param array $sort
      * @return Collection
      */
-    public function getAll(array $filters = []): Collection
+    public function getAll(string $search, array $filters, array $sort): Collection
     {
         $query = $this->project->query();
 
-        if ($filters['created_by']) {
-            $query = $query->where('created_by', $filters['created_by']);
+        if ($search) {
+            /**
+             * dynamic local scopes.
+             */
+            $query = $query->searchWith($search);
+
+            $query = $query->orderWith($search);
         }
 
-        $query = $query->orderBy('id');
+        foreach ($filters as $column => $value) {
+            $query = $query->where($column, $value);
+        }
+
+        foreach ($sort as $column => $direction) {
+            $query = $query->orderBy($column, $direction);
+        }
 
         return $query->get();
     }

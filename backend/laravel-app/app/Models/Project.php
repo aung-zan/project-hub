@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use App\Enum\ProjectStatus;
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -36,5 +38,30 @@ class Project extends Model
             'created_at' => 'datetime:Y-m-d H:i:s',
             'updated_at' => 'datetime:Y-m-d H:i:s',
         ];
+    }
+
+    /**
+     * Scope a query to only include projects that match with given search.
+     */
+    #[Scope]
+    protected function searchWith(Builder $query, string $search): void
+    {
+        $query->where(function (Builder $query) use ($search) {
+            $query->orWhere('status', $search)
+                ->orWhere('description', 'LIKE', "%$search%")
+                ->orWhere('name', 'LIKE', "%$search%");
+        });
+    }
+
+    /**
+     * Scope a query to sort projects that match with given search.
+     */
+    #[Scope]
+    protected function orderWith(Builder $query, string $search): void
+    {
+        $query->orderByRaw("Case
+            When status = '$search' Then 1
+            Else 2
+        End ASC");
     }
 }
