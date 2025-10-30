@@ -2,47 +2,72 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Http\Requests\Project\ProjectCreateRequest;
+use App\Http\Requests\Project\ProjectIndexRequest;
+use App\Http\Requests\Project\ProjectUpdateRequest;
+use App\Services\ProjectService;
 
 class ProjectController extends Controller
 {
-    public function index()
+    public function __construct(private ProjectService $projectService)
     {
+    }
+
+    public function index(ProjectIndexRequest $request)
+    {
+        $data = $request->validated();
+        $id = auth()->guard('api')->id();
+
+        $projects = $this->projectService->getProjects($id, $data);
+
         return response()->json([
             'success' => true,
-            'message' => 'index',
+            'data' => $projects,
         ]);
     }
 
-    public function store()
+    public function store(ProjectCreateRequest $request)
     {
+        $data = $request->validated();
+        $data['created_by'] = auth()->guard('api')->id();
+
+        $project = $this->projectService->createProject($data);
+
         return response()->json([
             'success' => true,
-            'message' => 'store',
+            'data' => $project,
         ]);
     }
 
-    public function show()
+    public function show(int $id)
     {
+        $project = $this->projectService->getProject($id);
+
         return response()->json([
             'success' => true,
-            'message' => 'show',
+            'data' => $project,
         ]);
     }
 
-    public function update()
+    public function update(int $id, ProjectUpdateRequest $request)
     {
+        $data = $request->validated();
+
+        $project = $this->projectService->updateProject($id, $data);
+
         return response()->json([
             'success' => true,
-            'message' => 'update',
+            'data' => $project,
         ]);
     }
 
-    public function destroy()
+    public function destroy(int $id)
     {
+        $project = $this->projectService->deleteProject($id);
+
         return response()->json([
             'success' => true,
-            'message' => 'destroy',
+            'data' => $project,
         ]);
     }
 }

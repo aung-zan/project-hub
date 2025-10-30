@@ -1,0 +1,15 @@
+@token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImlhdCI6MTc2MTc5NTQyOSwiZXhwIjoxNzYxNzk5MDI5LCJuYmYiOjE3NjE3OTU0Mjl9.HAxXQO10DTXTNzMaqogBA5TBhYCZ_4QVHlYukVnJESo
+
+POST http://localhost/api/projects/1/members
+Authorization: Bearer {{token}}
+Content-Type: application/json
+Accept: application/json
+
+{
+    "member_id": [2]
+}
+###
+
+DELETE http://localhost/api/projects/1/members/2
+Authorization: Bearer {{token}}
+Accept: application/json
