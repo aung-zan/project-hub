@@ -103,7 +103,7 @@ class TeamUserDestroyTest extends TestCase
                 'message' => 'Resource not found.',
             ]);
 
-        $this->assertDatabaseHas('team_users', [
+        $this->assertDatabaseHas('team_user', [
             'team_id' => $team->id,
             'user_id' => $id,
             'created_by' => $id,

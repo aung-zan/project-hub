@@ -43,12 +43,16 @@ class Project extends Model
 
     public function users(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'project_users', 'project_id', 'user_id')
+        return $this->belongsToMany(User::class, 'project_user', 'project_id', 'user_id')
             ->withTimestamps();
     }
 
     /**
      * Scope a query to only include projects that match with given search.
+     *
+     * @param Builder $query
+     * @param string $search
+     * @return void
      */
     #[Scope]
     protected function searchWith(Builder $query, string $search): void
@@ -62,6 +66,10 @@ class Project extends Model
 
     /**
      * Scope a query to sort projects that match with given search.
+     *
+     * @param Builder $query
+     * @param string $search
+     * @return void
      */
     #[Scope]
     protected function orderWith(Builder $query, string $search): void
