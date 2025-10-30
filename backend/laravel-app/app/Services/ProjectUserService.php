@@ -59,7 +59,7 @@ class ProjectUserService
 
         Gate::authorize('view', $project);
 
-        $this->projectUserRepo->checkExist($project, 'user_id', $memberId);
+        $this->projectUserRepo->userExists($project, $memberId);
 
         $this->projectUserRepo->delete($project, $memberId);
     }

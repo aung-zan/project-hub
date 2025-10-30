@@ -117,7 +117,7 @@ class ProjectService
     }
 
     /**
-     * Find the resource, check the authorization and delete the resource.
+     * Find the resource, check the authorization and delete it.
      *
      * @param int $id
      * @return Project
