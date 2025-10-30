@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\ProjectUserController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\TeamUserController;
@@ -38,6 +39,12 @@ Route::prefix('teams/{id}')->controller(TeamUserController::class)
     });
 
 Route::apiResource('projects', ProjectController::class)->middleware('jwt.auth');
+Route::prefix('projects/{id}')->controller(ProjectUserController::class)
+    ->middleware('jwt.auth')
+    ->group(function () {
+        Route::post('members', 'store');
+        Route::delete('members/{memberId}', 'destroy');
+    });
 
 Route::apiResource('projects.tasks', TaskController::class)->middleware('jwt.auth');
 
