@@ -7,72 +7,29 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\Feature\TestHelper;
-use Tests\TestCase;
+use Tests\FeatureTestCase;
 
-class ProjectUserDestroyTest extends TestCase
+class ProjectUserDestroyTest extends FeatureTestCase
 {
     use RefreshDatabase;
     use TestHelper;
 
-    private string $projectUserURL = 'http://localhost/api/projects/{projectId}/members/{memberId}';
+    protected string $method = 'delete';
+    protected string $url = 'http://localhost/api/projects/{projectId}/members/{memberId}';
     private array $projectData = [
         'name' => 'another project'
     ];
+    private array $search = ['{projectId}', '{memberId}'];
 
     /**
-     * Return the real url.
-     *
-     * @param int $teamId
-     * @param int $memberId
-     * @return string
+     * Test for user cannot delete a resource with fake project and member id.
      */
-    private function getRealURL(int $projectId, int $memberId): string
-    {
-        return str_replace(['{projectId}', '{memberId}'], [$projectId, $memberId], $this->projectUserURL);
-    }
-
-    /**
-     * Test for user cannot access destroy without jwt token.
-     */
-    public function testUserCannotAccessDestroyWithoutToken(): void
-    {
-        $response = $this->deleteJson($this->getRealURL(1, 1));
-
-        $response->assertStatus(401)
-            ->assertJsonFragments([
-                ['success' => false,],
-                ['error' => 'TOKEN_NOT_PROVIDED'],
-                ['message' => 'Token is not provided in header.'],
-            ]);
-    }
-
-    /**
-     * Test for user cannot access destroy with wrong jwt token.
-     */
-    public function testUserCannotAccessDestroyWithWrongToken(): void
-    {
-        $token = 'abc';
-
-        $response = $this->withHeader('Authorization', "Bearer $token")
-            ->deleteJson($this->getRealURL(1, 1));
-
-        $response->assertStatus(401)
-            ->assertJsonFragments([
-                ['success' => false,],
-                ['error' => 'INVALID_TOKEN'],
-                ['message' => 'Token is malformed or invalid.'],
-            ]);
-    }
-
-    /**
-     * Test for user cannot send fake project and member id to destory.
-     */
-    public function testUserCannotSendFakeProjectAndMemberIdToDestroy(): void
+    public function testUserCannotDeleteAResourceWithFakeProjectAndMemberId(): void
     {
         list($token) = $this->login();
 
         $response = $this->withHeader('Authorization', "Bearer $token")
-            ->deleteJson($this->getRealURL(1, 1));
+            ->deleteJson($this->getRealURL($this->search, [1, 1]));
 
         $response->assertStatus(404)
             ->assertJson([
@@ -82,9 +39,9 @@ class ProjectUserDestroyTest extends TestCase
     }
 
     /**
-     * Test for user cannot send a request with unauthorized project id to destroy.
+     * Test for user cannot delete a resource with unauthorized project id.
      */
-    public function testUserCannotSendARequestWithUnauthorizedProjectIdToDestroy(): void
+    public function testUserCannotDeleteAResourceWithUnauthorizedProjectId(): void
     {
         $user = User::factory()->create();
 
@@ -97,7 +54,7 @@ class ProjectUserDestroyTest extends TestCase
         list($token) = $this->login();
 
         $response = $this->withHeader('Authorization', "Bearer $token")
-            ->deleteJson($this->getRealURL($project->id, $user->id));
+            ->deleteJson($this->getRealURL($this->search, [$project->id, 1]));
 
         $response->assertStatus(404)
             ->assertJson([
@@ -107,9 +64,9 @@ class ProjectUserDestroyTest extends TestCase
     }
 
     /**
-     * Test for user can send a request with right project and member id to destory.
+     * Test for user can delete a resource with right project and user id.
      */
-    public function testUserCanSendARequestWithRightProjectAndMemberIdToDestroy(): void
+    public function testUserCanDeleteAResourceWithRightProjectAndUserId(): void
     {
         list($token, $id) = $this->login();
 
@@ -120,7 +77,7 @@ class ProjectUserDestroyTest extends TestCase
         $project->users()->attach([$id => ['created_by' => $id]]);
 
         $response = $this->withHeader('Authorization', "Bearer $token")
-            ->deleteJson($this->getRealURL($project->id, $id));
+            ->deleteJson($this->getRealURL($this->search, [$project->id, $id]));
 
         $response->assertStatus(200)
             ->assertJson([
