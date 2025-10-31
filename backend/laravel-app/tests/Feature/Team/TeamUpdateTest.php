@@ -7,14 +7,16 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\Feature\TestHelper;
+use Tests\FeatureTestCase;
 use Tests\TestCase;
 
-class TeamUpdateTest extends TestCase
+class TeamUpdateTest extends FeatureTestCase
 {
     use RefreshDatabase;
     use TestHelper;
 
-    private string $teamURL = 'http://localhost/api/teams/';
+    protected string $method = 'put';
+    protected string $url = 'http://localhost/api/teams/{id}';
     private array $teamData = [
         'name' => 'testing Team',
         'description' => 'Team for testing.',
@@ -23,49 +25,17 @@ class TeamUpdateTest extends TestCase
         'name' => 'Testing Team',
         'description' => 'A team for testing.',
     ];
+    private array $search = ['{id}'];
 
     /**
-     * Test for user cannot access update without jwt token.
+     * Test for user cannot update a resource with wrong team id.
      */
-    public function testUserCannotAccessUpdateWithoutToken(): void
-    {
-        $response = $this->putJson($this->teamURL . '1', []);
-
-        $response->assertStatus(401)
-            ->assertJsonFragments([
-                ['success' => false,],
-                ['error' => 'TOKEN_NOT_PROVIDED'],
-                ['message' => 'Token is not provided in header.'],
-            ]);
-    }
-
-    /**
-     * Test for user cannot access the data with wrong jwt token.
-     */
-    public function testUserCannotAccessUpdateWithWrongToken(): void
-    {
-        $token = 'abc';
-
-        $response = $this->withHeader('Authorization', "Bearer $token")
-            ->putJson($this->teamURL . '1', []);
-
-        $response->assertStatus(401)
-            ->assertJsonFragments([
-                ['success' => false,],
-                ['error' => 'INVALID_TOKEN'],
-                ['message' => 'Token is malformed or invalid.'],
-            ]);
-    }
-
-    /**
-     * Test for user cannot access update with wrong team id.
-     */
-    public function testUserCannotAccessUpdateWithWrongTeamId(): void
+    public function testUserCannotUpdateAResourceWithWrongId(): void
     {
         list($token) = $this->login();
 
         $response = $this->withHeader('Authorization', "Bearer $token")
-            ->putJson($this->teamURL . '1', []);
+            ->putJson($this->getRealURL($this->search, [1]), []);
 
         $response->assertStatus(404)
             ->assertJsonFragments([
@@ -75,9 +45,9 @@ class TeamUpdateTest extends TestCase
     }
 
     /**
-     * Test for user cannot access update with unauthorized team id.
+     * Test for user cannot update a resource with unauthorized team id.
      */
-    public function testUserCannotAccessUpdateWithUnauthorizedTeamId(): void
+    public function testUserCannotUpdateAResourceWithUnauthorizedId(): void
     {
         $user = User::factory()->create();
 
@@ -89,19 +59,20 @@ class TeamUpdateTest extends TestCase
         list($token) = $this->login();
 
         $response = $this->withHeader('Authorization', "Bearer $token")
-            ->putJson($this->teamURL . $team->id, []);
+            ->putJson($this->getRealURL($this->search, [$team->id]), []);
 
         $response->assertStatus(404)
-            ->assertJson([
-                'success' => false,
-                'message' => 'Resource not found.'
+            ->assertJsonFragments([
+                ['success' => false,],
+                ['message' => 'Resource not found.'],
             ]);
     }
 
     /**
-     * Test for user can send an empty request to update.
+     * Test for user can only send an empty request to update.
+     * The data is not updated or changed.
      */
-    public function testUserCanSendEmptyRequestToUpdate(): void
+    public function testUserCanSendAnEmptyRequestToUpdate(): void
     {
         list($token, $id) = $this->login();
 
@@ -113,7 +84,7 @@ class TeamUpdateTest extends TestCase
         $request = [];
 
         $response = $this->withHeader('Authorization', "Bearer $token")
-            ->putJson($this->teamURL . $team->id, $request);
+            ->putJson($this->getRealURL($this->search, [$team->id]), $request);
 
         $response->assertStatus(200)
             ->assertJson([
@@ -124,12 +95,14 @@ class TeamUpdateTest extends TestCase
                     'created_by' => $teamData['created_by'],
                 ]
             ]);
+
+        $this->assertDatabaseHas('teams', $teamData);
     }
 
     /**
-     * Test for user cannot send empty request to update.
+     * Test for user cannot update a resource with empty data.
      */
-    public function testUserCannotSendEmptyValueRequestToUpdate(): void
+    public function testUserCannotUpdateAResourceWithEmptyData(): void
     {
         list($token, $id) = $this->login();
 
@@ -144,7 +117,7 @@ class TeamUpdateTest extends TestCase
         ];
 
         $response = $this->withHeader('Authorization', "Bearer $token")
-            ->putJson($this->teamURL . $team->id, $request);
+            ->putJson($this->getRealURL($this->search, [$team->id]), $request);
 
         $response->assertStatus(422)
             ->assertJsonFragments([
@@ -155,9 +128,9 @@ class TeamUpdateTest extends TestCase
     }
 
     /**
-     * Test for user can send name only request to update.
+     * Test for user can update a resource with name only request.
      */
-    public function testUserCanSendNameOnlyRequestToUpdate(): void
+    public function testUserCanUpdateAResourceWithRightData(): void
     {
         list($token, $id) = $this->login();
 
@@ -169,7 +142,7 @@ class TeamUpdateTest extends TestCase
         $request['name'] = $this->request['name'];
 
         $response = $this->withHeader('Authorization', "Bearer $token")
-            ->putJson($this->teamURL . $team->id, $request);
+            ->putJson($this->getRealURL($this->search, [$team->id]), $request);
 
         $response->assertStatus(200)
             ->assertJson([

@@ -7,52 +7,23 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\Feature\TestHelper;
-use Tests\TestCase;
+use Tests\FeatureTestCase;
 
-class TeamUserStoreTest extends TestCase
+class TeamUserStoreTest extends FeatureTestCase
 {
     use RefreshDatabase;
     use TestHelper;
 
-    private string $teamUserURL = 'http://localhost/api/teams/{id}/members';
+    protected string $method = 'post';
+    protected string $url = 'http://localhost/api/teams/{id}/members';
     private array $teamData = [
         'name' => 'Testing team A'
     ];
 
     /**
-     * Test for user cannot access store without jwt token.
+     * Test for user cannot send an empty request to store.
      */
-    public function testUserCannotAccessStoreWithoutToken(): void
-    {
-        $response = $this->postJson($this->teamUserURL, []);
-
-        $response->assertStatus(401)
-            ->assertJsonFragments([
-                ['success' => false,],
-                ['error' => 'TOKEN_NOT_PROVIDED'],
-                ['message' => 'Token is not provided in header.'],
-            ]);
-    }
-
-    /**
-     * Test for user cannot access the data with wrong jwt token.
-     */
-    public function testUserCannotAccessStoreWithWrongToken(): void
-    {
-        $token = 'abc';
-
-        $response = $this->withHeader('Authorization', "Bearer $token")
-            ->postJson($this->teamUserURL, []);
-
-        $response->assertStatus(401)
-            ->assertJsonFragments([
-                ['success' => false,],
-                ['error' => 'INVALID_TOKEN'],
-                ['message' => 'Token is malformed or invalid.'],
-            ]);
-    }
-
-    public function testUserCannotSendAnEmptyRequestToStore(): void
+    public function testUserCannotCreateAResourceWithEmptyData(): void
     {
         $request = [];
         $teamData = $this->teamData;
@@ -64,7 +35,7 @@ class TeamUserStoreTest extends TestCase
 
         $response = $this->withHeader('Authorization', "Bearer $token")
             ->postJson(
-                str_replace('{id}', $team->id, $this->teamUserURL),
+                str_replace('{id}', $team->id, $this->url),
                 $request
             );
 
@@ -76,7 +47,10 @@ class TeamUserStoreTest extends TestCase
             ]);
     }
 
-    public function testUserCannotSendARequestWithoutAnArrayOfMemberId(): void
+    /**
+     * Test for user cannot send a request without members' ids.
+     */
+    public function testUserCannotCreateAResourceWithoutAnArrayOfMemberId(): void
     {
         $request = ['member_id' => 1];
         $teamData = $this->teamData;
@@ -88,7 +62,7 @@ class TeamUserStoreTest extends TestCase
 
         $response = $this->withHeader('Authorization', "Bearer $token")
             ->postJson(
-                str_replace('{id}', $team->id, $this->teamUserURL),
+                str_replace('{id}', $team->id, $this->url),
                 $request
             );
 
@@ -100,7 +74,10 @@ class TeamUserStoreTest extends TestCase
             ]);
     }
 
-    public function testUserCannotSendARequestWithStringofMemberId(): void
+    /**
+     * Test for user cannot send a request with string type member's ids.
+     */
+    public function testUserCannotCreateAResourceWithStringofMemberId(): void
     {
         $request = ['member_id' => ['1', '2']];
         $teamData = $this->teamData;
@@ -112,7 +89,7 @@ class TeamUserStoreTest extends TestCase
 
         $response = $this->withHeader('Authorization', "Bearer $token")
             ->postJson(
-                str_replace('{id}', $team->id, $this->teamUserURL),
+                str_replace('{id}', $team->id, $this->url),
                 $request
             );
 
@@ -125,7 +102,10 @@ class TeamUserStoreTest extends TestCase
             ]);
     }
 
-    public function testUserCannotSendARequestWithFakeMemberId(): void
+    /**
+     * Test for user cannot send a request with fake members' ids.
+     */
+    public function testUserCannotCreateAResourceWithFakeMemberId(): void
     {
         $request = ['member_id' => [10, 11]];
         $teamData = $this->teamData;
@@ -137,7 +117,7 @@ class TeamUserStoreTest extends TestCase
 
         $response = $this->withHeader('Authorization', "Bearer $token")
             ->postJson(
-                str_replace('{id}', $team->id, $this->teamUserURL),
+                str_replace('{id}', $team->id, $this->url),
                 $request
             );
 
@@ -150,6 +130,9 @@ class TeamUserStoreTest extends TestCase
             ]);
     }
 
+    /**
+     * Test for user can send a request with right data.
+     */
     public function testUserCanSendARequestWithExistIntegerMemberId(): void
     {
         $teamData = $this->teamData;
@@ -164,7 +147,7 @@ class TeamUserStoreTest extends TestCase
 
         $response = $this->withHeader('Authorization', "Bearer $token")
             ->postJson(
-                str_replace('{id}', $team->id, $this->teamUserURL),
+                str_replace('{id}', $team->id, $this->url),
                 $request
             );
 

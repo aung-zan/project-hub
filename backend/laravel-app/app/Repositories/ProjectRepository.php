@@ -47,7 +47,7 @@ class ProjectRepository
     }
 
     /**
-     * Create a resource in the project table.
+     * Create a resource in a table.
      *
      * @param array $data
      * @return Project

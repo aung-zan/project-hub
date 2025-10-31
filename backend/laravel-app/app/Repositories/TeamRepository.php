@@ -15,7 +15,7 @@ class TeamRepository
     }
 
     /**
-     * Get all the resources filtered by $filters.
+     * Search, filter and sort the resources.
      *
      * @param array $filters
      * @return Collection
@@ -32,7 +32,7 @@ class TeamRepository
     }
 
     /**
-     * Create a resource in the team table.
+     * Create a resource in a table.
      *
      * @param array $data
      * @return Team

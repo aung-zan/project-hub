@@ -28,7 +28,7 @@ class ProjectUserRepository
     }
 
     /**
-     * Remove a resource in the pivot table.
+     * Remove a resource from the pivot table.
      *
      * @param Project $project
      * @param int $id
@@ -40,16 +40,15 @@ class ProjectUserRepository
     }
 
     /**
-     * Check whether the value of the column is exists in pivot_table or not.
+     * Check whether the resource exists in a pivot table or not.
      *
      * @param Project $team
-     * @param string $column
-     * @param int $id
+     * @param int $userId
      * @return bool
      */
-    public function checkExist(Project $project, string $column, int $id): bool
+    public function userExists(Project $project, int $userId): bool
     {
-        if (!$project->users()->wherePivot($column, $id)->exists()) {
+        if (!$project->users()->wherePivot('user_id', $userId)) {
             throw new ModelNotFoundException('Resource not found.');
         }
 

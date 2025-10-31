@@ -30,4 +30,16 @@ trait TestHelper
 
         return [$token, $user->id];
     }
+
+    /**
+     * Return the real url.
+     *
+     * @param array $search
+     * @param array $replace
+     * @return string
+     */
+    protected function getRealURL(array $search, array $replace): string
+    {
+        return str_replace($search, $replace, $this->url);
+    }
 }

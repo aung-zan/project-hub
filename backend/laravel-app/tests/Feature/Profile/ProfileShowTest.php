@@ -5,13 +5,14 @@ namespace Tests\Feature\Profile;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
+use Tests\FeatureTestCase;
 
-class ProfileShowTest extends TestCase
+class ProfileShowTest extends FeatureTestCase
 {
     use RefreshDatabase;
 
-    private string $profileURL = 'http://localhost/api/profile';
+    protected string $method = 'get';
+    protected string $url = 'http://localhost/api/profile';
     private array $request = [
         'name' => 'test',
         'username' => 'tester',
@@ -20,42 +21,9 @@ class ProfileShowTest extends TestCase
     ];
 
     /**
-     * Test for user cannot access the data without jwt token.
-     */
-    public function testUserCannotAccessShowWithoutToken(): void
-    {
-        $response = $this->getJson($this->profileURL);
-
-        $response->assertStatus(401)
-            ->assertJsonFragments([
-                ['success' => false,],
-                ['error' => 'TOKEN_NOT_PROVIDED'],
-                ['message' => 'Token is not provided in header.'],
-            ]);
-    }
-
-    /**
-     * Test for user cannot access the data with wrong jwt token.
-     */
-    public function testUserCannotAccessShowWithWrongToken(): void
-    {
-        $token = 'abc';
-
-        $response = $this->withHeader('Authorization', "Bearer $token")
-            ->getJson($this->profileURL);
-
-        $response->assertStatus(401)
-            ->assertJsonFragments([
-                ['success' => false,],
-                ['error' => 'INVALID_TOKEN'],
-                ['message' => 'Token is malformed or invalid.'],
-            ]);
-    }
-
-    /**
      * Test for user access the data with right token.
      */
-    public function testUserCanAccessShowWithRightToken(): void
+    public function testUserCanGetAResourceWithRightToken(): void
     {
         $request = $this->request;
 
@@ -64,7 +32,7 @@ class ProfileShowTest extends TestCase
         $token = auth()->guard('api')->login($user);
 
         $response = $this->withHeader('Authorization', "Bearer $token")
-            ->getJson($this->profileURL);
+            ->getJson($this->url);
 
         $response->assertStatus(200)
             ->assertJson([

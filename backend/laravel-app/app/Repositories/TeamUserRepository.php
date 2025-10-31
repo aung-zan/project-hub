@@ -15,8 +15,9 @@ class TeamUserRepository
     }
 
     /**
-     * Create/Update a resource in the team_user table.
+     * Create/Update resources in the pivot table.
      *
+     * @param Team $team
      * @param array $data
      * @return array
      */
@@ -26,7 +27,7 @@ class TeamUserRepository
     }
 
     /**
-     * Remove a resource in the team_user table.
+     * Remove a resource from the pivot table.
      *
      * @param Team $team
      * @param int $id
@@ -38,16 +39,15 @@ class TeamUserRepository
     }
 
     /**
-     * Check whether the value of the column is exists in pivot_table or not.
+     * Check whether the resource exists in a pivot table or not.
      *
      * @param Team $team
-     * @param string $column
-     * @param int $id
+     * @param int $userId
      * @return bool
      */
-    public function checkExist(Team $team, string $column, int $id): bool
+    public function userExists(Team $team, int $userId): bool
     {
-        if (!$team->users()->wherePivot($column, $id)->exists()) {
+        if (!$team->users()->wherePivot('user_id', $userId)->exists()) {
             throw new ModelNotFoundException('Resource not found.');
         }
 

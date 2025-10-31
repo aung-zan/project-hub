@@ -14,7 +14,7 @@ class UserRepository
     }
 
     /**
-     * Create a resource in the user table.
+     * Create a resource in a table.
      *
      * @param array $data
      * @return User
@@ -29,11 +29,11 @@ class UserRepository
      * if an id is not found, throws exception.
      *
      * @param int $id
-     * @return ?User
+     * @return User
      *
      * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
      */
-    public function getById(int $id): ?User
+    public function getById(int $id): User
     {
         return $this->user->findOrFail($id);
     }

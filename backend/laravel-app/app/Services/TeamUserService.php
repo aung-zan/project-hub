@@ -18,29 +18,16 @@ class TeamUserService
     }
 
     /**
-     * Return the additional fields of pivot table.
-     *
-     * @param array $data
-     * @return array
-     */
-    private function getPivotData(array $data): array
-    {
-        return [
-            'created_by' => $data['auth_id'],
-        ];
-    }
-
-    /**
-     * Create team user.
+     * Add users to a team.
      *
      * @param int $id
      * @param array $data
-     * @return ?array
+     * @return array
      *
      * @throws \Illuminate\Auth\Access\AuthorizationException
      * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
      */
-    public function createTeamUser(int $id, array $data): ?array
+    public function createTeamUser(int $id, array $data): array
     {
         $team = $this->teamRepo->getById($id);
 
@@ -72,8 +59,21 @@ class TeamUserService
 
         Gate::authorize('view', $team);
 
-        $this->teamUserRepo->checkExist($team, 'user_id', $memberId);
+        $this->teamUserRepo->userExists($team, $memberId);
 
         $this->teamUserRepo->delete($team, $memberId);
+    }
+
+    /**
+     * Return the additional fields of pivot table.
+     *
+     * @param array $data
+     * @return array
+     */
+    private function getPivotData(array $data): array
+    {
+        return [
+            'created_by' => $data['auth_id'],
+        ];
     }
 }

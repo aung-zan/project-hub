@@ -7,55 +7,23 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\Feature\TestHelper;
-use Tests\TestCase;
+use Tests\FeatureTestCase;
 
-class ProjectUserStoreTest extends TestCase
+class ProjectUserStoreTest extends FeatureTestCase
 {
     use RefreshDatabase;
     use TestHelper;
 
-    private string $projectUserURL = 'http://localhost/api/projects/{id}/members';
+    protected string $method = 'post';
+    protected string $url = 'http://localhost/api/projects/{id}/members';
     private array $projectData = [
         'name' => 'another project'
     ];
 
     /**
-     * Test for user cannot access store without jwt token.
-     */
-    public function testUserCannotAccessStoreWithoutToken(): void
-    {
-        $response = $this->postJson($this->projectUserURL, []);
-
-        $response->assertStatus(401)
-            ->assertJsonFragments([
-                ['success' => false,],
-                ['error' => 'TOKEN_NOT_PROVIDED'],
-                ['message' => 'Token is not provided in header.'],
-            ]);
-    }
-
-    /**
-     * Test for user cannot access the data with wrong jwt token.
-     */
-    public function testUserCannotAccessStoreWithWrongToken(): void
-    {
-        $token = 'abc';
-
-        $response = $this->withHeader('Authorization', "Bearer $token")
-            ->postJson($this->projectUserURL, []);
-
-        $response->assertStatus(401)
-            ->assertJsonFragments([
-                ['success' => false,],
-                ['error' => 'INVALID_TOKEN'],
-                ['message' => 'Token is malformed or invalid.'],
-            ]);
-    }
-
-    /**
      * Test for user cannot send an empty request to store.
      */
-    public function testUserCannotSendAnEmptyRequestToStore(): void
+    public function testUserCannotCreateAResourceWithEmptyData(): void
     {
         $request = [];
         $projectData = $this->projectData;
@@ -67,7 +35,7 @@ class ProjectUserStoreTest extends TestCase
 
         $response = $this->withHeader('Authorization', "Bearer $token")
             ->postJson(
-                str_replace('{id}', $project->id, $this->projectUserURL),
+                $this->getRealURL(['{id}'], [$project->id]),
                 $request
             );
 
@@ -82,7 +50,7 @@ class ProjectUserStoreTest extends TestCase
     /**
      * Test for user cannot send a request without members' ids.
      */
-    public function testUserCannotSendARequestWithoutAnArrayOfMemberId(): void
+    public function testUserCannotCreateAResourceWithoutAnArrayOfMemberId(): void
     {
         $request = ['member_id' => 1];
         $projectData = $this->projectData;
@@ -94,7 +62,7 @@ class ProjectUserStoreTest extends TestCase
 
         $response = $this->withHeader('Authorization', "Bearer $token")
             ->postJson(
-                str_replace('{id}', $project->id, $this->projectUserURL),
+                $this->getRealURL(['{id}'], [$project->id]),
                 $request
             );
 
@@ -109,7 +77,7 @@ class ProjectUserStoreTest extends TestCase
     /**
      * Test for user cannot send a request with string type member's ids.
      */
-    public function testUserCannotSendARequestWithStringofMemberId(): void
+    public function testUserCannotCreateAResourceWithStringofMemberId(): void
     {
         $request = ['member_id' => ['1', '2']];
         $projectData = $this->projectData;
@@ -121,7 +89,7 @@ class ProjectUserStoreTest extends TestCase
 
         $response = $this->withHeader('Authorization', "Bearer $token")
             ->postJson(
-                str_replace('{id}', $project->id, $this->projectUserURL),
+                $this->getRealURL(['{id}'], [$project->id]),
                 $request
             );
 
@@ -137,7 +105,7 @@ class ProjectUserStoreTest extends TestCase
     /**
      * Test for user cannot send a request with fake members' ids.
      */
-    public function testUserCannotSendARequestWithFakeMemberId(): void
+    public function testUserCannotCreateAResourceWithFakeMemberId(): void
     {
         $request = ['member_id' => [10, 11]];
         $projectData = $this->projectData;
@@ -149,7 +117,7 @@ class ProjectUserStoreTest extends TestCase
 
         $response = $this->withHeader('Authorization', "Bearer $token")
             ->postJson(
-                str_replace('{id}', $project->id, $this->projectUserURL),
+                $this->getRealURL(['{id}'], [$project->id]),
                 $request
             );
 
@@ -165,7 +133,7 @@ class ProjectUserStoreTest extends TestCase
     /**
      * Test for user can send a request with right data.
      */
-    public function testUserCanSendARequestWithExistIntegerMemberId(): void
+    public function testUserCanCreateAResourceWithExistIntegerMemberId(): void
     {
         $projectData = $this->projectData;
 
@@ -179,7 +147,7 @@ class ProjectUserStoreTest extends TestCase
 
         $response = $this->withHeader('Authorization', "Bearer $token")
             ->postJson(
-                str_replace('{id}', $project->id, $this->projectUserURL),
+                $this->getRealURL(['{id}'], [$project->id]),
                 $request
             );
 

@@ -6,51 +6,19 @@ use App\Models\Team;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\Feature\TestHelper;
-use Tests\TestCase;
+use Tests\FeatureTestCase;
 
-class TeamIndexTest extends TestCase
+class TeamIndexTest extends FeatureTestCase
 {
     use RefreshDatabase;
     use TestHelper;
 
-    private string $teamURL = 'http://localhost/api/teams';
+    protected string $method = 'get';
+    protected string $url = 'http://localhost/api/teams';
     private array $teamData = [
         'name' => 'Testing Team',
         'description' => 'Team for testing.',
     ];
-
-    /**
-     * Test for user cannot access the data without jwt token.
-     */
-    public function testUserCannotAccessIndexWithoutToken(): void
-    {
-        $response = $this->getJson($this->teamURL);
-
-        $response->assertStatus(401)
-            ->assertJsonFragments([
-                ['success' => false,],
-                ['error' => 'TOKEN_NOT_PROVIDED'],
-                ['message' => 'Token is not provided in header.'],
-            ]);
-    }
-
-    /**
-     * Test for user cannot access the data with wrong jwt token.
-     */
-    public function testUserCannotAccessIndexWithWrongToken(): void
-    {
-        $token = 'abc';
-
-        $response = $this->withHeader('Authorization', "Bearer $token")
-            ->getJson($this->teamURL);
-
-        $response->assertStatus(401)
-            ->assertJsonFragments([
-                ['success' => false,],
-                ['error' => 'INVALID_TOKEN'],
-                ['message' => 'Token is malformed or invalid.'],
-            ]);
-    }
 
     /**
      * Test for user access the data with right token.
@@ -65,7 +33,7 @@ class TeamIndexTest extends TestCase
         Team::factory()->create($teamData);
 
         $response = $this->withHeader('Authorization', "Bearer $token")
-            ->getJson($this->teamURL);
+            ->getJson($this->url);
 
         $response->assertStatus(200)
             ->assertJson([
