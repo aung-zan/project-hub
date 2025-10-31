@@ -12,6 +12,7 @@ class ProjectStoreTest extends FeatureTestCase
     use RefreshDatabase;
     use TestHelper;
 
+    protected string $method = 'post';
     protected string $url = 'http://localhost/api/projects';
     private array $projectData = [
         'name' => 'another testing',

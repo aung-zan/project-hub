@@ -14,7 +14,8 @@ class ProjectUpdateTest extends FeatureTestCase
     use RefreshDatabase;
     use TestHelper;
 
-    protected string $url = 'http://localhost/api/projects/';
+    protected string $method = 'put';
+    protected string $url = 'http://localhost/api/projects/{id}';
     private array $projectData = [
         'name' => 'testing',
         'status' => 'active',
@@ -23,6 +24,7 @@ class ProjectUpdateTest extends FeatureTestCase
         'name' => 'another testing',
         'status' => 'completed',
     ];
+    private array $search = ['{id}'];
 
     /**
      * Test for user cannot update a resource with wrong id.
@@ -32,7 +34,7 @@ class ProjectUpdateTest extends FeatureTestCase
         list($token) = $this->login();
 
         $response = $this->withHeader('Authorization', "Bearer $token")
-            ->putJson($this->url . '1', []);
+            ->putJson($this->getRealURL($this->search, [1]), []);
 
         $response->assertStatus(404)
             ->assertJsonFragments([
@@ -56,7 +58,7 @@ class ProjectUpdateTest extends FeatureTestCase
         list($token) = $this->login();
 
         $response = $this->withHeader('Authorization', "Bearer $token")
-            ->putJson($this->url . $project->id, []);
+            ->putJson($this->getRealURL($this->search, [$project->id]), []);
 
         $response->assertStatus(404)
             ->assertJsonFragments([
@@ -81,7 +83,7 @@ class ProjectUpdateTest extends FeatureTestCase
         $request = [];
 
         $response = $this->withHeader('Authorization', "Bearer $token")
-            ->putJson($this->url . $project->id, $request);
+            ->putJson($this->getRealURL($this->search, [$project->id]), $request);
 
         $response->assertStatus(200)
             ->assertJson([
@@ -114,7 +116,7 @@ class ProjectUpdateTest extends FeatureTestCase
         ];
 
         $response = $this->withHeader('Authorization', "Bearer $token")
-            ->putJson($this->url . $project->id, $request);
+            ->putJson($this->getRealURL($this->search, [$project->id]), $request);
 
         $response->assertStatus(422)
             ->assertJsonFragments([
@@ -141,7 +143,7 @@ class ProjectUpdateTest extends FeatureTestCase
         $request['start_date'] = 'Mon 27 Oct';
 
         $response = $this->withHeader('Authorization', "Bearer $token")
-            ->putJson($this->url . $project->id, $request);
+            ->putJson($this->getRealURL($this->search, [$project->id]), $request);
 
         $response->assertStatus(422)
             ->assertJsonFragments([
@@ -171,7 +173,7 @@ class ProjectUpdateTest extends FeatureTestCase
         $request['end_date'] = '2025-10-27';
 
         $response = $this->withHeader('Authorization', "Bearer $token")
-            ->putJson($this->url . $project->id, $request);
+            ->putJson($this->getRealURL($this->search, [$project->id]), $request);
 
         $response->assertStatus(422)
             ->assertJsonFragments([
@@ -198,7 +200,7 @@ class ProjectUpdateTest extends FeatureTestCase
         $request['end_date'] = '2025-10-30';
 
         $response = $this->withHeader('Authorization', "Bearer $token")
-            ->putJson($this->url . $project->id, $request);
+            ->putJson($this->getRealURL($this->search, [$project->id]), $request);
 
         $response->assertStatus(200)
             ->assertJson([

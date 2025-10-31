@@ -15,11 +15,13 @@ class ProjectDestroyTest extends FeatureTestCase
     use RefreshDatabase;
     use TestHelper;
 
-    protected string $url = 'http://localhost/api/projects/';
+    protected string $method = 'delete';
+    protected string $url = 'http://localhost/api/projects/{id}';
     private array $projectData = [
         'name' => 'testing',
         'status' => 'active',
     ];
+    private array $search = ['{id}'];
 
     /**
      * Test for user cannot delete a resource with wrong project id.
@@ -29,7 +31,7 @@ class ProjectDestroyTest extends FeatureTestCase
         list($token) = $this->login();
 
         $response = $this->withHeader('Authorization', "Bearer $token")
-            ->deleteJson($this->url . '1');
+            ->deleteJson($this->getRealURL($this->search, [1]));
 
         $response->assertStatus(404)
             ->assertJsonFragments([
@@ -53,7 +55,7 @@ class ProjectDestroyTest extends FeatureTestCase
         list($token) = $this->login();
 
         $response = $this->withHeader('Authorization', "Bearer $token")
-            ->deleteJson($this->url . $project->id);
+            ->deleteJson($this->getRealURL($this->search, [$project->id]));
 
         $response->assertStatus(404)
             ->assertJsonFragments([
@@ -75,7 +77,7 @@ class ProjectDestroyTest extends FeatureTestCase
         $project = Project::factory()->create($projectData);
 
         $response = $this->withHeader('Authorization', "Bearer $token")
-            ->deleteJson($this->url . $project->id);
+            ->deleteJson($this->getRealURL($this->search, [$project->id]));
 
         $response->assertStatus(200)
             ->assertJson([

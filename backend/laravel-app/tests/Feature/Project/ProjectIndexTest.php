@@ -13,6 +13,7 @@ class ProjectIndexTest extends FeatureTestCase
     use RefreshDatabase;
     use TestHelper;
 
+    protected string $method = 'get';
     protected string $url = 'http://localhost/api/projects';
     private array $projectData = [
         'name' => 'another testing',
