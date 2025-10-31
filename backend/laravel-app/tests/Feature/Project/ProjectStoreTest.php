@@ -5,63 +5,30 @@ namespace Tests\Feature\Project;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\Feature\TestHelper;
-use Tests\TestCase;
+use Tests\FeatureTestCase;
 
-class ProjectStoreTest extends TestCase
+class ProjectStoreTest extends FeatureTestCase
 {
     use RefreshDatabase;
     use TestHelper;
 
-    private string $projectURL = 'http://localhost/api/projects';
+    protected string $url = 'http://localhost/api/projects';
     private array $projectData = [
         'name' => 'another testing',
         'status' => 'active',
     ];
 
     /**
-     * Test for user cannot access store without jwt token.
+     * Test for user cannot create a resource with empty data.
      */
-    public function testUserCannotAccessStoreWithoutToken(): void
-    {
-        $response = $this->postJson($this->projectURL, []);
-
-        $response->assertStatus(401)
-            ->assertJsonFragments([
-                ['success' => false,],
-                ['error' => 'TOKEN_NOT_PROVIDED'],
-                ['message' => 'Token is not provided in header.'],
-            ]);
-    }
-
-    /**
-     * Test for user cannot access the data with wrong jwt token.
-     */
-    public function testUserCannotAccessStoreWithWrongToken(): void
-    {
-        $token = 'abc';
-
-        $response = $this->withHeader('Authorization', "Bearer $token")
-            ->postJson($this->projectURL, []);
-
-        $response->assertStatus(401)
-            ->assertJsonFragments([
-                ['success' => false,],
-                ['error' => 'INVALID_TOKEN'],
-                ['message' => 'Token is malformed or invalid.'],
-            ]);
-    }
-
-    /**
-     * Test for user cannot create resource with empty data.
-     */
-    public function testUserCannotCreateWithEmptyData(): void
+    public function testUserCannotCreateAResourceWithEmptyData(): void
     {
         $request = [];
 
         list($token) = $this->login();
 
         $response = $this->withHeader('Authorization', "Bearer $token")
-            ->postJson($this->projectURL, $request);
+            ->postJson($this->url, $request);
 
         $response->assertStatus(422)
             ->assertJsonFragments([
@@ -71,9 +38,9 @@ class ProjectStoreTest extends TestCase
     }
 
     /**
-     * Test for user cannot create resource without name field.
+     * Test for user cannot create a resource without name field.
      */
-    public function testUserCannotCreateWithoutNameAndStatus(): void
+    public function testUserCannotCreateAResourceWithoutNameAndStatus(): void
     {
         list($token) = $this->login();
 
@@ -82,7 +49,7 @@ class ProjectStoreTest extends TestCase
         ];
 
         $response = $this->withHeader('Authorization', "Bearer $token")
-            ->postJson($this->projectURL, $request);
+            ->postJson($this->url, $request);
 
         $response->assertStatus(422)
             ->assertJsonFragments([
@@ -94,9 +61,9 @@ class ProjectStoreTest extends TestCase
     }
 
     /**
-     * Test for user cannot create with wrong date format.
+     * Test for user cannot create a resource with wrong date format.
      */
-    public function testUserCannotCreateWithWrongDateFormat(): void
+    public function testUserCannotCreateAResourceWithWrongDateFormat(): void
     {
         list($token) = $this->login();
 
@@ -104,7 +71,7 @@ class ProjectStoreTest extends TestCase
         $request['start_date'] = 'Mon 27 Oct';
 
         $response = $this->withHeader('Authorization', "Bearer $token")
-            ->postJson($this->projectURL, $request);
+            ->postJson($this->url, $request);
 
         $response->assertStatus(422)
             ->assertJsonFragments([
@@ -118,9 +85,9 @@ class ProjectStoreTest extends TestCase
     }
 
     /**
-     * Test for user cannot create with start date greater than end date.
+     * Test for user cannot create a resource with start date greater than end date.
      */
-    public function testUserCannotCreateWithStartDateGreaterThanEndDate(): void
+    public function testUserCannotCreateAResourceWithStartDateGreaterThanEndDate(): void
     {
         list($token) = $this->login();
 
@@ -129,7 +96,7 @@ class ProjectStoreTest extends TestCase
         $request['end_date'] = '2025-10-27';
 
         $response = $this->withHeader('Authorization', "Bearer $token")
-            ->postJson($this->projectURL, $request);
+            ->postJson($this->url, $request);
 
         $response->assertStatus(422)
             ->assertJsonFragments([
@@ -140,16 +107,16 @@ class ProjectStoreTest extends TestCase
     }
 
     /**
-     * Test for user can create with right data.
+     * Test for user can create a resource with right data.
      */
-    public function testUserCanCreateWithRightData(): void
+    public function testUserCanCreateAResourceWithRightData(): void
     {
         list($token) = $this->login();
 
         $request = $this->projectData;
 
         $response = $this->withHeader('Authorization', "Bearer $token")
-            ->postJson($this->projectURL, $request);
+            ->postJson($this->url, $request);
 
         $response->assertStatus(200)
             ->assertJson([

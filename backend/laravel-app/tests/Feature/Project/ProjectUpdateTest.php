@@ -7,14 +7,14 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\Feature\TestHelper;
-use Tests\TestCase;
+use Tests\FeatureTestCase;
 
-class ProjectUpdateTest extends TestCase
+class ProjectUpdateTest extends FeatureTestCase
 {
     use RefreshDatabase;
     use TestHelper;
 
-    private string $projectURL = 'http://localhost/api/projects/';
+    protected string $url = 'http://localhost/api/projects/';
     private array $projectData = [
         'name' => 'testing',
         'status' => 'active',
@@ -25,47 +25,14 @@ class ProjectUpdateTest extends TestCase
     ];
 
     /**
-     * Test for user cannot access update without jwt token.
+     * Test for user cannot update a resource with wrong id.
      */
-    public function testUserCannotAccessUpdateWithoutToken(): void
-    {
-        $response = $this->putJson($this->projectURL . '1', []);
-
-        $response->assertStatus(401)
-            ->assertJsonFragments([
-                ['success' => false,],
-                ['error' => 'TOKEN_NOT_PROVIDED'],
-                ['message' => 'Token is not provided in header.'],
-            ]);
-    }
-
-    /**
-     * Test for user cannot access the data with wrong jwt token.
-     */
-    public function testUserCannotAccessUpdateWithWrongToken(): void
-    {
-        $token = 'abc';
-
-        $response = $this->withHeader('Authorization', "Bearer $token")
-            ->putJson($this->projectURL . '1', []);
-
-        $response->assertStatus(401)
-            ->assertJsonFragments([
-                ['success' => false,],
-                ['error' => 'INVALID_TOKEN'],
-                ['message' => 'Token is malformed or invalid.'],
-            ]);
-    }
-
-    /**
-     * Test for user cannot access update with wrong id.
-     */
-    public function testUserCannotAccessUpdateWithWrongId(): void
+    public function testUserCannotUpdateAResourceWithWrongId(): void
     {
         list($token) = $this->login();
 
         $response = $this->withHeader('Authorization', "Bearer $token")
-            ->putJson($this->projectURL . '1', []);
+            ->putJson($this->url . '1', []);
 
         $response->assertStatus(404)
             ->assertJsonFragments([
@@ -75,9 +42,9 @@ class ProjectUpdateTest extends TestCase
     }
 
     /**
-     * Test for user cannot access update with unauthorized id.
+     * Test for user cannot update a resource with unauthorized id.
      */
-    public function testUserCannotAccessUpdateWithUnauthorizedId(): void
+    public function testUserCannotUpdateAResourceWithUnauthorizedId(): void
     {
         $user = User::factory()->create();
 
@@ -89,19 +56,20 @@ class ProjectUpdateTest extends TestCase
         list($token) = $this->login();
 
         $response = $this->withHeader('Authorization', "Bearer $token")
-            ->putJson($this->projectURL . $project->id, []);
+            ->putJson($this->url . $project->id, []);
 
         $response->assertStatus(404)
-            ->assertJson([
-                'success' => false,
-                'message' => 'Resource not found.'
+            ->assertJsonFragments([
+                ['success' => false,],
+                ['message' => 'Resource not found.'],
             ]);
     }
 
     /**
-     * Test for user can send an empty request to update.
+     * Test for user can only send an empty request to update.
+     * The data is not updated or changed.
      */
-    public function testUserCanSendEmptyRequestToUpdate(): void
+    public function testUserCanSendAnEmptyRequestToUpdate(): void
     {
         list($token, $id) = $this->login();
 
@@ -113,7 +81,7 @@ class ProjectUpdateTest extends TestCase
         $request = [];
 
         $response = $this->withHeader('Authorization', "Bearer $token")
-            ->putJson($this->projectURL . $project->id, $request);
+            ->putJson($this->url . $project->id, $request);
 
         $response->assertStatus(200)
             ->assertJson([
@@ -124,12 +92,14 @@ class ProjectUpdateTest extends TestCase
                     'created_by' => $projectData['created_by'],
                 ]
             ]);
+
+        $this->assertDatabaseHas('projects', $projectData);
     }
 
     /**
-     * Test for user cannot send empty request to update.
+     * Test for user cannot update a resource with empty data.
      */
-    public function testUserCannotSendEmptyValueRequestToUpdate(): void
+    public function testUserCannotUpdateAResourceWithEmptyData(): void
     {
         list($token, $id) = $this->login();
 
@@ -144,7 +114,7 @@ class ProjectUpdateTest extends TestCase
         ];
 
         $response = $this->withHeader('Authorization', "Bearer $token")
-            ->putJson($this->projectURL . $project->id, $request);
+            ->putJson($this->url . $project->id, $request);
 
         $response->assertStatus(422)
             ->assertJsonFragments([
@@ -156,9 +126,9 @@ class ProjectUpdateTest extends TestCase
     }
 
     /**
-     * Test for user cannot update with wrong date format.
+     * Test for user cannot update a resource with wrong date format.
      */
-    public function testUserCannotUpdateWithWrongDateFormat(): void
+    public function testUserCannotUpdateAResourceWithWrongDateFormat(): void
     {
         list($token, $id) = $this->login();
 
@@ -171,7 +141,7 @@ class ProjectUpdateTest extends TestCase
         $request['start_date'] = 'Mon 27 Oct';
 
         $response = $this->withHeader('Authorization', "Bearer $token")
-            ->putJson($this->projectURL . $project->id, $request);
+            ->putJson($this->url . $project->id, $request);
 
         $response->assertStatus(422)
             ->assertJsonFragments([
@@ -185,9 +155,9 @@ class ProjectUpdateTest extends TestCase
     }
 
     /**
-     * Test for user cannot update with start date greater than end date.
+     * Test for user cannot update a resource with start date greater than end date.
      */
-    public function testUserCannotUpdateWithStartDateGreaterThanEndDate(): void
+    public function testUserCannotUpdateAResourceWithStartDateGreaterThanEndDate(): void
     {
         list($token, $id) = $this->login();
 
@@ -201,7 +171,7 @@ class ProjectUpdateTest extends TestCase
         $request['end_date'] = '2025-10-27';
 
         $response = $this->withHeader('Authorization', "Bearer $token")
-            ->putJson($this->projectURL . $project->id, $request);
+            ->putJson($this->url . $project->id, $request);
 
         $response->assertStatus(422)
             ->assertJsonFragments([
@@ -212,9 +182,9 @@ class ProjectUpdateTest extends TestCase
     }
 
     /**
-     * Test for user can update with right data.
+     * Test for user can update a resource with right data.
      */
-    public function testUserCanUpdateWithRightData(): void
+    public function testUserCanUpdateAResourceWithRightData(): void
     {
         list($token, $id) = $this->login();
 
@@ -228,7 +198,7 @@ class ProjectUpdateTest extends TestCase
         $request['end_date'] = '2025-10-30';
 
         $response = $this->withHeader('Authorization', "Bearer $token")
-            ->putJson($this->projectURL . $project->id, $request);
+            ->putJson($this->url . $project->id, $request);
 
         $response->assertStatus(200)
             ->assertJson([

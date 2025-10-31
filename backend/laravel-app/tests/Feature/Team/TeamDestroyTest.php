@@ -7,61 +7,29 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\Feature\TestHelper;
+use Tests\FeatureTestCase;
 use Tests\TestCase;
 
-class TeamDestroyTest extends TestCase
+class TeamDestroyTest extends FeatureTestCase
 {
     use RefreshDatabase;
     use TestHelper;
 
-    private string $teamURL = 'http://localhost/api/teams/';
+    protected string $url = 'http://localhost/api/teams/';
     private array $teamData = [
         'name' => 'Testing Team',
         'description' => 'Team for testing.',
     ];
 
     /**
-     * Test for user cannot access delete without jwt token.
+     * Test for user cannot delete a resource with wrong team id.
      */
-    public function testUserCannotAccessDeleteWithoutToken(): void
-    {
-        $response = $this->deleteJson($this->teamURL . '1');
-
-        $response->assertStatus(401)
-            ->assertJsonFragments([
-                ['success' => false,],
-                ['error' => 'TOKEN_NOT_PROVIDED'],
-                ['message' => 'Token is not provided in header.'],
-            ]);
-    }
-
-    /**
-     * Test for user cannot access the data with wrong jwt token.
-     */
-    public function testUserCannotAccessDeleteWithWrongToken(): void
-    {
-        $token = 'abc';
-
-        $response = $this->withHeader('Authorization', "Bearer $token")
-            ->deleteJson($this->teamURL . '1');
-
-        $response->assertStatus(401)
-            ->assertJsonFragments([
-                ['success' => false,],
-                ['error' => 'INVALID_TOKEN'],
-                ['message' => 'Token is malformed or invalid.'],
-            ]);
-    }
-
-    /**
-     * Test for user cannot access delete with wrong team id.
-     */
-    public function testUserCannotAccessDeleteWithWrongTeamId(): void
+    public function testUserCannotDeleteAResourceWithWrongId(): void
     {
         list($token) = $this->login();
 
         $response = $this->withHeader('Authorization', "Bearer $token")
-            ->deleteJson($this->teamURL . '1');
+            ->deleteJson($this->url . '1');
 
         $response->assertStatus(404)
             ->assertJsonFragments([
@@ -71,9 +39,9 @@ class TeamDestroyTest extends TestCase
     }
 
     /**
-     * Test for user cannot access delete with unauthorized team id.
+     * Test for user cannot delete a resource with unauthorized team id.
      */
-    public function testUserCannotAccessDeleteWithUnauthorizedTeamId(): void
+    public function testUserCannotDeleteAResourceWithUnauthorizedId(): void
     {
         $user = User::factory()->create();
 
@@ -85,19 +53,19 @@ class TeamDestroyTest extends TestCase
         list($token) = $this->login();
 
         $response = $this->withHeader('Authorization', "Bearer $token")
-            ->deleteJson($this->teamURL . $team->id);
+            ->deleteJson($this->url . $team->id);
 
         $response->assertStatus(404)
-            ->assertJson([
-                'success' => false,
-                'message' => 'Resource not found.'
+            ->assertJsonFragments([
+                ['success' => false,],
+                ['message' => 'Resource not found.'],
             ]);
     }
 
     /**
-     * Test for user can access delete with right team id.
+     * Test for user can delete a resource with right team id.
      */
-    public function testUserCanAcessDeleteWithRightTeamId(): void
+    public function testUserCanDeleteAResourceWithRightId(): void
     {
         list($token, $id) = $this->login();
 
@@ -107,7 +75,7 @@ class TeamDestroyTest extends TestCase
         $team = Team::factory()->create($teamData);
 
         $response = $this->withHeader('Authorization', "Bearer $token")
-            ->deleteJson($this->teamURL . $team->id);
+            ->deleteJson($this->url . $team->id);
 
         $response->assertStatus(200)
             ->assertJson([
