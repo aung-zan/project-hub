@@ -11,20 +11,20 @@ class AuthLoginTest extends TestCase
 {
     use RefreshDatabase;
 
-    private string $loginURL = 'http://localhost/api/login';
+    private string $url = 'http://localhost/api/login';
     private array $request = [
         'email' => 'test@mail.com',
         'password' => 'password',
     ];
 
     /**
-     * Test for login a user with an empty data.
+     * Test for user cannot login with an empty request.
      */
-    public function testUserCannotLoginWithAnEmptyData(): void
+    public function testUserCannotLoginWithAnEmptyRequest(): void
     {
         $request = [];
 
-        $response = $this->postJson($this->loginURL, $request);
+        $response = $this->postJson($this->url, $request);
 
         $response->assertStatus(422)
             ->assertJsonFragments([
@@ -36,13 +36,13 @@ class AuthLoginTest extends TestCase
     }
 
     /**
-     * Test for login a user with wrong credentials.
+     * Test for user cannot login with wrong credentials.
      */
     public function testUserCannotLoginWithWrongCredentials(): void
     {
         $request = $this->request;
 
-        $response = $this->postJson($this->loginURL, $request);
+        $response = $this->postJson($this->url, $request);
 
         $response->assertStatus(401)
             ->assertJsonFragments([
@@ -53,7 +53,7 @@ class AuthLoginTest extends TestCase
     }
 
     /**
-     * Test for login a user with right credentials.
+     * Test for user cannot login with right credentials.
      */
     public function testUserCanLoginWithRightCredentials(): void
     {
@@ -61,7 +61,7 @@ class AuthLoginTest extends TestCase
 
         User::factory()->create($request);
 
-        $response = $this->postJson($this->loginURL, $request);
+        $response = $this->postJson($this->url, $request);
 
         $response->assertStatus(200)
             ->assertJsonFragments([

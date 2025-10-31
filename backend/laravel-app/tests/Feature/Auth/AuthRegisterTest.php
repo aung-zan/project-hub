@@ -11,7 +11,7 @@ class AuthRegisterTest extends TestCase
 {
     use RefreshDatabase;
 
-    private string $registerURL = 'http://localhost/api/register';
+    private string $url = 'http://localhost/api/register';
     private array $request = [
         'name' => 'test',
         'username' => 'tester',
@@ -21,13 +21,13 @@ class AuthRegisterTest extends TestCase
     ];
 
     /**
-     * Test for creating a user with an empty data.
+     * Test for user cannot register with an empty request.
      */
-    public function testUserCannotRegisterWithAnEmptyData(): void
+    public function testUserCannotRegisterWithAnEmptyRequest(): void
     {
         $request = [];
 
-        $response = $this->postJson($this->registerURL, $request);
+        $response = $this->postJson($this->url, $request);
 
         $response->assertStatus(422)
             ->assertJsonFragments([
@@ -37,14 +37,14 @@ class AuthRegisterTest extends TestCase
     }
 
     /**
-     * Test for creating a user without confirm_password field.
+     * Test for user cannot register without confirm_password field.
      */
     public function testUserCannotRegisterWithoutConfirmPassword(): void
     {
         $request = $this->request;
         unset($request['confirm_password']);
 
-        $response = $this->postJson($this->registerURL, $request);
+        $response = $this->postJson($this->url, $request);
 
         $response->assertStatus(422)
             ->assertJsonFragments([
@@ -55,14 +55,14 @@ class AuthRegisterTest extends TestCase
     }
 
     /**
-     * Test for creating a user with passwords mismatched.
+     * Test for user cannot register with mismatched passwords.
      */
     public function testUserCannotRegisterWithMismatchedPasswords(): void
     {
         $request = $this->request;
         $request['confirm_password'] = 'pa';
 
-        $response = $this->postJson($this->registerURL, $request);
+        $response = $this->postJson($this->url, $request);
 
         $response->assertStatus(422)
             ->assertJsonFragments([
@@ -73,7 +73,7 @@ class AuthRegisterTest extends TestCase
     }
 
     /**
-     * Test for creating a user with the Existing email address.
+     * Test for user cannot register with an existing email.
      */
     public function testUserCannotRegisterWithExistingEmail(): void
     {
@@ -83,7 +83,7 @@ class AuthRegisterTest extends TestCase
             'email' => $request['email'],
         ]);
 
-        $response = $this->postJson($this->registerURL, $request);
+        $response = $this->postJson($this->url, $request);
 
         $response->assertStatus(422)
             ->assertJsonFragments([
@@ -94,7 +94,7 @@ class AuthRegisterTest extends TestCase
     }
 
     /**
-     * Test for creating a user with the Existing username.
+     * Test for user cannot register with an existing username.
      */
     public function testUserCannotRegisterWithExistingUsername(): void
     {
@@ -104,7 +104,7 @@ class AuthRegisterTest extends TestCase
             'username' => $request['username'],
         ]);
 
-        $response = $this->postJson($this->registerURL, $request);
+        $response = $this->postJson($this->url, $request);
 
         $response->assertStatus(422)
             ->assertJsonFragments([
@@ -115,13 +115,13 @@ class AuthRegisterTest extends TestCase
     }
 
     /**
-     * Test for creating a user with a unique data.
+     * Test for user can register with unique right request.
      */
-    public function testUserCanRegisterWithUniqueData(): void
+    public function testUserCanRegisterWithUniqueRightRequest(): void
     {
         $request = $this->request;
 
-        $response = $this->postJson($this->registerURL, $request);
+        $response = $this->postJson($this->url, $request);
 
         unset($request['password']);
         unset($request['confirm_password']);
