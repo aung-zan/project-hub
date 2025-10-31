@@ -5,14 +5,14 @@ namespace Tests\Feature\Profile;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\Feature\TestHelper;
-use Tests\TestCase;
+use Tests\FeatureTestCase;
 
-class ProfileUpdateTest extends TestCase
+class ProfileUpdateTest extends FeatureTestCase
 {
     use RefreshDatabase;
     use TestHelper;
 
-    private string $profileURL = 'http://localhost/api/profile';
+    protected string $url = 'http://localhost/api/profile';
     private array $userData = [
         'name' => 'test',
         'username' => 'tester',
@@ -25,50 +25,16 @@ class ProfileUpdateTest extends TestCase
     ];
 
     /**
-     * Test for user cannot access the data without jwt token.
+     * Test for user can only send an empty request to update.
+     * The data is not updated or changed.
      */
-    public function testUserCannotAccessUpdateWithoutToken(): void
-    {
-        $request = [];
-        $response = $this->putJson($this->profileURL, $request);
-
-        $response->assertStatus(401)
-            ->assertJsonFragments([
-                ['success' => false,],
-                ['error' => 'TOKEN_NOT_PROVIDED'],
-                ['message' => 'Token is not provided in header.'],
-            ]);
-    }
-
-    /**
-     * Test for user cannot access the data with wrong jwt token.
-     */
-    public function testUserCannotAccessUpdateWithWrongToken(): void
-    {
-        $request = [];
-        $token = 'abc';
-
-        $response = $this->withHeader('Authorization', "Bearer $token")
-            ->putJson($this->profileURL, $request);
-
-        $response->assertStatus(401)
-            ->assertJsonFragments([
-                ['success' => false,],
-                ['error' => 'INVALID_TOKEN'],
-                ['message' => 'Token is malformed or invalid.'],
-            ]);
-    }
-
-    /**
-     * Test for user can send empty request and the data are not changed.
-     */
-    public function testUserCanSendEmptyRequestToUpdate(): void
+    public function testUserCanSendAnEmptyRequestToUpdate(): void
     {
         $request = [];
         list($token) = $this->login($this->userData);
 
         $response = $this->withHeader('Authorization', "Bearer $token")
-            ->putJson($this->profileURL, $request);
+            ->putJson($this->url, $request);
 
         $response->assertStatus(200)
             ->assertJson([
@@ -84,7 +50,7 @@ class ProfileUpdateTest extends TestCase
     /**
      * Test for user cannot update with a request with empty value.
      */
-    public function testUserCannotUpdateEmptyValueRequest(): void
+    public function testUserCannotUpdateAResourceWithEmptyData(): void
     {
         $userData = $this->userData;
         $request = [
@@ -97,7 +63,7 @@ class ProfileUpdateTest extends TestCase
         unset($userData['password']);
 
         $response = $this->withHeader('Authorization', "Bearer $token")
-            ->putJson($this->profileURL, $request);
+            ->putJson($this->url, $request);
 
         $response->assertStatus(422)
             ->assertJsonFragments([
@@ -116,17 +82,14 @@ class ProfileUpdateTest extends TestCase
     public function testUserCannotUpdatePasswordWithoutConfirmPassword(): void
     {
         $userData = $this->userData;
-        $request = [
-            'name' => $this->request['name'],
-            'password' => $this->request['password'],
-        ];
+        $request = $this->request;
 
         list($token) = $this->login($userData);
 
         unset($userData['password']);
 
         $response = $this->withHeader('Authorization', "Bearer $token")
-            ->putJson($this->profileURL, $request);
+            ->putJson($this->url, $request);
 
         $response->assertStatus(422)
             ->assertJsonFragments([
@@ -139,9 +102,9 @@ class ProfileUpdateTest extends TestCase
     }
 
     /**
-     * Test for user cannot update other fields except from name and password.
+     * Test for user can update only name and password.
      */
-    public function testUserCannotUpdateExceptFromNameAndPassword(): void
+    public function testUserCanUpdateOnlyNameAndPassword(): void
     {
         $userData = $this->userData;
         $request = [
@@ -154,7 +117,7 @@ class ProfileUpdateTest extends TestCase
         unset($userData['password']);
 
         $response = $this->withHeader('Authorization', "Bearer $token")
-            ->putJson($this->profileURL, $request);
+            ->putJson($this->url, $request);
 
         $response->assertStatus(200)
             ->assertJson([
@@ -181,7 +144,7 @@ class ProfileUpdateTest extends TestCase
         list($token) = $this->login($userData);
 
         $response = $this->withHeader('Authorization', "Bearer $token")
-            ->putJson($this->profileURL, $request);
+            ->putJson($this->url, $request);
 
         $response->assertStatus(200)
             ->assertJson([
