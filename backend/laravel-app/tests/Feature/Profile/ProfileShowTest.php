@@ -11,6 +11,7 @@ class ProfileShowTest extends FeatureTestCase
 {
     use RefreshDatabase;
 
+    protected string $method = 'get';
     protected string $url = 'http://localhost/api/profile';
     private array $request = [
         'name' => 'test',

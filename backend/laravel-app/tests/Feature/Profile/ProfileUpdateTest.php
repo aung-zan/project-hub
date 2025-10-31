@@ -12,6 +12,7 @@ class ProfileUpdateTest extends FeatureTestCase
     use RefreshDatabase;
     use TestHelper;
 
+    protected string $method = 'put';
     protected string $url = 'http://localhost/api/profile';
     private array $userData = [
         'name' => 'test',
