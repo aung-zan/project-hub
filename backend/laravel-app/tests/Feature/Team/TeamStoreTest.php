@@ -12,6 +12,7 @@ class TeamStoreTest extends FeatureTestCase
     use RefreshDatabase;
     use TestHelper;
 
+    protected string $method = 'post';
     protected string $url = 'http://localhost/api/teams';
     private array $request = [
         'name' => 'Testing Team',

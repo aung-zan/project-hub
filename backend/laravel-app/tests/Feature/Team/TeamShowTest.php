@@ -14,6 +14,7 @@ class TeamShowTest extends FeatureTestCase
     use RefreshDatabase;
     use TestHelper;
 
+    protected string $method = 'get';
     protected string $url = 'http://localhost/api/teams/';
     private array $teamData = [
         'name' => 'Testing Team',

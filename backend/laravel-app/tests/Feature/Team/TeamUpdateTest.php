@@ -15,7 +15,8 @@ class TeamUpdateTest extends FeatureTestCase
     use RefreshDatabase;
     use TestHelper;
 
-    protected string $url = 'http://localhost/api/teams/';
+    protected string $method = 'put';
+    protected string $url = 'http://localhost/api/teams/{id}';
     private array $teamData = [
         'name' => 'testing Team',
         'description' => 'Team for testing.',
@@ -24,6 +25,7 @@ class TeamUpdateTest extends FeatureTestCase
         'name' => 'Testing Team',
         'description' => 'A team for testing.',
     ];
+    private array $search = ['{id}'];
 
     /**
      * Test for user cannot update a resource with wrong team id.
@@ -33,7 +35,7 @@ class TeamUpdateTest extends FeatureTestCase
         list($token) = $this->login();
 
         $response = $this->withHeader('Authorization', "Bearer $token")
-            ->putJson($this->url . '1', []);
+            ->putJson($this->getRealURL($this->search, [1]), []);
 
         $response->assertStatus(404)
             ->assertJsonFragments([
@@ -57,7 +59,7 @@ class TeamUpdateTest extends FeatureTestCase
         list($token) = $this->login();
 
         $response = $this->withHeader('Authorization', "Bearer $token")
-            ->putJson($this->url . $team->id, []);
+            ->putJson($this->getRealURL($this->search, [$team->id]), []);
 
         $response->assertStatus(404)
             ->assertJsonFragments([
@@ -82,7 +84,7 @@ class TeamUpdateTest extends FeatureTestCase
         $request = [];
 
         $response = $this->withHeader('Authorization', "Bearer $token")
-            ->putJson($this->url . $team->id, $request);
+            ->putJson($this->getRealURL($this->search, [$team->id]), $request);
 
         $response->assertStatus(200)
             ->assertJson([
@@ -115,7 +117,7 @@ class TeamUpdateTest extends FeatureTestCase
         ];
 
         $response = $this->withHeader('Authorization', "Bearer $token")
-            ->putJson($this->url . $team->id, $request);
+            ->putJson($this->getRealURL($this->search, [$team->id]), $request);
 
         $response->assertStatus(422)
             ->assertJsonFragments([
@@ -140,7 +142,7 @@ class TeamUpdateTest extends FeatureTestCase
         $request['name'] = $this->request['name'];
 
         $response = $this->withHeader('Authorization', "Bearer $token")
-            ->putJson($this->url . $team->id, $request);
+            ->putJson($this->getRealURL($this->search, [$team->id]), $request);
 
         $response->assertStatus(200)
             ->assertJson([

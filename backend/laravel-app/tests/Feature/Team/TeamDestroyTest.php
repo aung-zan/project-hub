@@ -15,11 +15,13 @@ class TeamDestroyTest extends FeatureTestCase
     use RefreshDatabase;
     use TestHelper;
 
-    protected string $url = 'http://localhost/api/teams/';
+    protected string $method = 'delete';
+    protected string $url = 'http://localhost/api/teams/{id}';
     private array $teamData = [
         'name' => 'Testing Team',
         'description' => 'Team for testing.',
     ];
+    private array $search = ['{id}'];
 
     /**
      * Test for user cannot delete a resource with wrong team id.
@@ -29,7 +31,7 @@ class TeamDestroyTest extends FeatureTestCase
         list($token) = $this->login();
 
         $response = $this->withHeader('Authorization', "Bearer $token")
-            ->deleteJson($this->url . '1');
+            ->deleteJson($this->getRealURL($this->search, [1]));
 
         $response->assertStatus(404)
             ->assertJsonFragments([
@@ -53,7 +55,7 @@ class TeamDestroyTest extends FeatureTestCase
         list($token) = $this->login();
 
         $response = $this->withHeader('Authorization', "Bearer $token")
-            ->deleteJson($this->url . $team->id);
+            ->deleteJson($this->getRealURL($this->search, [$team->id]));
 
         $response->assertStatus(404)
             ->assertJsonFragments([
@@ -75,7 +77,7 @@ class TeamDestroyTest extends FeatureTestCase
         $team = Team::factory()->create($teamData);
 
         $response = $this->withHeader('Authorization', "Bearer $token")
-            ->deleteJson($this->url . $team->id);
+            ->deleteJson($this->getRealURL($this->search, [$team->id]));
 
         $response->assertStatus(200)
             ->assertJson([
