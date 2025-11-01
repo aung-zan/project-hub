@@ -6,7 +6,16 @@ Content-Type: application/json
 Accept: application/json
 
 {
-    "member_id": [2]
+    "members": [
+        {
+            "id": 2,
+            "role": "member"
+        },
+        {
+            "id": 3,
+            "role": "viewer"
+        }
+    ]
 }
 ###
 

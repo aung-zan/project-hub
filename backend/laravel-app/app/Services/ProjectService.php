@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Project;
 use App\Repositories\ProjectRepository;
+use App\Repositories\ProjectUserRepository;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Gate;
 
@@ -12,8 +13,10 @@ class ProjectService
     /**
      * Create a new class instance.
      */
-    public function __construct(private ProjectRepository $projectRepo)
-    {
+    public function __construct(
+        private ProjectRepository $projectRepo,
+        private ProjectUserRepository $projectUserRepo
+    ) {
     }
 
     /**
@@ -75,7 +78,18 @@ class ProjectService
      */
     public function createProject(array $data): Project
     {
-        return $this->projectRepo->create($data);
+        $project = $this->projectRepo->create($data);
+
+        // for pivot data
+        $member = [$data['created_by'] => [
+            // pivot additional info
+            'created_by' => $data['created_by'],
+            'role' => 'owner'
+        ]];
+
+        $this->projectUserRepo->create($project, $member);
+
+        return $project;
     }
 
     /**

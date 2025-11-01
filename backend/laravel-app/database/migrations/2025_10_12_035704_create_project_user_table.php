@@ -17,6 +17,7 @@ return new class extends Migration
                 ->onDelete('cascade');
             $table->foreignId('user_id')->constrained('users', 'id')
                 ->onDelete('cascade');
+            $table->enum('role', ['owner', 'member', 'viewer']);
             $table->foreignId('created_by')->constrained('users', 'id')
                 ->onDelete('cascade');
             $table->timestamps();

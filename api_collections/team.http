@@ -1,4 +1,4 @@
-@token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImlhdCI6MTc2MTEwNjI0NCwiZXhwIjoxNzYxMTA5ODQ0LCJuYmYiOjE3NjExMDYyNDR9.mQ1MCI3YV7Wjfk5WQQOWIOV-zhN4JosJNFjcjaqQWyk
+@token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImlhdCI6MTc2MTkyODEzOSwiZXhwIjoxNzYxOTMxNzM5LCJuYmYiOjE3NjE5MjgxMzl9._rd8YIxEgtVSh1AIy7mhPNG_MF3Lj3MOQ0rcJo8_Y_M
 
 GET http://localhost/api/teams
 Authorization: Bearer {{token}}
@@ -9,8 +9,8 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-    "name": "testing b",
-    "description": "A testing b team"
+    "name": "testing A",
+    "description": "Testing A team"
 }
 ###
 GET http://localhost/api/teams/1
