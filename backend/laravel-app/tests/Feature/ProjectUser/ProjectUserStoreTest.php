@@ -20,6 +20,13 @@ class ProjectUserStoreTest extends FeatureTestCase
         'name' => 'another project'
     ];
 
+    /**
+     * Create a request array for project_user.
+     *
+     * @param array $roles
+     * @param array $memberIds
+     * @return array
+     */
     private function createRequest(array $roles, array $memberIds): array
     {
         $request['members'] = [];
