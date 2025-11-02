@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Project;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Collection;
 
 class ProjectUserRepository
 {
@@ -16,7 +17,7 @@ class ProjectUserRepository
     }
 
     /**
-     * Create/Update resources in the pivot table.
+     * Create resources in the pivot table.
      *
      * @param Project $project
      * @param array $data
@@ -24,7 +25,7 @@ class ProjectUserRepository
      */
     public function create(Project $project, array $data): array
     {
-        return $project->users()->sync($data);
+        return $project->users()->syncWithoutDetaching($data);
     }
 
     /**
@@ -48,7 +49,7 @@ class ProjectUserRepository
      */
     public function userExists(Project $project, int $userId): bool
     {
-        if (!$project->users()->wherePivot('user_id', $userId)) {
+        if (!$project->users()->wherePivot('user_id', $userId)->exists()) {
             throw new ModelNotFoundException('Resource not found.');
         }
 

@@ -1,6 +1,6 @@
-@token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImlhdCI6MTc2MTc5NTQyOSwiZXhwIjoxNzYxNzk5MDI5LCJuYmYiOjE3NjE3OTU0Mjl9.HAxXQO10DTXTNzMaqogBA5TBhYCZ_4QVHlYukVnJESo
+@token=abc
 
-POST http://localhost/api/projects/1/members
+POST http://localhost/api/projects/{id}/members
 Authorization: Bearer {{token}}
 Content-Type: application/json
 Accept: application/json
@@ -8,12 +8,16 @@ Accept: application/json
 {
     "members": [
         {
-            "id": 2,
-            "role": "member"
-        },
-        {
             "id": 3,
             "role": "viewer"
+        },
+        {
+            "id": 2,
+            "role": "owner"
+        },
+        {
+            "id": 1,
+            "role": "member"
         }
     ]
 }
