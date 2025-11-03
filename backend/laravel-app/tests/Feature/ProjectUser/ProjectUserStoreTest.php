@@ -21,6 +21,29 @@ class ProjectUserStoreTest extends FeatureTestCase
     ];
 
     /**
+     * Create a request array for project_user.
+     *
+     * @param array $roles
+     * @param array $memberIds
+     * @return array
+     */
+    private function createRequest(array $roles, array $memberIds): array
+    {
+        $request['members'] = [];
+        $role = '';
+
+        foreach ($memberIds as $key => $memberId) {
+            $role = $roles[$key] ?? $role;
+            $request['members'][] = [
+                'id' => $memberId,
+                'role' => $role
+            ];
+        }
+
+        return $request;
+    }
+
+    /**
      * Test for user cannot send an empty request to store.
      */
     public function testUserCannotCreateAResourceWithEmptyData(): void
@@ -43,22 +66,23 @@ class ProjectUserStoreTest extends FeatureTestCase
             ->assertJsonFragments([
                 ['success' => false],
                 ['error' => 'VALIDATION_FALIED'],
-                ['member_id' => ['The member_id field is required.']],
+                ['members' => ['The members field is required.']],
             ]);
     }
 
     /**
-     * Test for user cannot send a request without members' ids.
+     * Test for user cannot send a request with fake user_id and unknown role.
      */
-    public function testUserCannotCreateAResourceWithoutAnArrayOfMemberId(): void
+    public function testUserCannotCreateAResourceWithFakeMemberIdAndUnknownRole(): void
     {
-        $request = ['member_id' => 1];
         $projectData = $this->projectData;
 
         list($token, $id) = $this->login();
         $projectData['created_by'] = $id;
 
         $project = Project::factory()->create($projectData);
+
+        $request = $this->createRequest(['test'], [10, 11]);
 
         $response = $this->withHeader('Authorization', "Bearer $token")
             ->postJson(
@@ -70,70 +94,17 @@ class ProjectUserStoreTest extends FeatureTestCase
             ->assertJsonFragments([
                 ['success' => false],
                 ['error' => 'VALIDATION_FALIED'],
-                ['member_id' => ['The member_id field must be an array.']],
-            ]);
-    }
-
-    /**
-     * Test for user cannot send a request with string type member's ids.
-     */
-    public function testUserCannotCreateAResourceWithStringofMemberId(): void
-    {
-        $request = ['member_id' => ['1', '2']];
-        $projectData = $this->projectData;
-
-        list($token, $id) = $this->login();
-        $projectData['created_by'] = $id;
-
-        $project = Project::factory()->create($projectData);
-
-        $response = $this->withHeader('Authorization', "Bearer $token")
-            ->postJson(
-                $this->getRealURL(['{id}'], [$project->id]),
-                $request
-            );
-
-        $response->assertStatus(422)
-            ->assertJsonFragments([
-                ['success' => false],
-                ['error' => 'VALIDATION_FALIED'],
-                ['member_id.0' => ['The member_id field must be an integer.']],
-                ['member_id.1' => ['The member_id field must be an integer.']],
-            ]);
-    }
-
-    /**
-     * Test for user cannot send a request with fake members' ids.
-     */
-    public function testUserCannotCreateAResourceWithFakeMemberId(): void
-    {
-        $request = ['member_id' => [10, 11]];
-        $projectData = $this->projectData;
-
-        list($token, $id) = $this->login();
-        $projectData['created_by'] = $id;
-
-        $project = Project::factory()->create($projectData);
-
-        $response = $this->withHeader('Authorization', "Bearer $token")
-            ->postJson(
-                $this->getRealURL(['{id}'], [$project->id]),
-                $request
-            );
-
-        $response->assertStatus(422)
-            ->assertJsonFragments([
-                ['success' => false],
-                ['error' => 'VALIDATION_FALIED'],
-                ['member_id.0' => ['The selected member_id is invalid.']],
-                ['member_id.1' => ['The selected member_id is invalid.']],
+                ['members.0.id' => ['Resource not found.']],
+                ['members.0.role' => ['The selected member role is invalid.']],
+                ['members.1.id' => ['Resource not found.']],
+                ['members.1.role' => ['The selected member role is invalid.']],
             ]);
     }
 
     /**
      * Test for user can send a request with right data.
      */
-    public function testUserCanCreateAResourceWithExistIntegerMemberId(): void
+    public function testUserCanCreateAResourceWithExistingIDAndRightRole(): void
     {
         $projectData = $this->projectData;
 
@@ -143,7 +114,7 @@ class ProjectUserStoreTest extends FeatureTestCase
         $project = Project::factory()->create($projectData);
         $user = User::factory()->create();
 
-        $request = ['member_id' => [$id, $user->id]];
+        $request = $this->createRequest(['member'], [$user->id]);
 
         $response = $this->withHeader('Authorization', "Bearer $token")
             ->postJson(
@@ -155,7 +126,7 @@ class ProjectUserStoreTest extends FeatureTestCase
             ->assertJson([
                 'success' => true,
                 'data' => [
-                    'members' => [$id, $user->id]
+                    'members' => [$user->id]
                 ]
             ]);
     }

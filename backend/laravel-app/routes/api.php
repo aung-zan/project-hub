@@ -8,6 +8,7 @@ use App\Http\Controllers\TaskController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\TeamUserController;
 use App\Http\Controllers\UserController;
+use App\Http\Middleware\JWTAuthenticate;
 use Illuminate\Support\Facades\Route;
 
 Route::get('test', function () {
@@ -15,39 +16,38 @@ Route::get('test', function () {
         'success' => true,
         'message' => 'hello api routes.'
     ]);
-});
+})->withoutMiddleware(JWTAuthenticate::class);
 
 Route::controller(AuthController::class)->group(function () {
-    Route::post('register', 'register');
-    Route::post('login', 'login');
-    Route::post('logout', 'logout')->middleware('jwt.auth');
+    Route::withoutMiddleware(JWTAuthenticate::class)->group(function () {
+        Route::post('register', 'register');
+        Route::post('login', 'login');
+    });
+    Route::post('logout', 'logout');
 });
 
 Route::prefix('profile')->controller(UserController::class)
-    ->middleware('jwt.auth')
     ->group(function () {
         Route::get('', 'show');
         Route::put('', 'update');
     });
 
-Route::apiResource('teams', TeamController::class)->middleware('jwt.auth');
+Route::apiResource('teams', TeamController::class);
 Route::prefix('teams/{id}')->controller(TeamUserController::class)
-    ->middleware('jwt.auth')
     ->group(function () {
         Route::post('members', 'store');
         Route::delete('members/{memberId}', 'destroy');
     });
 
-Route::apiResource('projects', ProjectController::class)->middleware('jwt.auth');
-Route::prefix('projects/{id}')->controller(ProjectUserController::class)
-    ->middleware('jwt.auth')
+Route::apiResource('projects', ProjectController::class);
+Route::prefix('projects/{project}')
+    ->controller(ProjectUserController::class)
     ->group(function () {
         Route::post('members', 'store');
         Route::delete('members/{memberId}', 'destroy');
     });
 
-Route::apiResource('projects.tasks', TaskController::class)->middleware('jwt.auth');
+Route::apiResource('projects.tasks', TaskController::class);
 
 Route::apiResource('tasks.comments', CommentController::class)->shallow()
-    ->except(['index', 'show'])
-    ->middleware('jwt.auth');
+    ->except(['index', 'show']);

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Project;
 use App\Repositories\ProjectRepository;
 use App\Repositories\ProjectUserRepository;
 use Illuminate\Support\Facades\Gate;
@@ -12,7 +13,6 @@ class ProjectUserService
      * Create a new class instance.
      */
     public function __construct(
-        private ProjectRepository $projectRepo,
         private ProjectUserRepository $projectUserRepo
     ) {
     }
@@ -20,20 +20,18 @@ class ProjectUserService
     /**
      * Add users to a project.
      *
-     * @param int $projectId
+     * @param Project $project
      * @param array $data
      * @return array
      *
      * @throws \Illuminate\Auth\Access\AuthorizationException
      * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
      */
-    public function createProjectUser(int $projectId, array $data): array
+    public function createProjectUser(Project $project, array $data): array
     {
-        $project = $this->projectRepo->getById($projectId);
-
         Gate::authorize('view', $project);
 
-        $data = array_fill_keys($data['member_id'], $this->getPivotData($data));
+        $data = $this->prepareForProjectUser($data);
 
         $savedData = $this->projectUserRepo->create($project, $data);
 
@@ -46,17 +44,15 @@ class ProjectUserService
     /**
      * Remove a user from a project.
      *
-     * @param int $projectId
+     * @param Project $project
      * @param int $memberId
      * @return void
      *
      * @throws \Illuminate\Auth\Access\AuthorizationException
      * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
      */
-    public function removeProjectUser(int $projectId, int $memberId): void
+    public function removeProjectUser(Project $project, int $memberId): void
     {
-        $project = $this->projectRepo->getById($projectId);
-
         Gate::authorize('view', $project);
 
         $this->projectUserRepo->userExists($project, $memberId);
@@ -70,10 +66,19 @@ class ProjectUserService
      * @param array $data
      * @return array
      */
-    private function getPivotData(array $data): array
+    private function prepareForProjectUser(array $data): array
     {
-        return [
-            'created_by' => $data['auth_id'],
-        ];
+        $result = [];
+        $authId = $data['auth_id'];
+        sort($data['members']);
+
+        foreach ($data['members'] as $member) {
+            $result[$member['id']] = [
+                'role' => $member['role'],
+                'created_by' => $authId,
+            ];
+        }
+
+        return $result;
     }
 }

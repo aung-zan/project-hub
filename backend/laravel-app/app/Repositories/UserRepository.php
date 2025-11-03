@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\User;
+use Illuminate\Support\Collection;
 
 class UserRepository
 {
@@ -50,5 +51,15 @@ class UserRepository
         $user->update($data);
 
         return $user;
+    }
+
+    /**
+     * Get all users' ids from users table.
+     *
+     * @return Illuminate\Support\Collection
+     */
+    public function getAllUserIds(): Collection
+    {
+        return $this->user->pluck('id');
     }
 }

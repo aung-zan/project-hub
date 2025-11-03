@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProjectUser\ProjectUserCreateRequest;
+use App\Models\Project;
 use App\Services\ProjectUserService;
 
 class ProjectUserController extends Controller
@@ -11,12 +12,12 @@ class ProjectUserController extends Controller
     {
     }
 
-    public function store(int $projectId, ProjectUserCreateRequest $request)
+    public function store(Project $project, ProjectUserCreateRequest $request)
     {
         $data = $request->validated();
         $data['auth_id'] = auth()->guard('api')->id();
 
-        $members = $this->projectUserService->createProjectUser($projectId, $data);
+        $members = $this->projectUserService->createProjectUser($project, $data);
 
         return response()->json([
             'success' => true,
@@ -26,9 +27,9 @@ class ProjectUserController extends Controller
         ], 200);
     }
 
-    public function destroy(int $projectId, int $memberId)
+    public function destroy(Project $project, int $memberId)
     {
-        $this->projectUserService->removeProjectUser($projectId, $memberId);
+        $this->projectUserService->removeProjectUser($project, $memberId);
 
         return response()->json([
             'success' => true,

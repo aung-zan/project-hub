@@ -17,9 +17,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        $middleware->alias([
-            'jwt.auth' => JWTAuthenticate::class
-        ]);
+        $middleware->api(prepend: JWTAuthenticate::class);
 
         /**
          * Global middleware
@@ -56,7 +54,8 @@ return Application::configure(basePath: dirname(__DIR__))
             if ($request->expectsJson()) {
                 \Log::info('Exception caught: ' . get_class($th));
                 \Log::info('Exception message: ' . $th->getMessage());
-                \Log::info('Exception code: ' . $th->getCode());
+                \Log::info('Exception file: ' . $th->getFile());
+                \Log::info('Exception line: ' . $th->getLine());
 
                 $statusCode = (int) $th->getCode();
 

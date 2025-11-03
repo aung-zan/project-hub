@@ -3,7 +3,9 @@
 namespace Tests\Feature\ProjectUser;
 
 use App\Models\Project;
+use App\Models\ProjectUser;
 use App\Models\User;
+use Database\Factories\ProjectUserFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\Feature\TestHelper;
@@ -49,12 +51,18 @@ class ProjectUserDestroyTest extends FeatureTestCase
         $projectData['created_by'] = $user->id;
 
         $project = Project::factory()->create($projectData);
-        $project->users()->attach([$user->id => ['created_by' => $user->id]]);
+
+        ProjectUser::factory()->create([
+            'project_id' => $project->id,
+            'user_id' => $user->id,
+            'role' => 'owner',
+            'created_by' => $user->id,
+        ]);
 
         list($token) = $this->login();
 
         $response = $this->withHeader('Authorization', "Bearer $token")
-            ->deleteJson($this->getRealURL($this->search, [$project->id, 1]));
+            ->deleteJson($this->getRealURL($this->search, [$project->id, $user->id]));
 
         $response->assertStatus(404)
             ->assertJson([
@@ -74,10 +82,17 @@ class ProjectUserDestroyTest extends FeatureTestCase
         $projectData['created_by'] = $id;
 
         $project = Project::factory()->create($projectData);
-        $project->users()->attach([$id => ['created_by' => $id]]);
+        $user = User::factory()->create();
+
+        ProjectUser::factory()->create([
+            'project_id' => $project->id,
+            'user_id' => $user->id,
+            'role' => 'member',
+            'created_by' => $id,
+        ]);
 
         $response = $this->withHeader('Authorization', "Bearer $token")
-            ->deleteJson($this->getRealURL($this->search, [$project->id, $id]));
+            ->deleteJson($this->getRealURL($this->search, [$project->id, $user->id]));
 
         $response->assertStatus(200)
             ->assertJson([
