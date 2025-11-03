@@ -95,16 +95,14 @@ class ProjectService
     /**
      * Find the resource and check the authorization.
      *
-     * @param int $id
+     * @param Project $project
      * @return Project
      *
      * @throws \Illuminate\Auth\Access\AuthorizationException
      * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
      */
-    public function getProject(int $id): Project
+    public function getProject(Project $project): Project
     {
-        $project = $this->projectRepo->getById($id);
-
         Gate::authorize('view', $project);
 
         return $project;
@@ -113,7 +111,7 @@ class ProjectService
     /**
      * Find the resource, check the authorization and update it.
      *
-     * @param int $id
+     * @param Project $project
      * @param array $data
      * @return Project
      *
@@ -121,10 +119,8 @@ class ProjectService
      * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
      *
      */
-    public function updateProject(int $id, array $data): Project
+    public function updateProject(Project $project, array $data): Project
     {
-        $project = $this->projectRepo->getById($id);
-
         Gate::authorize('update', $project);
 
         return $this->projectRepo->update($project, $data);
@@ -133,16 +129,14 @@ class ProjectService
     /**
      * Find the resource, check the authorization and delete it.
      *
-     * @param int $id
+     * @param Project $project
      * @return Project
      *
      * @throws \Illuminate\Auth\Access\AuthorizationException
      * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
      */
-    public function deleteProject(int $id): Project
+    public function deleteProject(Project $project): Project
     {
-        $project = $this->projectRepo->getById($id);
-
         Gate::authorize('delete', $project);
 
         return $this->projectRepo->delete($project);

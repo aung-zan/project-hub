@@ -58,20 +58,6 @@ class ProjectRepository
     }
 
     /**
-     * Find a resource with requested id.
-     * if an id is not found, throws exception.
-     *
-     * @param int $id
-     * @return Project
-     *
-     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
-     */
-    public function getById(int $id): Project
-    {
-        return $this->project->findOrFail($id);
-    }
-
-    /**
      * Update the resource.
      *
      * @param Project $project
