@@ -33,10 +33,10 @@ Route::prefix('profile')->controller(UserController::class)
     });
 
 Route::apiResource('teams', TeamController::class);
-Route::prefix('teams/{id}')->controller(TeamUserController::class)
+Route::prefix('teams/{team}')->controller(TeamUserController::class)
     ->group(function () {
         Route::post('members', 'store');
-        Route::delete('members/{memberId}', 'destroy');
+        Route::delete('members/{user_id}', 'destroy');
     });
 
 Route::apiResource('projects', ProjectController::class);
@@ -44,7 +44,7 @@ Route::prefix('projects/{project}')
     ->controller(ProjectUserController::class)
     ->group(function () {
         Route::post('members', 'store');
-        Route::delete('members/{memberId}', 'destroy');
+        Route::delete('members/{user_id}', 'destroy');
     });
 
 Route::apiResource('projects.tasks', TaskController::class);

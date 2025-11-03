@@ -45,16 +45,14 @@ class TeamService
     /**
      * Find the resource and check the authorization.
      *
-     * @param int $id
+     * @param Team $team
      * @return Team
      *
      * @throws \Illuminate\Auth\Access\AuthorizationException
      * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
      */
-    public function getTeam(int $id): Team
+    public function getTeam(Team $team): Team
     {
-        $team = $this->teamRepo->getById($id);
-
         Gate::authorize('view', $team);
 
         return $team;
@@ -63,7 +61,7 @@ class TeamService
     /**
      * Find the resource, check the authorization and update it.
      *
-     * @param int $id
+     * @param Team $team
      * @param array $data
      * @return Team
      *
@@ -71,10 +69,8 @@ class TeamService
      * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
      *
      */
-    public function updateTeam(int $id, array $data): Team
+    public function updateTeam(Team $team, array $data): Team
     {
-        $team = $this->teamRepo->getById($id);
-
         Gate::authorize('update', $team);
 
         return $this->teamRepo->update($team, $data);
@@ -83,16 +79,14 @@ class TeamService
     /**
      * Find the resource, check the authorization and delete it.
      *
-     * @param int $id
+     * @param Team $team
      * @return Team
      *
      * @throws \Illuminate\Auth\Access\AuthorizationException
      * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
      */
-    public function deleteTeam(int $id): Team
+    public function deleteTeam(Team $team): Team
     {
-        $team = $this->teamRepo->getById($id);
-
         Gate::authorize('delete', $team);
 
         return $this->teamRepo->delete($team);

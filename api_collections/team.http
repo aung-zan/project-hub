@@ -1,4 +1,4 @@
-@token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImlhdCI6MTc2MTkyODEzOSwiZXhwIjoxNzYxOTMxNzM5LCJuYmYiOjE3NjE5MjgxMzl9._rd8YIxEgtVSh1AIy7mhPNG_MF3Lj3MOQ0rcJo8_Y_M
+@token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImlhdCI6MTc2MjE0NjI5NSwiZXhwIjoxNzYyMTQ5ODk1LCJuYmYiOjE3NjIxNDYyOTV9.zgrCwDIWUHZJl5PlpzhTI3LpEeXfUuvFFGSuxvdPZTQ
 
 GET http://localhost/api/teams
 Authorization: Bearer {{token}}
@@ -17,9 +17,10 @@ GET http://localhost/api/teams/1
 Authorization: Bearer {{token}}
 Accept: application/json
 ###
-PUT http://localhost/api/teams/2
+PUT http://localhost/api/teams/1
 Authorization: Bearer {{token}}
 Content-Type: application/json
+Accept: application/json
 
 {
     "name": "Testing A",
@@ -28,3 +29,4 @@ Content-Type: application/json
 ###
 DELETE http://localhost/api/teams/2
 Authorization: Bearer {{token}}
+Accept: application/json
