@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Project\ProjectCreateRequest;
 use App\Http\Requests\Project\ProjectIndexRequest;
 use App\Http\Requests\Project\ProjectUpdateRequest;
+use App\Models\Project;
 use App\Services\ProjectService;
 
 class ProjectController extends Controller
@@ -39,9 +40,9 @@ class ProjectController extends Controller
         ]);
     }
 
-    public function show(int $id)
+    public function show(Project $project)
     {
-        $project = $this->projectService->getProject($id);
+        $project = $this->projectService->getProject($project);
 
         return response()->json([
             'success' => true,
@@ -49,11 +50,11 @@ class ProjectController extends Controller
         ]);
     }
 
-    public function update(int $id, ProjectUpdateRequest $request)
+    public function update(Project $project, ProjectUpdateRequest $request)
     {
         $data = $request->validated();
 
-        $project = $this->projectService->updateProject($id, $data);
+        $project = $this->projectService->updateProject($project, $data);
 
         return response()->json([
             'success' => true,
@@ -61,9 +62,9 @@ class ProjectController extends Controller
         ]);
     }
 
-    public function destroy(int $id)
+    public function destroy(Project $project)
     {
-        $project = $this->projectService->deleteProject($id);
+        $project = $this->projectService->deleteProject($project);
 
         return response()->json([
             'success' => true,

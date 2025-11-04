@@ -9,6 +9,11 @@ use Symfony\Component\HttpFoundation\Response;
 
 class JWTAuthenticate
 {
+    private $except = [
+        'api/register',
+        'api/login',
+    ];
+
     /**
      * Handle an incoming request.
      *
@@ -16,26 +21,39 @@ class JWTAuthenticate
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $token = $request->bearerToken();
-        if (!$token) {
-            return response()->json([
-                'success' => false,
-                'error' => 'TOKEN_NOT_PROVIDED',
-                'message' => 'Token is not provided in header.'
-            ], 401);
-        }
+        if (!$this->shouldSkip($request)) {
+            $token = $request->bearerToken();
+            if (!$token) {
+                return response()->json([
+                    'success' => false,
+                    'error' => 'TOKEN_NOT_PROVIDED',
+                    'message' => 'Token is not provided in header.'
+                ], 401);
+            }
 
-        $jwtService = new JWTService();
-        $result = $jwtService->verifyToken($token);
+            $jwtService = new JWTService();
+            $result = $jwtService->verifyToken($token);
 
-        if (!$result['valid']) {
-            return response()->json([
-                'success' => false,
-                'error' => $result['error'],
-                'message' => $result['message'],
-            ], 401);
+            if (!$result['valid']) {
+                return response()->json([
+                    'success' => false,
+                    'error' => $result['error'],
+                    'message' => $result['message'],
+                ], 401);
+            }
         }
 
         return $next($request);
+    }
+
+    private function shouldSkip(Request $request): bool
+    {
+        foreach ($this->except as $route) {
+            if ($request->is($route)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

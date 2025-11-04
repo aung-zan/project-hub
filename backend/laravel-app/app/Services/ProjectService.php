@@ -39,6 +39,7 @@ class ProjectService
             $filters['status'] = $data;
         }
 
+        // TODO: implement date search.
         if (array_key_exists('start', $data)) {
             # code...
         }
@@ -47,25 +48,7 @@ class ProjectService
             # code...
         }
 
-        if (array_key_exists('sort', $data)) {
-            list($column, $direction) = explode('_', $data['sort']);
-
-            switch ($column) {
-                case 'start':
-                    $sort['start_date'] = $direction;
-                    break;
-
-                case 'end':
-                    $sort['end_date'] = $direction;
-                    break;
-
-                default:
-                    $sort[$column] = $direction;
-                    break;
-            }
-        } else {
-            $sort['id'] = 'asc';
-        }
+        $sort = $this->createSortData($data);
 
         return $this->projectRepo->getAll($search, $filters, $sort);
     }
@@ -95,16 +78,14 @@ class ProjectService
     /**
      * Find the resource and check the authorization.
      *
-     * @param int $id
+     * @param Project $project
      * @return Project
      *
      * @throws \Illuminate\Auth\Access\AuthorizationException
      * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
      */
-    public function getProject(int $id): Project
+    public function getProject(Project $project): Project
     {
-        $project = $this->projectRepo->getById($id);
-
         Gate::authorize('view', $project);
 
         return $project;
@@ -113,7 +94,7 @@ class ProjectService
     /**
      * Find the resource, check the authorization and update it.
      *
-     * @param int $id
+     * @param Project $project
      * @param array $data
      * @return Project
      *
@@ -121,10 +102,8 @@ class ProjectService
      * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
      *
      */
-    public function updateProject(int $id, array $data): Project
+    public function updateProject(Project $project, array $data): Project
     {
-        $project = $this->projectRepo->getById($id);
-
         Gate::authorize('update', $project);
 
         return $this->projectRepo->update($project, $data);
@@ -133,18 +112,47 @@ class ProjectService
     /**
      * Find the resource, check the authorization and delete it.
      *
-     * @param int $id
+     * @param Project $project
      * @return Project
      *
      * @throws \Illuminate\Auth\Access\AuthorizationException
      * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
      */
-    public function deleteProject(int $id): Project
+    public function deleteProject(Project $project): Project
     {
-        $project = $this->projectRepo->getById($id);
-
         Gate::authorize('delete', $project);
 
         return $this->projectRepo->delete($project);
+    }
+
+    /**
+     * Create a sort data from the request data.
+     *
+     * @param array $data
+     * @return array
+     */
+    private function createSortData(array $data): array
+    {
+        if (array_key_exists('sort', $data)) {
+            list($column, $direction) = explode('-', $data['sort']);
+
+            switch ($column) {
+                case 'start':
+                    $sort['start_date'] = $direction;
+                    break;
+
+                case 'end':
+                    $sort['end_date'] = $direction;
+                    break;
+
+                default:
+                    $sort[$column] = $direction;
+                    break;
+            }
+
+            return $sort;
+        }
+
+        return ['id' => 'asc'];
     }
 }

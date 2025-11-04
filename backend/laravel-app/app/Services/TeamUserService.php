@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Repositories\TeamRepository;
+use App\Models\Team;
 use App\Repositories\TeamUserRepository;
 use Illuminate\Support\Facades\Gate;
 
@@ -12,7 +12,6 @@ class TeamUserService
      * Create a new class instance.
      */
     public function __construct(
-        private TeamRepository $teamRepo,
         private TeamUserRepository $teamUserRepo,
     ) {
     }
@@ -20,17 +19,15 @@ class TeamUserService
     /**
      * Add users to a team.
      *
-     * @param int $id
+     * @param Team $team
      * @param array $data
      * @return array
      *
      * @throws \Illuminate\Auth\Access\AuthorizationException
      * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
      */
-    public function createTeamUser(int $id, array $data): array
+    public function createTeamUser(Team $team, array $data): array
     {
-        $team = $this->teamRepo->getById($id);
-
         Gate::authorize('view', $team);
 
         $data = array_fill_keys($data['member_id'], $this->getPivotData($data));
@@ -46,17 +43,15 @@ class TeamUserService
     /**
      * Remove a user from a team.
      *
-     * @param int $teamId
+     * @param Team $team
      * @param int $memberId
      * @return void
      *
      * @throws \Illuminate\Auth\Access\AuthorizationException
      * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
      */
-    public function removeTeamUser(int $teamId, int $memberId): void
+    public function removeTeamUser(Team $team, int $memberId): void
     {
-        $team = $this->teamRepo->getById($teamId);
-
         Gate::authorize('view', $team);
 
         $this->teamUserRepo->userExists($team, $memberId);

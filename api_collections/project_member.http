@@ -1,4 +1,4 @@
-@token=abc
+@token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImlhdCI6MTc2MjIzMjk5MCwiZXhwIjoxNzYyMjM2NTkwLCJuYmYiOjE3NjIyMzI5OTB9.BiYNlpQVozKoV5cRbQ1EVHnGU0bnHNoZuByhZgx3t0U
 
 POST http://localhost/api/projects/{id}/members
 Authorization: Bearer {{token}}

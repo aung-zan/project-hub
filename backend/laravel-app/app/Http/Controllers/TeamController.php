@@ -4,15 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Team\TeamCreateRequest;
 use App\Http\Requests\Team\TeamUpdateRequest;
+use App\Models\Team;
 use App\Services\TeamService;
 
 class TeamController extends Controller
 {
-    private TeamService $teamService;
-
-    public function __construct(TeamService $teamService)
+    public function __construct(private TeamService $teamService)
     {
-        $this->teamService = $teamService;
     }
 
     public function index()
@@ -38,9 +36,9 @@ class TeamController extends Controller
         ]);
     }
 
-    public function show(int $id)
+    public function show(Team $team)
     {
-        $team = $this->teamService->getTeam($id);
+        $team = $this->teamService->getTeam($team);
 
         return response()->json([
             'success' => true,
@@ -48,11 +46,11 @@ class TeamController extends Controller
         ]);
     }
 
-    public function update(int $id, TeamUpdateRequest $request)
+    public function update(Team $team, TeamUpdateRequest $request)
     {
         $data = $request->validated();
 
-        $team = $this->teamService->updateTeam($id, $data);
+        $team = $this->teamService->updateTeam($team, $data);
 
         return response()->json([
             'success' => true,
@@ -60,9 +58,9 @@ class TeamController extends Controller
         ]);
     }
 
-    public function destroy(int $id)
+    public function destroy(Team $team)
     {
-        $team = $this->teamService->deleteTeam($id);
+        $team = $this->teamService->deleteTeam($team);
 
         return response()->json([
             'success' => true,

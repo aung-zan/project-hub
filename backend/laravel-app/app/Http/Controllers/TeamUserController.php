@@ -3,23 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\TeamUser\TeamUserCreateRequest;
+use App\Models\Team;
 use App\Services\TeamUserService;
 
 class TeamUserController extends Controller
 {
-    private TeamUserService $teamUserService;
-
-    public function __construct(TeamUserService $teamUserService)
+    public function __construct(private TeamUserService $teamUserService)
     {
-        $this->teamUserService = $teamUserService;
     }
 
-    public function store(int $id, TeamUserCreateRequest $request)
+    public function store(Team $team, TeamUserCreateRequest $request)
     {
-        $data = $request->toArray();
+        $data = $request->validated();
         $data['auth_id'] = auth()->guard('api')->id();
 
-        $memberIds = $this->teamUserService->createTeamUser($id, $data);
+        $memberIds = $this->teamUserService->createTeamUser($team, $data);
 
         return response()->json([
             'success' => true,
@@ -29,9 +27,9 @@ class TeamUserController extends Controller
         ], 200);
     }
 
-    public function destroy(int $teamId, int $memberId)
+    public function destroy(Team $team, int $memberId)
     {
-        $this->teamUserService->removeTeamUser($teamId, $memberId);
+        $this->teamUserService->removeTeamUser($team, $memberId);
 
         return response()->json([
             'success' => true,
