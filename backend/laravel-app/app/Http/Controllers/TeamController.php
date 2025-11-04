@@ -9,11 +9,8 @@ use App\Services\TeamService;
 
 class TeamController extends Controller
 {
-    private TeamService $teamService;
-
-    public function __construct(TeamService $teamService)
+    public function __construct(private TeamService $teamService)
     {
-        $this->teamService = $teamService;
     }
 
     public function index()

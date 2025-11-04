@@ -39,6 +39,7 @@ class ProjectService
             $filters['status'] = $data;
         }
 
+        // TODO: implement date search.
         if (array_key_exists('start', $data)) {
             # code...
         }
@@ -47,25 +48,7 @@ class ProjectService
             # code...
         }
 
-        if (array_key_exists('sort', $data)) {
-            list($column, $direction) = explode('_', $data['sort']);
-
-            switch ($column) {
-                case 'start':
-                    $sort['start_date'] = $direction;
-                    break;
-
-                case 'end':
-                    $sort['end_date'] = $direction;
-                    break;
-
-                default:
-                    $sort[$column] = $direction;
-                    break;
-            }
-        } else {
-            $sort['id'] = 'asc';
-        }
+        $sort = $this->createSortData($data);
 
         return $this->projectRepo->getAll($search, $filters, $sort);
     }
@@ -140,5 +123,36 @@ class ProjectService
         Gate::authorize('delete', $project);
 
         return $this->projectRepo->delete($project);
+    }
+
+    /**
+     * Create a sort data from the request data.
+     *
+     * @param array $data
+     * @return array
+     */
+    private function createSortData(array $data): array
+    {
+        if (array_key_exists('sort', $data)) {
+            list($column, $direction) = explode('-', $data['sort']);
+
+            switch ($column) {
+                case 'start':
+                    $sort['start_date'] = $direction;
+                    break;
+
+                case 'end':
+                    $sort['end_date'] = $direction;
+                    break;
+
+                default:
+                    $sort[$column] = $direction;
+                    break;
+            }
+
+            return $sort;
+        }
+
+        return ['id' => 'asc'];
     }
 }

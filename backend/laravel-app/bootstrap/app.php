@@ -17,7 +17,8 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        $middleware->api(prepend: JWTAuthenticate::class);
+        // $middleware->api(prepend: JWTAuthenticate::class);
+        $middleware->prepend(JWTAuthenticate::class);
 
         /**
          * Global middleware
