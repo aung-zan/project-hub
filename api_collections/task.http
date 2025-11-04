@@ -1,19 +1,32 @@
+@token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImlhdCI6MTc2MjI1MDc4OSwiZXhwIjoxNzYyMjU0Mzg5LCJuYmYiOjE3NjIyNTA3ODl9.jCwJwebdQwN70oE2uQ-yM_jz5Im9ASmwaVojtfMnfVQ
+
 GET http://localhost/api/projects/1/tasks
+Authorization: Bearer {{token}}
+Accept: application/json
 ###
 POST http://localhost/api/projects/1/tasks
+Authorization: Bearer {{token}}
+Accept: application/json
 Content-Type: application/json
 
 {
-    "name": "testing"
+    "title": "testing"
 }
 ###
-GET http://localhost/api/projects/1/tasks/1
+GET http://localhost/api/tasks/1
+Authorization: Bearer {{token}}
+Accept: application/json
 ###
-PUT http://localhost/api/projects/1/tasks/1
+PUT http://localhost/api/tasks/1
+Authorization: Bearer {{token}}
+Accept: application/json
 Content-Type: application/json
 
 {
-    "name": "Testing"
+    "title": "Testing",
+    "status": "complete"
 }
 ###
-DELETE http://localhost/api/projects/1/tasks/1
+DELETE http://localhost/api/tasks/1
+Authorization: Bearer {{token}}
+Accept: application/json
