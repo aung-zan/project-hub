@@ -17,9 +17,9 @@ class TaskController extends Controller
     public function index(Project $project, Request $request)
     {
         $data = $request->toArray();
-        $data['created_by'] = auth()->guard('api')->id();
+        $data['project_id'] = $project->id;
 
-        $task = $this->taskService->getTasks();
+        $task = $this->taskService->getTasks($data);
 
         return response()->json([
             'success' => true,

@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\DB;
 
 class User extends Authenticatable
 {
@@ -58,5 +59,33 @@ class User extends Authenticatable
     public function getJWTCustomClaims()
     {
         return [];
+    }
+
+    /**
+     * Check a user in a project.
+     *
+     * @param int $projectId
+     * @return bool
+     */
+    public function isMemberInProject(int $projectId): bool
+    {
+        return DB::table('project_user')
+            ->where('user_id', $this->id)
+            ->where('project_id', $projectId)
+            ->exists();
+    }
+
+    /**
+     * Get a user's role in a project.
+     *
+     * @param int $projectId
+     * @return ?object
+     */
+    public function projectMembership(int $projectId): ?object
+    {
+        return DB::table('project_user')
+            ->where('user_id', $this->id)
+            ->where('project_id', $projectId)
+            ->first('role');
     }
 }
