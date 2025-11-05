@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Task\TaskCreateRequest;
+use App\Http\Requests\Task\TaskUpdateRequest;
 use App\Models\Project;
 use App\Models\Task;
 use App\Services\TaskService;
@@ -27,9 +29,9 @@ class TaskController extends Controller
         ]);
     }
 
-    public function store(Project $project, Request $request)
+    public function store(Project $project, TaskCreateRequest $request)
     {
-        $data = $request->toArray();
+        $data = $request->validated();
         $data['project_id'] = $project->id;
         $data['created_by'] = auth()->guard('api')->id();
 
@@ -51,9 +53,9 @@ class TaskController extends Controller
         ]);
     }
 
-    public function update(Task $task, Request $request)
+    public function update(Task $task, TaskUpdateRequest $request)
     {
-        $data = $request->toArray();
+        $data = $request->validated();
 
         $task = $this->taskService->updateTask($task, $data);
 
