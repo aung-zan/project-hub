@@ -2,6 +2,7 @@
 
 use App\Http\Middleware\JWTAuthenticate;
 use App\Http\Middleware\QueryLog;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -33,10 +34,19 @@ return Application::configure(basePath: dirname(__DIR__))
          */
         $exceptions->render(function (AccessDeniedHttpException $e, Request $request) {
             if ($request->expectsJson()) {
+                if ($e->getPrevious() instanceof AuthorizationException) {
+                    $authorizeException = $e->getPrevious();
+
+                    return response()->json([
+                        'success' => false,
+                        'message' => $authorizeException->getMessage(),
+                    ], $authorizeException->getCode());
+                }
+
                 return response()->json([
                     'success' => false,
                     'message' => $e->getMessage(),
-                ], 404);
+                ], $e->getCode());
             }
         });
 
