@@ -20,7 +20,7 @@ class ProjectFactory extends Factory
 
         return [
             'name' => fake()->realText(10),
-            'description' => fake()->realText(20),
+            'description' => fake()->realText(10),
             'status' => 'active',
             'created_by' => 1,
             'start_date' => fake()->date(max: $endDate),

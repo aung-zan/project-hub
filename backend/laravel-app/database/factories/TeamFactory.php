@@ -18,7 +18,7 @@ class TeamFactory extends Factory
     {
         return [
             'name' => fake()->realText(10),
-            'description' => fake()->realText(20),
+            'description' => fake()->realText(10),
             'created_by' => 1, // need to fix
         ];
     }

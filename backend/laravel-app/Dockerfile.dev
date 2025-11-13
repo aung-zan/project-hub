@@ -26,7 +26,9 @@ RUN apt-get update && apt-get install -y \
     # open jpeg for gd
     && docker-php-ext-configure gd --with-jpeg \
     # install other php extensions
-    && docker-php-ext-install pdo pdo_pgsql mbstring exif pcntl bcmath gd intl zip opcache
+    && docker-php-ext-install pdo pdo_pgsql mbstring exif pcntl bcmath gd intl zip opcache \
+    # update the default memory_limit from 128M to 512M
+    && echo "memory_limit = 512M" > /usr/local/etc/php/php.ini-development
 
 # install composer from composer image
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer

@@ -19,7 +19,7 @@ class TaskFactory extends Factory
         return [
             'project_id' => 1,
             'title' => fake()->realText(10),
-            'description' => fake()->realText(20),
+            'description' => fake()->realText(10),
             'status' => 'todo',
             'priority' => 'low',
             'assigned_to' => 1,
