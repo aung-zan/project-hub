@@ -5,9 +5,9 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Project>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Task>
  */
-class ProjectFactory extends Factory
+class TaskFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -16,15 +16,15 @@ class ProjectFactory extends Factory
      */
     public function definition(): array
     {
-        $endDate = fake()->date();
-
         return [
-            'name' => fake()->realText(10),
+            'project_id' => 1,
+            'title' => fake()->realText(10),
             'description' => fake()->realText(10),
-            'status' => 'active',
+            'status' => 'todo',
+            'priority' => 'low',
+            'assigned_to' => 1,
             'created_by' => 1,
-            'start_date' => fake()->date(max: $endDate),
-            'end_date' => $endDate,
+            'due_date' => '2026-01-01',
         ];
     }
 }

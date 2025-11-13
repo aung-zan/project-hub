@@ -2,47 +2,76 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Task\TaskCreateRequest;
+use App\Http\Requests\Task\TaskUpdateRequest;
+use App\Models\Project;
+use App\Models\Task;
+use App\Services\TaskService;
 use Illuminate\Http\Request;
 
 class TaskController extends Controller
 {
-    public function index()
+    public function __construct(private TaskService $taskService)
     {
+        //
+    }
+
+    public function index(Project $project, Request $request)
+    {
+        $data = $request->toArray();
+        $data['project_id'] = $project->id;
+
+        $task = $this->taskService->getTasks($data);
+
         return response()->json([
             'success' => true,
-            'message' => 'index',
+            'data' => $task,
         ]);
     }
 
-    public function store()
+    public function store(Project $project, TaskCreateRequest $request)
     {
+        $data = $request->validated();
+        $data['project_id'] = $project->id;
+        $data['created_by'] = auth()->guard('api')->id();
+
+        $task = $this->taskService->createTask($data);
+
         return response()->json([
             'success' => true,
-            'message' => 'store',
+            'data' => $task,
         ]);
     }
 
-    public function show()
+    public function show(Task $task)
     {
+        $task = $this->taskService->getTask($task);
+
         return response()->json([
             'success' => true,
-            'message' => 'show',
+            'data' => $task,
         ]);
     }
 
-    public function update()
+    public function update(Task $task, TaskUpdateRequest $request)
     {
+        $data = $request->validated();
+
+        $task = $this->taskService->updateTask($task, $data);
+
         return response()->json([
             'success' => true,
-            'message' => 'update',
+            'data' => $task,
         ]);
     }
 
-    public function destroy()
+    public function destroy(Task $task)
     {
+        $task = $this->taskService->deleteTask($task);
+
         return response()->json([
             'success' => true,
-            'message' => 'destroy',
+            'data' => $task,
         ]);
     }
 }
