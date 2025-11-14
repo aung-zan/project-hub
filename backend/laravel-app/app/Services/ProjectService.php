@@ -22,21 +22,20 @@ class ProjectService
     /**
      * Find and filtered the resources.
      *
-     * @param int $id
      * @param array $data
      * @return Collection
      */
-    public function getProjects(int $id, array $data): Collection
+    public function getProjects(array $data): Collection
     {
         $search = '';
-        $filters['created_by'] = $id;
+        $filters['created_by'] = $data['created_by'];
 
         if (array_key_exists('search', $data)) {
             $search = $data['search'];
         }
 
         if (array_key_exists('status', $data)) {
-            $filters['status'] = $data;
+            $filters['status'] = $data['status'];
         }
 
         // TODO: implement date search.
