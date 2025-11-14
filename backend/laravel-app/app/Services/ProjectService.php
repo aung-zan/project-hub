@@ -104,8 +104,6 @@ class ProjectService
      */
     public function updateProject(Project $project, array $data): Project
     {
-        Gate::authorize('update', $project);
-
         return $this->projectRepo->update($project, $data);
     }
 

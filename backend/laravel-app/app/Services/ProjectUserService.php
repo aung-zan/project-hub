@@ -29,8 +29,6 @@ class ProjectUserService
      */
     public function createProjectUser(Project $project, array $data): array
     {
-        Gate::authorize('view', $project);
-
         $data = $this->prepareForProjectUser($data);
 
         $savedData = $this->projectUserRepo->create($project, $data);

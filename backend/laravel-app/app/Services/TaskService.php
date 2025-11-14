@@ -45,8 +45,6 @@ class TaskService
      */
     public function createTask(array $data): Task
     {
-        Gate::authorize('create', [Task::class, $data['project_id']]);
-
         return $this->taskRepo->create($data);
     }
 
@@ -78,8 +76,6 @@ class TaskService
      */
     public function updateTask(Task $task, array $data): Task
     {
-        Gate::authorize('update', $task);
-
         return $this->taskRepo->update($task, $data);
     }
 

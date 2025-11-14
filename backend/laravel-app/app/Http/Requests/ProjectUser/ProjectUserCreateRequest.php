@@ -9,6 +9,7 @@ use App\Repositories\ProjectUserRepository;
 use App\Repositories\UserRepository;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rules\Enum;
 
 class ProjectUserCreateRequest extends BaseRequest
@@ -17,6 +18,14 @@ class ProjectUserCreateRequest extends BaseRequest
         private UserRepository $userRepo
     ) {
     }
+
+    public function authorize(): bool
+    {
+        Gate::authorize('view', $this->project);
+
+        return true;
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *

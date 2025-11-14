@@ -4,10 +4,17 @@ namespace App\Http\Requests\Task;
 
 use App\Enum\TaskStatus;
 use App\Http\Requests\BaseRequest;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rules\Enum;
 
 class TaskUpdateRequest extends BaseRequest
 {
+    public function authorize(): bool
+    {
+        Gate::authorize('update', $this->task);
+
+        return true;
+    }
     /**
      * Get the validation rules that apply to the request.
      *

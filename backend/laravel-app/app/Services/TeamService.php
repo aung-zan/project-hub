@@ -71,8 +71,6 @@ class TeamService
      */
     public function updateTeam(Team $team, array $data): Team
     {
-        Gate::authorize('update', $team);
-
         return $this->teamRepo->update($team, $data);
     }
 

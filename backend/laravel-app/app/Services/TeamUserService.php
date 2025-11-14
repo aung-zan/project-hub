@@ -28,8 +28,6 @@ class TeamUserService
      */
     public function createTeamUser(Team $team, array $data): array
     {
-        Gate::authorize('view', $team);
-
         $data = array_fill_keys($data['member_id'], $this->getPivotData($data));
 
         $savedData = $this->teamUserRepo->create($team, $data);
