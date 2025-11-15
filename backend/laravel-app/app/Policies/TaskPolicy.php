@@ -34,9 +34,9 @@ class TaskPolicy
      */
     public function create(User $user, int $projectId): Response
     {
-        $membership = $user->projectMembership($projectId);
+        $member = $user->getProjectMemberRole($projectId);
 
-        return !$membership || $membership->role === ProjectRoles::Viewer->value
+        return !$member || $member->role === ProjectRoles::Viewer->value
             ? Response::deny($this->notAuthorized['message'], $this->notAuthorized['code'])
             : Response::allow();
     }
@@ -46,14 +46,14 @@ class TaskPolicy
      */
     public function update(User $user, Task $task): Response
     {
-        $membership = $user->projectMembership($task->project_id);
+        $member = $user->getProjectMemberRole($task->project_id);
 
-        if (!$membership) {
+        if (!$member) {
             return Response::deny($this->notFound['message'], $this->notFound['code']);
         }
 
-        $hasOwnerRole = $membership->role === ProjectRoles::Owner->value;
-        $isOwned = $membership->role === ProjectRoles::Member->value && $task->created_by === $user->id;
+        $hasOwnerRole = $member->role === ProjectRoles::Owner->value;
+        $isOwned = $member->role === ProjectRoles::Member->value && $task->created_by === $user->id;
 
         return $hasOwnerRole || $isOwned
             ? Response::allow()
@@ -65,14 +65,14 @@ class TaskPolicy
      */
     public function delete(User $user, Task $task): Response
     {
-        $membership = $user->projectMembership($task->project_id);
+        $member = $user->getProjectMemberRole($task->project_id);
 
-        if (!$membership) {
+        if (!$member) {
             return Response::deny($this->notFound['message'], $this->notFound['code']);
         }
 
-        $hasOwnerRole = $membership->role === ProjectRoles::Owner->value;
-        $isOwned = $membership->role === ProjectRoles::Member->value && $task->created_by === $user->id;
+        $hasOwnerRole = $member->role === ProjectRoles::Owner->value;
+        $isOwned = $member->role === ProjectRoles::Member->value && $task->created_by === $user->id;
 
         return $hasOwnerRole || $isOwned
             ? Response::allow()

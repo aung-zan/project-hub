@@ -81,7 +81,7 @@ class User extends Authenticatable
      * @param int $projectId
      * @return ?object
      */
-    public function projectMembership(int $projectId): ?object
+    public function getProjectMemberRole(int $projectId): ?object
     {
         return DB::table('project_user')
             ->where('user_id', $this->id)

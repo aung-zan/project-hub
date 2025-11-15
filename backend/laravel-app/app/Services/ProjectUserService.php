@@ -51,7 +51,7 @@ class ProjectUserService
      */
     public function removeProjectUser(Project $project, int $memberId): void
     {
-        Gate::authorize('view', $project);
+        Gate::authorize('delete', $project);
 
         $this->projectUserRepo->userExists($project, $memberId);
 

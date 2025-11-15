@@ -1,4 +1,4 @@
-@token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImlhdCI6MTc2MjMyODE1NiwiZXhwIjoxNzYyMzMxNzU2LCJuYmYiOjE3NjIzMjgxNTZ9.6DoNn9xW0ZfdkqkHonDM6aDEQf6_tE21p03QmRQhlBY
+@token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjMsImlhdCI6MTc2MzE0NDk3NiwiZXhwIjoxNzYzMTQ4NTc2LCJuYmYiOjE3NjMxNDQ5NzZ9.-D9eIDXc56aFTezwFmZ7qk1BNWFgCdMXQFMDrhw4r_A
 
 GET http://localhost/api/projects
 Authorization: Bearer {{token}}
@@ -18,7 +18,7 @@ GET http://localhost/api/projects/1
 Authorization: Bearer {{token}}
 Accept: application/json
 ###
-PUT http://localhost/api/projects/2
+PUT http://localhost/api/projects/1
 Authorization: Bearer {{token}}
 Content-Type: application/json
 Accept: application/json
@@ -28,6 +28,6 @@ Accept: application/json
     "start_date": "2025-09-10"
 }
 ###
-DELETE http://localhost/api/projects/4
+DELETE http://localhost/api/projects/1
 Authorization: Bearer {{token}}
 Accept: application/json

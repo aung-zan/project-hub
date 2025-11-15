@@ -21,7 +21,7 @@ class ProjectUserCreateRequest extends BaseRequest
 
     public function authorize(): bool
     {
-        Gate::authorize('view', $this->project);
+        Gate::authorize('update', $this->project);
 
         return true;
     }
