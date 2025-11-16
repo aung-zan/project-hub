@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Project extends Model
 {
@@ -45,6 +46,26 @@ class Project extends Model
     {
         return $this->belongsToMany(User::class, 'project_user', 'project_id', 'user_id')
             ->withTimestamps();
+    }
+
+    public function projectUser(): HasMany
+    {
+        return $this->hasMany(ProjectUser::class);
+    }
+
+    /**
+     * Scope a query to only include projects that the user member in.
+     *
+     * @param Builder $query
+     * @param int $userId
+     * @return void
+     */
+    #[Scope]
+    protected function memberProjects(Builder $query, int $userId)
+    {
+        $query->whereHas('projectUser', function ($query) use ($userId) {
+            $query->where('user_id', $userId);
+        });
     }
 
     /**

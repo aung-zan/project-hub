@@ -28,7 +28,7 @@ class ProjectService
     public function getProjects(array $data): Collection
     {
         $search = '';
-        $filters['created_by'] = $data['created_by'];
+        $filters['user_id'] = $data['user_id'];
 
         if (array_key_exists('search', $data)) {
             $search = $data['search'];

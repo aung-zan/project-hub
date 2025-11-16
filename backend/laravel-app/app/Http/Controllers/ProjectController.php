@@ -17,7 +17,7 @@ class ProjectController extends Controller
     public function index(ProjectIndexRequest $request)
     {
         $data = $request->validated();
-        $data['created_by'] = auth()->guard('api')->id();
+        $data['user_id'] = auth()->guard('api')->id();
 
         $projects = $this->projectService->getProjects($data);
 
