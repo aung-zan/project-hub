@@ -56,13 +56,12 @@ class ProjectIndexTest extends FeatureTestCase
         $projects = Project::factory()->count(2)->create($projectData);
         $firstProject = $projects->first();
 
-        $projectUserData = [
+        ProjectUser::factory()->create([
             'project_id' => $firstProject->id,
             'user_id' => $id,
             'role' => 'owner',
             'created_by' => $id,
-        ];
-        ProjectUser::factory()->create($projectUserData);
+        ]);
 
         $response = $this->withHeader('Authorization', "Bearer $token")
             ->getJson($this->url);

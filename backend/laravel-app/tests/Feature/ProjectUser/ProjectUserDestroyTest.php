@@ -82,6 +82,14 @@ class ProjectUserDestroyTest extends FeatureTestCase
         $projectData['created_by'] = $id;
 
         $project = Project::factory()->create($projectData);
+
+        ProjectUser::factory()->create([
+            'project_id' => $project->id,
+            'user_id' => $id,
+            'role' => 'owner',
+            'created_by' => $id,
+        ]);
+
         $user = User::factory()->create();
 
         ProjectUser::factory()->create([

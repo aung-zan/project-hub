@@ -79,13 +79,12 @@ class ProjectUpdateTest extends FeatureTestCase
 
         $project = Project::factory()->create($projectData);
 
-        $projectUserData = [
+        ProjectUser::factory()->create([
             'project_id' => $project->id,
             'user_id' => $id,
             'role' => 'owner',
             'created_by' => $id,
-        ];
-        ProjectUser::factory()->create($projectUserData);
+        ]);
 
         $request = [];
 
@@ -117,13 +116,12 @@ class ProjectUpdateTest extends FeatureTestCase
 
         $project = Project::factory()->create($projectData);
 
-        $projectUserData = [
+        ProjectUser::factory()->create([
             'project_id' => $project->id,
             'user_id' => $id,
             'role' => 'owner',
             'created_by' => $id,
-        ];
-        ProjectUser::factory()->create($projectUserData);
+        ]);
 
         $request = [
             'name' => '',
@@ -154,13 +152,12 @@ class ProjectUpdateTest extends FeatureTestCase
 
         $project = Project::factory()->create($projectData);
 
-        $projectUserData = [
+        ProjectUser::factory()->create([
             'project_id' => $project->id,
             'user_id' => $id,
             'role' => 'owner',
             'created_by' => $id,
-        ];
-        ProjectUser::factory()->create($projectUserData);
+        ]);
 
         $request = $this->request;
         $request['start_date'] = 'Mon 27 Oct';
@@ -191,13 +188,12 @@ class ProjectUpdateTest extends FeatureTestCase
 
         $project = Project::factory()->create($projectData);
 
-        $projectUserData = [
+        ProjectUser::factory()->create([
             'project_id' => $project->id,
             'user_id' => $id,
             'role' => 'owner',
             'created_by' => $id,
-        ];
-        ProjectUser::factory()->create($projectUserData);
+        ]);
 
         $request = $this->request;
         $request['start_date'] = '2025-10-28';
@@ -226,13 +222,12 @@ class ProjectUpdateTest extends FeatureTestCase
 
         $project = Project::factory()->create($projectData);
 
-        $projectUserData = [
+        ProjectUser::factory()->create([
             'project_id' => $project->id,
             'user_id' => $id,
             'role' => 'owner',
             'created_by' => $id,
-        ];
-        ProjectUser::factory()->create($projectUserData);
+        ]);
 
         $request = $this->request;
         $request['start_date'] = '2025-10-27';

@@ -3,6 +3,7 @@
 namespace Tests\Feature\ProjectUser;
 
 use App\Models\Project;
+use App\Models\ProjectUser;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -52,9 +53,16 @@ class ProjectUserStoreTest extends FeatureTestCase
         $projectData = $this->projectData;
 
         list($token, $id) = $this->login();
-        $projectData['created_by'] = $id;
 
+        $projectData['created_by'] = $id;
         $project = Project::factory()->create($projectData);
+
+        ProjectUser::factory()->create([
+            'project_id' => $project->id,
+            'user_id' => $id,
+            'role' => 'owner',
+            'created_by' => $id,
+        ]);
 
         $response = $this->withHeader('Authorization', "Bearer $token")
             ->postJson(
@@ -78,9 +86,16 @@ class ProjectUserStoreTest extends FeatureTestCase
         $projectData = $this->projectData;
 
         list($token, $id) = $this->login();
-        $projectData['created_by'] = $id;
 
+        $projectData['created_by'] = $id;
         $project = Project::factory()->create($projectData);
+
+        ProjectUser::factory()->create([
+            'project_id' => $project->id,
+            'user_id' => $id,
+            'role' => 'owner',
+            'created_by' => $id,
+        ]);
 
         $request = $this->createRequest(['test'], [10, 11]);
 
@@ -109,9 +124,17 @@ class ProjectUserStoreTest extends FeatureTestCase
         $projectData = $this->projectData;
 
         list($token, $id) = $this->login();
-        $projectData['created_by'] = $id;
 
+        $projectData['created_by'] = $id;
         $project = Project::factory()->create($projectData);
+
+        ProjectUser::factory()->create([
+            'project_id' => $project->id,
+            'user_id' => $id,
+            'role' => 'owner',
+            'created_by' => $id,
+        ]);
+
         $user = User::factory()->create();
 
         $request = $this->createRequest(['member'], [$user->id]);

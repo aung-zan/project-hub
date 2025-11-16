@@ -75,13 +75,12 @@ class ProjectDestroyTest extends FeatureTestCase
 
         $project = Project::factory()->create($projectData);
 
-        $projectUserData = [
+        ProjectUser::factory()->create([
             'project_id' => $project->id,
             'user_id' => $id,
             'role' => 'owner',
             'created_by' => $id,
-        ];
-        ProjectUser::factory()->create($projectUserData);
+        ]);
 
         $response = $this->withHeader('Authorization', "Bearer $token")
             ->deleteJson($this->getRealURL($this->search, [$project->id]));
