@@ -3,6 +3,7 @@
 namespace Tests\Feature\Project;
 
 use App\Models\Project;
+use App\Models\ProjectUser;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -48,14 +49,12 @@ class ProjectUpdateTest extends FeatureTestCase
      */
     public function testUserCannotUpdateAResourceWithUnauthorizedId(): void
     {
-        $user = User::factory()->create();
+        list($token, $id) = $this->login();
 
         $projectData = $this->projectData;
-        $projectData['created_by'] = $user->id;
+        $projectData['created_by'] = $id;
 
         $project = Project::factory()->create($projectData);
-
-        list($token) = $this->login();
 
         $response = $this->withHeader('Authorization', "Bearer $token")
             ->putJson($this->getRealURL($this->search, [$project->id]), []);
@@ -79,6 +78,14 @@ class ProjectUpdateTest extends FeatureTestCase
         $projectData['created_by'] = $id;
 
         $project = Project::factory()->create($projectData);
+
+        $projectUserData = [
+            'project_id' => $project->id,
+            'user_id' => $id,
+            'role' => 'owner',
+            'created_by' => $id,
+        ];
+        ProjectUser::factory()->create($projectUserData);
 
         $request = [];
 
@@ -110,6 +117,14 @@ class ProjectUpdateTest extends FeatureTestCase
 
         $project = Project::factory()->create($projectData);
 
+        $projectUserData = [
+            'project_id' => $project->id,
+            'user_id' => $id,
+            'role' => 'owner',
+            'created_by' => $id,
+        ];
+        ProjectUser::factory()->create($projectUserData);
+
         $request = [
             'name' => '',
             'status' => '',
@@ -138,6 +153,14 @@ class ProjectUpdateTest extends FeatureTestCase
         $projectData['created_by'] = $id;
 
         $project = Project::factory()->create($projectData);
+
+        $projectUserData = [
+            'project_id' => $project->id,
+            'user_id' => $id,
+            'role' => 'owner',
+            'created_by' => $id,
+        ];
+        ProjectUser::factory()->create($projectUserData);
 
         $request = $this->request;
         $request['start_date'] = 'Mon 27 Oct';
@@ -168,6 +191,14 @@ class ProjectUpdateTest extends FeatureTestCase
 
         $project = Project::factory()->create($projectData);
 
+        $projectUserData = [
+            'project_id' => $project->id,
+            'user_id' => $id,
+            'role' => 'owner',
+            'created_by' => $id,
+        ];
+        ProjectUser::factory()->create($projectUserData);
+
         $request = $this->request;
         $request['start_date'] = '2025-10-28';
         $request['end_date'] = '2025-10-27';
@@ -194,6 +225,14 @@ class ProjectUpdateTest extends FeatureTestCase
         $projectData['created_by'] = $id;
 
         $project = Project::factory()->create($projectData);
+
+        $projectUserData = [
+            'project_id' => $project->id,
+            'user_id' => $id,
+            'role' => 'owner',
+            'created_by' => $id,
+        ];
+        ProjectUser::factory()->create($projectUserData);
 
         $request = $this->request;
         $request['start_date'] = '2025-10-27';
