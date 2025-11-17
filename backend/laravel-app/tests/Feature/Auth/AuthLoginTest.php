@@ -59,7 +59,7 @@ class AuthLoginTest extends TestCase
     {
         $request = $this->request;
 
-        User::factory()->create($request);
+        $user = User::factory()->create($request);
 
         $response = $this->postJson($this->url, $request);
 
@@ -67,6 +67,7 @@ class AuthLoginTest extends TestCase
             ->assertJsonFragments([
                 ['success' => true],
                 ['message' => 'Login successfully.'],
+                ['email' => $user->email],
                 ['token_type' => 'bearer'],
             ]);
     }
