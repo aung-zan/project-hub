@@ -3,18 +3,22 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\User\UserUpdateRequest;
+use App\Http\Resources\UserResource;
 use App\Services\UserService;
+use Illuminate\Http\JsonResponse;
 
 class UserController extends Controller
 {
-    private UserService $userService;
-
-    public function __construct(UserService $userService)
+    public function __construct(private UserService $userService)
     {
-        $this->userService = $userService;
     }
 
-    public function show()
+    /**
+     * Show the authenticated user.
+     *
+     * @return JsonResponse
+     */
+    public function show(): JsonResponse
     {
         $id = auth()->guard('api')->user()->id;
 
@@ -22,11 +26,17 @@ class UserController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => $user
+            'data' => new UserResource($user),
         ]);
     }
 
-    public function update(UserUpdateRequest $request)
+    /**
+     * Update the authenticate user.
+     *
+     * @param UserUpdateRequest $request
+     * @return JsonResponse
+     */
+    public function update(UserUpdateRequest $request): JsonResponse
     {
         $id = auth()->guard('api')->user()->id;
         $data = $request->validated();
@@ -35,7 +45,7 @@ class UserController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => $user
+            'data' => new UserResource($user)
         ]);
     }
 }
