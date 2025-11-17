@@ -2,14 +2,15 @@
 
 namespace Tests\Feature\Profile;
 
-use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Tests\Feature\TestHelper;
 use Tests\FeatureTestCase;
 
 class ProfileShowTest extends FeatureTestCase
 {
     use RefreshDatabase;
+    use TestHelper;
 
     protected string $method = 'get';
     protected string $url = 'http://localhost/api/profile';
@@ -27,9 +28,7 @@ class ProfileShowTest extends FeatureTestCase
     {
         $request = $this->request;
 
-        $user = User::factory()->create($request);
-
-        $token = auth()->guard('api')->login($user);
+        list($token) = $this->login($request);
 
         $response = $this->withHeader('Authorization', "Bearer $token")
             ->getJson($this->url);
