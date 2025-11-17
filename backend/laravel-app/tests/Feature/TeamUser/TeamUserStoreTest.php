@@ -3,6 +3,7 @@
 namespace Tests\Feature\TeamUser;
 
 use App\Models\Team;
+use App\Models\TeamUser;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -33,6 +34,12 @@ class TeamUserStoreTest extends FeatureTestCase
 
         $team = Team::factory()->create($teamData);
 
+        TeamUser::factory()->create([
+            'team_id' => $team->id,
+            'user_id' => $id,
+            'created_by' => $id,
+        ]);
+
         $response = $this->withHeader('Authorization', "Bearer $token")
             ->postJson(
                 str_replace('{id}', $team->id, $this->url),
@@ -60,6 +67,12 @@ class TeamUserStoreTest extends FeatureTestCase
 
         $team = Team::factory()->create($teamData);
 
+        TeamUser::factory()->create([
+            'team_id' => $team->id,
+            'user_id' => $id,
+            'created_by' => $id,
+        ]);
+
         $response = $this->withHeader('Authorization', "Bearer $token")
             ->postJson(
                 str_replace('{id}', $team->id, $this->url),
@@ -86,6 +99,12 @@ class TeamUserStoreTest extends FeatureTestCase
         $teamData['created_by'] = $id;
 
         $team = Team::factory()->create($teamData);
+
+        TeamUser::factory()->create([
+            'team_id' => $team->id,
+            'user_id' => $id,
+            'created_by' => $id,
+        ]);
 
         $response = $this->withHeader('Authorization', "Bearer $token")
             ->postJson(
@@ -115,6 +134,12 @@ class TeamUserStoreTest extends FeatureTestCase
 
         $team = Team::factory()->create($teamData);
 
+        TeamUser::factory()->create([
+            'team_id' => $team->id,
+            'user_id' => $id,
+            'created_by' => $id,
+        ]);
+
         $response = $this->withHeader('Authorization', "Bearer $token")
             ->postJson(
                 str_replace('{id}', $team->id, $this->url),
@@ -141,6 +166,13 @@ class TeamUserStoreTest extends FeatureTestCase
         $teamData['created_by'] = $id;
 
         $team = Team::factory()->create($teamData);
+
+        TeamUser::factory()->create([
+            'team_id' => $team->id,
+            'user_id' => $id,
+            'created_by' => $id,
+        ]);
+
         $user = User::factory()->create();
 
         $request = ['member_id' => [$id, $user->id]];

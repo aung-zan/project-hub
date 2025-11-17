@@ -50,7 +50,7 @@ class TeamUserService
      */
     public function removeTeamUser(Team $team, int $memberId): void
     {
-        Gate::authorize('view', $team);
+        Gate::authorize('delete', $team);
 
         $this->teamUserRepo->userExists($team, $memberId);
 

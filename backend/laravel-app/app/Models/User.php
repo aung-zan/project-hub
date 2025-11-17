@@ -62,7 +62,21 @@ class User extends Authenticatable
     }
 
     /**
-     * Check a user in a project.
+     * Check a user is in a team.
+     *
+     * @param int $teamId
+     * @return bool
+     */
+    public function isMemberInTeam(int $teamId): bool
+    {
+        return DB::table('team_user')
+            ->where('user_id', $this->id)
+            ->where('team_id', $teamId)
+            ->exists();
+    }
+
+    /**
+     * Check a user is in a project.
      *
      * @param int $projectId
      * @return bool

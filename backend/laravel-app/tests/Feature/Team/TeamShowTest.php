@@ -3,6 +3,7 @@
 namespace Tests\Feature\Team;
 
 use App\Models\Team;
+use App\Models\TeamUser;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -43,14 +44,12 @@ class TeamShowTest extends FeatureTestCase
      */
     public function testUserCannotGetAResourceWithUnauthorizedId(): void
     {
-        $user = User::factory()->create();
+        list($token, $id) = $this->login();
 
         $teamData = $this->teamData;
-        $teamData['created_by'] = $user->id;
+        $teamData['created_by'] = $id;
 
         $team = Team::factory()->create($teamData);
-
-        list($token) = $this->login();
 
         $response = $this->withHeader('Authorization', "Bearer $token")
             ->getJson($this->url . $team->id);
@@ -73,6 +72,12 @@ class TeamShowTest extends FeatureTestCase
         $teamData['created_by'] = $id;
 
         $team = Team::factory()->create($teamData);
+
+        TeamUser::factory()->create([
+            'team_id' => $team->id,
+            'user_id' => $id,
+            'created_by' => $id,
+        ]);
 
         $response = $this->withHeader('Authorization', "Bearer $token")
             ->getJson($this->url . $team->id);

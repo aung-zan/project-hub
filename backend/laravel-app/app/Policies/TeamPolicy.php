@@ -16,7 +16,7 @@ class TeamPolicy
      */
     public function view(User $user, Team $team): Response
     {
-        return $user->id === $team->created_by
+        return $user->isMemberInTeam($team->id)
             ? Response::allow()
             : Response::deny($this->message, $this->code);
     }
