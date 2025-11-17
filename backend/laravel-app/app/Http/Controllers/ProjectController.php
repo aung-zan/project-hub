@@ -7,6 +7,7 @@ use App\Http\Requests\Project\ProjectIndexRequest;
 use App\Http\Requests\Project\ProjectUpdateRequest;
 use App\Models\Project;
 use App\Services\ProjectService;
+use Illuminate\Http\JsonResponse;
 
 class ProjectController extends Controller
 {
@@ -14,7 +15,13 @@ class ProjectController extends Controller
     {
     }
 
-    public function index(ProjectIndexRequest $request)
+    /**
+     * List the projects.
+     *
+     * @param ProjectIndexRequest $request
+     * @return JsonResponse
+     */
+    public function index(ProjectIndexRequest $request): JsonResponse
     {
         $data = $request->validated();
         $data['user_id'] = auth()->guard('api')->id();
@@ -27,7 +34,13 @@ class ProjectController extends Controller
         ]);
     }
 
-    public function store(ProjectCreateRequest $request)
+    /**
+     * Store a project data.
+     *
+     * @param ProjectCreateRequest $request
+     * @return JsonResponse
+     */
+    public function store(ProjectCreateRequest $request): JsonResponse
     {
         $data = $request->validated();
         $data['created_by'] = auth()->guard('api')->id();
@@ -40,7 +53,13 @@ class ProjectController extends Controller
         ]);
     }
 
-    public function show(Project $project)
+    /**
+     * Show a project.
+     *
+     * @param Project $project
+     * @return JsonResponse
+     */
+    public function show(Project $project): JsonResponse
     {
         $project = $this->projectService->getProject($project);
 
@@ -50,7 +69,14 @@ class ProjectController extends Controller
         ]);
     }
 
-    public function update(Project $project, ProjectUpdateRequest $request)
+    /**
+     * Update a project data.
+     *
+     * @param Project $project
+     * @param ProjectUpdateRequest $request
+     * @return JsonResponse
+     */
+    public function update(Project $project, ProjectUpdateRequest $request): JsonResponse
     {
         $data = $request->validated();
 
@@ -62,7 +88,13 @@ class ProjectController extends Controller
         ]);
     }
 
-    public function destroy(Project $project)
+    /**
+     * Delete a project.
+     *
+     * @param Project $project
+     * @return JsonResponse
+     */
+    public function destroy(Project $project): JsonResponse
     {
         $project = $this->projectService->deleteProject($project);
 

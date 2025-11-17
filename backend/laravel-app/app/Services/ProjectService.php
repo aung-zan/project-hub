@@ -20,7 +20,7 @@ class ProjectService
     }
 
     /**
-     * Find and filtered the resources.
+     * Find and filtered the projects that a user belongs to.
      *
      * @param array $data
      * @return Collection
@@ -53,7 +53,7 @@ class ProjectService
     }
 
     /**
-     * Create the resource.
+     * Create a project.
      *
      * @param array $data
      * @return Project
@@ -75,7 +75,7 @@ class ProjectService
     }
 
     /**
-     * Find the resource and check the authorization.
+     * Find a project that a user belongs to.
      *
      * @param Project $project
      * @return Project
@@ -91,7 +91,7 @@ class ProjectService
     }
 
     /**
-     * Find the resource, check the authorization and update it.
+     * Update a project that a user belongs to.
      *
      * @param Project $project
      * @param array $data
@@ -107,7 +107,7 @@ class ProjectService
     }
 
     /**
-     * Find the resource, check the authorization and delete it.
+     * Delete a project that a user belongs to.
      *
      * @param Project $project
      * @return Project
