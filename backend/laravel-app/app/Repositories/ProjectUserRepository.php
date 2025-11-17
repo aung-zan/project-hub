@@ -4,7 +4,6 @@ namespace App\Repositories;
 
 use App\Models\Project;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Support\Collection;
 
 class ProjectUserRepository
 {
@@ -49,7 +48,7 @@ class ProjectUserRepository
      */
     public function userExists(Project $project, int $userId): bool
     {
-        if (!$project->users()->wherePivot('user_id', $userId)->exists()) {
+        if (!$project->hasUser($userId)) {
             throw new ModelNotFoundException('Resource not found.');
         }
 

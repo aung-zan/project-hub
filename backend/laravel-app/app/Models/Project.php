@@ -53,6 +53,13 @@ class Project extends Model
         return $this->hasMany(ProjectUser::class);
     }
 
+    public function hasUser(int $userId): bool
+    {
+        return $this->projectUser()->where('user_id', $userId)
+            ->select('id')
+            ->exists();
+    }
+
     /**
      * Scope a query to only include projects that the user member in.
      *

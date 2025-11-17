@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Models\Project;
-use App\Repositories\ProjectRepository;
 use App\Repositories\ProjectUserRepository;
 use Illuminate\Support\Facades\Gate;
 

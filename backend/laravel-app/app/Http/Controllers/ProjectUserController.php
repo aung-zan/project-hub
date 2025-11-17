@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ProjectUser\ProjectUserCreateRequest;
 use App\Models\Project;
 use App\Services\ProjectUserService;
+use Illuminate\Http\JsonResponse;
 
 class ProjectUserController extends Controller
 {
@@ -12,7 +13,14 @@ class ProjectUserController extends Controller
     {
     }
 
-    public function store(Project $project, ProjectUserCreateRequest $request)
+    /**
+     * Add users to a project.
+     *
+     * @param Project $project
+     * @param ProjectUserCreateRequest $request
+     * @return JsonResponse
+     */
+    public function store(Project $project, ProjectUserCreateRequest $request): JsonResponse
     {
         $data = $request->validated();
         $data['auth_id'] = auth()->guard('api')->id();
@@ -27,7 +35,14 @@ class ProjectUserController extends Controller
         ], 200);
     }
 
-    public function destroy(Project $project, int $memberId)
+    /**
+     * Remove a user from a project.
+     *
+     * @param Project $project
+     * @param int $memberId
+     * @return JsonResponse
+     */
+    public function destroy(Project $project, int $memberId): JsonResponse
     {
         $this->projectUserService->removeProjectUser($project, $memberId);
 
