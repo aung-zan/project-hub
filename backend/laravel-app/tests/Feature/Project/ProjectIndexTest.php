@@ -70,10 +70,12 @@ class ProjectIndexTest extends FeatureTestCase
             ->assertJson([
                 'success' => true,
                 'data' => [
-                    [
-                        'id' => $firstProject->id,
-                        'name' => $projectData['name'],
-                        'status' => $projectData['status'],
+                    'projects' => [
+                        [
+                            'id' => $firstProject->id,
+                            'name' => $projectData['name'],
+                            'status' => $projectData['status'],
+                        ]
                     ]
                 ]
             ]);

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Project\ProjectCreateRequest;
 use App\Http\Requests\Project\ProjectIndexRequest;
 use App\Http\Requests\Project\ProjectUpdateRequest;
+use App\Http\Resources\ProjectCollectionResource;
+use App\Http\Resources\ProjectResource;
 use App\Models\Project;
 use App\Services\ProjectService;
 use Illuminate\Http\JsonResponse;
@@ -30,7 +32,7 @@ class ProjectController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => $projects,
+            'data' => new ProjectCollectionResource($projects),
         ]);
     }
 
@@ -49,7 +51,7 @@ class ProjectController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => $project,
+            'data' => new ProjectResource($project),
         ]);
     }
 
@@ -65,7 +67,7 @@ class ProjectController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => $project,
+            'data' => new ProjectResource($project),
         ]);
     }
 
@@ -84,7 +86,7 @@ class ProjectController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => $project,
+            'data' => new ProjectResource($project),
         ]);
     }
 
@@ -100,7 +102,7 @@ class ProjectController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => $project,
+            'data' => new ProjectResource($project),
         ]);
     }
 }

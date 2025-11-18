@@ -7,7 +7,7 @@ Accept: application/json
 {
     "name": "test1",
     "username": "tester1",
-    "email": "test1@mail.com",
+"email": "test1@mail.com",
     "password": "password",
     "confirm_password": "password"
 }

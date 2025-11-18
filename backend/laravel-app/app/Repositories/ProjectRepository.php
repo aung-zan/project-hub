@@ -26,7 +26,7 @@ class ProjectRepository
     {
         $query = $this->project->query();
 
-        $query = $query->memberProjects($filters['user_id']);
+        $query = $query->forUser($filters['user_id']);
 
         if ($search) {
             /**

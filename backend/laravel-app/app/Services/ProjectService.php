@@ -87,7 +87,7 @@ class ProjectService
     {
         Gate::authorize('view', $project);
 
-        return $project;
+        return $project->loadUsersWithSpecificColumns();
     }
 
     /**
