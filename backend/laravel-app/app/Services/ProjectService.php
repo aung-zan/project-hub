@@ -6,6 +6,7 @@ use App\Models\Project;
 use App\Repositories\ProjectRepository;
 use App\Repositories\ProjectUserRepository;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 
 class ProjectService
@@ -60,18 +61,20 @@ class ProjectService
      */
     public function createProject(array $data): Project
     {
-        $project = $this->projectRepo->create($data);
+        return DB::transaction(function () use ($data) {
+            $project = $this->projectRepo->create($data);
 
-        // for pivot data
-        $member = [$data['created_by'] => [
-            // pivot additional info
-            'created_by' => $data['created_by'],
-            'role' => 'owner'
-        ]];
+            // for pivot data
+            $member = [$data['created_by'] => [
+                // pivot additional info
+                'created_by' => $data['created_by'],
+                'role' => 'owner'
+            ]];
 
-        $this->projectUserRepo->create($project, $member);
+            $this->projectUserRepo->create($project, $member);
 
-        return $project;
+            return $project;
+        });
     }
 
     /**

@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class Project extends Model
@@ -89,6 +90,19 @@ class Project extends Model
             ->where('user_id', $userId)
             ->select('id')
             ->exists();
+    }
+
+    /**
+     * Get the user ids of the project.
+     *
+     * @param array $userIds
+     * @return Collection
+     */
+    public function getProjectUserByIds(array $userIds): Collection
+    {
+        return DB::table('project_user')->where('project_id', $this->id)
+            ->whereIn('user_id', $userIds)
+            ->pluck('user_id');
     }
 
     /**

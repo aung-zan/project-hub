@@ -20,11 +20,11 @@ class ProjectUserRepository
      *
      * @param Project $project
      * @param array $data
-     * @return array
+     * @return void
      */
-    public function create(Project $project, array $data): array
+    public function create(Project $project, array $data): void
     {
-        return $project->users()->syncWithoutDetaching($data);
+        $project->users()->attach($data);
     }
 
     /**

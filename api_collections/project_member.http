@@ -1,4 +1,4 @@
-@token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImlhdCI6MTc2MzQwNTg0MSwiZXhwIjoxNzYzNDA2MTQxLCJuYmYiOjE3NjM0MDU4NDF9.dDFPISIqMmhnykYaJcIVchanA6FkUYW2nyT63CRdLC0
+@token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImlhdCI6MTc2MzQ1Mjk4MSwiZXhwIjoxNzYzNDUzMjgxLCJuYmYiOjE3NjM0NTI5ODF9.qSnuP0omtSly5jQICMv4vfQuLYh7_dlrXUnWfOu3EEI
 
 POST http://localhost/api/projects/1/members
 Authorization: Bearer {{token}}
@@ -8,8 +8,12 @@ Accept: application/json
 {
     "members": [
         {
-            "id": 3,
+            "id": 2,
             "role": "member"
+        },
+        {
+            "id": 3,
+            "role": "viewer"
         }
     ]
 }
