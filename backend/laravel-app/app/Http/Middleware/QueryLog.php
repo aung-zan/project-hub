@@ -18,17 +18,19 @@ class QueryLog
      */
     public function handle(Request $request, Closure $next): Response
     {
+        $channel = app()->environment('testing') ? 'query-testing' : 'query';
+
         $routeURI = $request->uri() ?? 'N/A';
         $method = $request->method();
 
-        Log::channel('query')->info('-----------------------------------------------------------');
-        Log::channel('query')->info('URI: ' . $method . ' ' . $routeURI);
+        Log::channel($channel)->info('-----------------------------------------------------------');
+        Log::channel($channel)->info('URI: ' . $method . ' ' . $routeURI);
 
-        DB::listen(function (QueryExecuted $query) {
-            Log::channel('query')->info('');
-            Log::channel('query')->info('Query: ' . $query->sql);
-            Log::channel('query')->info('Bindings: ', $query->bindings);
-            Log::channel('query')->info('Time (miliseconds): ' . $query->time . ' ms');
+        DB::listen(function (QueryExecuted $query) use ($channel) {
+            Log::channel($channel)->info('');
+            Log::channel($channel)->info('Query: ' . $query->sql);
+            Log::channel($channel)->info('Bindings: ', $query->bindings);
+            Log::channel($channel)->info('Time (miliseconds): ' . $query->time . ' ms');
         });
 
         return $next($request);
