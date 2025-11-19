@@ -22,7 +22,8 @@ jobs:
             php artisan key:generate &&
             SECRET=$(openssl rand -base64 32) &&
             echo $SECRET &&
-            echo -e "\nJWT_TEST=${SECRET}" >> .env &&
+            echo -e "\nJWT_SECRET=${SECRET}" >> .env &&
+            php artisan config:clear &&
             php artisan test --filter=Feature"
 
       - name: Clean up and remove the container
