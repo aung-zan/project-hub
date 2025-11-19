@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\User\UserCreateRequest;
+use App\Http\Resources\UserResource;
 use App\Services\UserService;
 use Illuminate\Http\JsonResponse;
 
@@ -28,13 +29,12 @@ class AuthController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'User register successfully.',
-            'data' => $user
+            'data' => new UserResource($user),
         ]);
     }
 
     /**
-     * Return the access token if a user with validated data pass
-     * the authentication.
+     * Return the access token if authenticated.
      *
      * @param LoginRequest $request
      * @return JsonResponse
@@ -54,8 +54,12 @@ class AuthController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Login successfully.',
-            'access_token' => $token,
-            'token_type' => 'bearer',
+            'data' => [
+                'user' => new UserResource(auth()->guard('api')->user()),
+                'token_type' => 'bearer',
+                'expires_in' => config('jwt.ttl', 3600) . ' seconds',
+                'access_token' => $token,
+            ],
         ]);
     }
 

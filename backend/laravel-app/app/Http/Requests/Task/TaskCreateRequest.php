@@ -5,10 +5,19 @@ namespace App\Http\Requests\Task;
 use App\Enum\TaskPriority;
 use App\Enum\TaskStatus;
 use App\Http\Requests\BaseRequest;
+use App\Models\Task;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rules\Enum;
 
 class TaskCreateRequest extends BaseRequest
 {
+    public function authorize(): bool
+    {
+        Gate::authorize('create', [Task::class, $this->project->id]);
+
+        return true;
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *

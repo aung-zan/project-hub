@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Models\Project;
-use App\Repositories\ProjectRepository;
 use App\Repositories\ProjectUserRepository;
 use Illuminate\Support\Facades\Gate;
 
@@ -22,23 +21,18 @@ class ProjectUserService
      *
      * @param Project $project
      * @param array $data
-     * @return array
+     * @return Project
      *
      * @throws \Illuminate\Auth\Access\AuthorizationException
      * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
      */
-    public function createProjectUser(Project $project, array $data): array
+    public function createProjectUser(Project $project, array $data): Project
     {
-        Gate::authorize('view', $project);
-
         $data = $this->prepareForProjectUser($data);
 
-        $savedData = $this->projectUserRepo->create($project, $data);
+        $this->projectUserRepo->create($project, $data);
 
-        $memberIds = array_merge($savedData['attached'], $savedData['updated']);
-        sort($memberIds);
-
-        return $memberIds;
+        return $project->loadUsersWithSpecificColumns('users');
     }
 
     /**
@@ -46,18 +40,20 @@ class ProjectUserService
      *
      * @param Project $project
      * @param int $memberId
-     * @return void
+     * @return Project
      *
      * @throws \Illuminate\Auth\Access\AuthorizationException
      * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
      */
-    public function removeProjectUser(Project $project, int $memberId): void
+    public function removeProjectUser(Project $project, int $memberId): Project
     {
-        Gate::authorize('view', $project);
+        Gate::authorize('delete', $project);
 
         $this->projectUserRepo->userExists($project, $memberId);
 
         $this->projectUserRepo->delete($project, $memberId);
+
+        return $project->loadUsersWithSpecificColumns('users');
     }
 
     /**

@@ -8,6 +8,9 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 class Project extends Model
 {
@@ -41,10 +44,80 @@ class Project extends Model
         ];
     }
 
+    /**
+     * Relationships between project and user.
+     *
+     * @return BelongsToMany
+     */
     public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'project_user', 'project_id', 'user_id')
-            ->withTimestamps();
+            ->withPivot('role')
+            ->as('membership');
+    }
+
+    /**
+     * Relationships between project and project_user (pivot table).
+     *
+     * @return HasMany
+     */
+    public function projectUser(): HasMany
+    {
+        return $this->hasMany(ProjectUser::class);
+    }
+
+    /**
+     * Get the users with specific columns.
+     *
+     * @return Project
+     */
+    public function loadUsersWithSpecificColumns(): Project
+    {
+        return $this->load(['users' => function ($query) {
+            $query->select(['users.id', 'users.name', 'users.username', 'users.email']);
+        }]);
+    }
+
+    /**
+     * Check the user is member of the project.
+     *
+     * @param int $userId
+     * @return bool
+     */
+    public function hasUser(int $userId): bool
+    {
+        return DB::table('project_user')->where('project_id', $this->id)
+            ->where('user_id', $userId)
+            ->select('id')
+            ->exists();
+    }
+
+    /**
+     * Get the user ids of the project.
+     *
+     * @param array $userIds
+     * @return Collection
+     */
+    public function getProjectUserByIds(array $userIds): Collection
+    {
+        return DB::table('project_user')->where('project_id', $this->id)
+            ->whereIn('user_id', $userIds)
+            ->pluck('user_id');
+    }
+
+    /**
+     * Scope a query to only include projects that the user member in.
+     *
+     * @param Builder $query
+     * @param int $userId
+     * @return void
+     */
+    #[Scope]
+    protected function forUser(Builder $query, int $userId)
+    {
+        $query->whereHas('projectUser', function ($query) use ($userId) {
+            $query->where('user_id', $userId);
+        });
     }
 
     /**

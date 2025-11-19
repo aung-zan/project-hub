@@ -19,14 +19,12 @@ class TeamService
     /**
      * Find and filtered the resources.
      *
+     * @param array $data
      * @return Collection
      */
-    public function getAllTeam(): Collection
+    public function getAllTeam(array $data): Collection
     {
-        // TODO: mixed with request in controller and clean here.
-        $filters = [
-            'created_by' => auth()->guard('api')->id(),
-        ];
+        $filters['created_by'] = $data['created_by'];
 
         return $this->teamRepo->getAll($filters);
     }
@@ -71,8 +69,6 @@ class TeamService
      */
     public function updateTeam(Team $team, array $data): Team
     {
-        Gate::authorize('update', $team);
-
         return $this->teamRepo->update($team, $data);
     }
 

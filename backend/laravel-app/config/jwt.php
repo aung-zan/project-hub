@@ -14,7 +14,7 @@ return [
     | openssl rand -base64 32
     |
     */
-    'secret' => env('JWT_SECRET'),
+    'secret' => env('JWT_SECRET', ''),
 
     /*
     |--------------------------------------------------------------------------

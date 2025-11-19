@@ -2,23 +2,31 @@
 
 namespace App\Policies;
 
+use App\Enum\ProjectRoles;
 use App\Models\Project;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
 
 class ProjectPolicy
 {
-    private $message = 'Resource not found.';
-    private $code = 404;
+    private $notFound = [
+        'message' => 'Resource not found.',
+        'code' => 404,
+    ];
+
+    private $notAuthorized = [
+        'message' => 'This action is unauthorized.',
+        'code' => 401,
+    ];
 
     /**
      * Determine whether the user can view the model.
      */
     public function view(User $user, Project $project): Response
     {
-        return $user->id === $project->created_by
+        return $user->isMemberInProject($project->id)
             ? Response::allow()
-            : Response::deny($this->message, $this->code);
+            : Response::deny($this->notFound['message'], $this->notFound['code']);
     }
 
     /**
@@ -26,9 +34,15 @@ class ProjectPolicy
      */
     public function update(User $user, Project $project): Response
     {
-        return $user->id === $project->created_by
+        $member = $user->getProjectMemberRole($project->id);
+
+        if (!$member) {
+            return Response::deny($this->notFound['message'], $this->notFound['code']);
+        }
+
+        return $member->role === ProjectRoles::Owner->value
             ? Response::allow()
-            : Response::deny($this->message, $this->code);
+            : Response::deny($this->notAuthorized['message'], $this->notAuthorized['code']);
     }
 
     /**
@@ -36,8 +50,14 @@ class ProjectPolicy
      */
     public function delete(User $user, Project $project): Response
     {
-        return $user->id === $project->created_by
+        $member = $user->getProjectMemberRole($project->id);
+
+        if (!$member) {
+            return Response::deny($this->notFound['message'], $this->notFound['code']);
+        }
+
+        return $member->role === ProjectRoles::Owner->value
             ? Response::allow()
-            : Response::deny($this->message, $this->code);
+            : Response::deny($this->notAuthorized['message'], $this->notAuthorized['code']);
     }
 }

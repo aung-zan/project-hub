@@ -3,6 +3,7 @@
 namespace Tests\Feature\ProjectUser;
 
 use App\Models\Project;
+use App\Models\ProjectUser;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -44,7 +45,7 @@ class ProjectUserStoreTest extends FeatureTestCase
     }
 
     /**
-     * Test for user cannot send an empty request to store.
+     * Test for user cannot create a resource with empty data.
      */
     public function testUserCannotCreateAResourceWithEmptyData(): void
     {
@@ -52,9 +53,16 @@ class ProjectUserStoreTest extends FeatureTestCase
         $projectData = $this->projectData;
 
         list($token, $id) = $this->login();
-        $projectData['created_by'] = $id;
 
+        $projectData['created_by'] = $id;
         $project = Project::factory()->create($projectData);
+
+        ProjectUser::factory()->create([
+            'project_id' => $project->id,
+            'user_id' => $id,
+            'role' => 'owner',
+            'created_by' => $id,
+        ]);
 
         $response = $this->withHeader('Authorization', "Bearer $token")
             ->postJson(
@@ -71,16 +79,23 @@ class ProjectUserStoreTest extends FeatureTestCase
     }
 
     /**
-     * Test for user cannot send a request with fake user_id and unknown role.
+     * Test for user cannot create a resource with fake user_id and unknown role.
      */
     public function testUserCannotCreateAResourceWithFakeMemberIdAndUnknownRole(): void
     {
         $projectData = $this->projectData;
 
         list($token, $id) = $this->login();
-        $projectData['created_by'] = $id;
 
+        $projectData['created_by'] = $id;
         $project = Project::factory()->create($projectData);
+
+        ProjectUser::factory()->create([
+            'project_id' => $project->id,
+            'user_id' => $id,
+            'role' => 'owner',
+            'created_by' => $id,
+        ]);
 
         $request = $this->createRequest(['test'], [10, 11]);
 
@@ -94,24 +109,67 @@ class ProjectUserStoreTest extends FeatureTestCase
             ->assertJsonFragments([
                 ['success' => false],
                 ['error' => 'VALIDATION_FALIED'],
-                ['members.0.id' => ['Resource not found.']],
+                ['members.0.id' => ['Resource ID:10 not found.']],
                 ['members.0.role' => ['The selected member role is invalid.']],
-                ['members.1.id' => ['Resource not found.']],
+                ['members.1.id' => ['Resource ID:11 not found.']],
                 ['members.1.role' => ['The selected member role is invalid.']],
             ]);
     }
 
     /**
-     * Test for user can send a request with right data.
+     * Test for user cannot create a resource with member id.
      */
-    public function testUserCanCreateAResourceWithExistingIDAndRightRole(): void
+    public function testUserCannotCreateAResourceWithMemberIdAndRightRole(): void
     {
         $projectData = $this->projectData;
 
         list($token, $id) = $this->login();
-        $projectData['created_by'] = $id;
 
+        $projectData['created_by'] = $id;
         $project = Project::factory()->create($projectData);
+
+        ProjectUser::factory()->create([
+            'project_id' => $project->id,
+            'user_id' => $id,
+            'role' => 'owner',
+            'created_by' => $id,
+        ]);
+
+        $request = $this->createRequest(['member'], [$id]);
+
+        $response = $this->withHeader('Authorization', "Bearer $token")
+            ->postJson(
+                $this->getRealURL(['{id}'], [$project->id]),
+                $request
+            );
+
+        $response->assertStatus(422)
+            ->assertJsonFragments([
+                ['success' => false],
+                ['error' => 'VALIDATION_FALIED'],
+                ['members.0.id' => ["ID:$id is already member in the project."]],
+            ]);
+    }
+
+    /**
+     * Test for user can create a resource with right id and right role.
+     */
+    public function testUserCanCreateAResourceWithRightIdAndRightRole(): void
+    {
+        $projectData = $this->projectData;
+
+        list($token, $id) = $this->login();
+
+        $projectData['created_by'] = $id;
+        $project = Project::factory()->create($projectData);
+
+        ProjectUser::factory()->create([
+            'project_id' => $project->id,
+            'user_id' => $id,
+            'role' => 'owner',
+            'created_by' => $id,
+        ]);
+
         $user = User::factory()->create();
 
         $request = $this->createRequest(['member'], [$user->id]);
@@ -123,11 +181,11 @@ class ProjectUserStoreTest extends FeatureTestCase
             );
 
         $response->assertStatus(200)
-            ->assertJson([
-                'success' => true,
-                'data' => [
-                    'members' => [$user->id]
-                ]
+            ->assertJsonFragments([
+                ['success' => true],
+                ['name' => $user->name],
+                ['username' => $user->username],
+                ['email' => $user->email],
             ]);
     }
 }

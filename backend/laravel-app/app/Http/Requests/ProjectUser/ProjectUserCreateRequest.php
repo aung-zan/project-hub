@@ -4,11 +4,10 @@ namespace App\Http\Requests\ProjectUser;
 
 use App\Enum\ProjectRoles;
 use App\Http\Requests\BaseRequest;
-use App\Models\Project;
-use App\Repositories\ProjectUserRepository;
 use App\Repositories\UserRepository;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rules\Enum;
 
 class ProjectUserCreateRequest extends BaseRequest
@@ -17,6 +16,14 @@ class ProjectUserCreateRequest extends BaseRequest
         private UserRepository $userRepo
     ) {
     }
+
+    public function authorize(): bool
+    {
+        Gate::authorize('update', $this->project);
+
+        return true;
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -46,12 +53,17 @@ class ProjectUserCreateRequest extends BaseRequest
     {
         return [
             function (Validator $validator) {
-                $users = collect(request()->get('members'))->pluck('id');
+                $userIds = collect(request()->get('members'))->pluck('id');
 
                 // may or maynot need to change for the frontend.
-                $result = $this->checkUsersExist($users);
+                $result = $this->checkUsersExist($userIds);
                 foreach ($result as $key => $value) {
-                    $validator->errors()->add('members.' . $key . '.id', 'Resource not found.');
+                    $validator->errors()->add('members.' . $key . '.id', "Resource ID:$value not found.");
+                }
+
+                $result = $this->checkUsersExistInProject($userIds);
+                foreach ($result as $key => $value) {
+                    $validator->errors()->add('members.' . $key . '.id', "ID:$value is already member in the project.");
                 }
             }
         ];
@@ -63,10 +75,23 @@ class ProjectUserCreateRequest extends BaseRequest
      * @param Illuminate\Support\Collection $users
      * @return Illuminate\Support\Collection
      */
-    private function checkUsersExist(Collection $users)
+    private function checkUsersExist(Collection $requestUserIds): Collection
     {
-        $storedUsers = $this->userRepo->getAllUserIds();
+        $userIds = $this->userRepo->getByIds($requestUserIds->toArray());
 
-        return $users->diff($storedUsers);
+        return $requestUserIds->diff($userIds);
+    }
+
+    /**
+     * Check which users are already project members.
+     *
+     * @param Illuminate\Support\Collection $users
+     * @return Illuminate\Support\Collection
+     */
+    private function checkUsersExistInProject(Collection $requestUserIds): Collection
+    {
+        $memberIds = $this->project->getProjectUserByIds($requestUserIds->toArray());
+
+        return $requestUserIds->intersect($memberIds);
     }
 }

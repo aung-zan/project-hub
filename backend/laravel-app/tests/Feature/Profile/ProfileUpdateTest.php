@@ -32,7 +32,9 @@ class ProfileUpdateTest extends FeatureTestCase
     public function testUserCanSendAnEmptyRequestToUpdate(): void
     {
         $request = [];
-        list($token) = $this->login($this->userData);
+        $userData = $this->userData;
+
+        list($token) = $this->login($userData);
 
         $response = $this->withHeader('Authorization', "Bearer $token")
             ->putJson($this->url, $request);
@@ -41,11 +43,15 @@ class ProfileUpdateTest extends FeatureTestCase
             ->assertJson([
                 'success' => true,
                 'data' => [
-                    'name' => $this->userData['name'],
-                    'username' => $this->userData['username'],
-                    'email' => $this->userData['email'],
+                    'name' => $userData['name'],
+                    'username' => $userData['username'],
+                    'email' => $userData['email'],
                 ]
             ]);
+
+        unset($userData['password']);
+
+        $this->assertDatabaseHas('users', $userData);
     }
 
     /**

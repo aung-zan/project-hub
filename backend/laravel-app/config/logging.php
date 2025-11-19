@@ -140,6 +140,13 @@ return [
             'replace_placeholders' => true,
         ],
 
+        'query-testing' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/query-testing.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'replace_placeholders' => true,
+        ],
+
     ],
 
 ];

@@ -4,10 +4,21 @@ namespace App\Http\Requests\Project;
 
 use App\Enum\ProjectStatus;
 use App\Http\Requests\BaseRequest;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rules\Enum;
 
 class ProjectUpdateRequest extends BaseRequest
 {
+    /**
+     * Determine if the user is authorized to make this request.
+     */
+    public function authorize(): bool
+    {
+        Gate::authorize('update', $this->project);
+
+        return true;
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *

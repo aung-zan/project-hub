@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProjectUser\ProjectUserCreateRequest;
+use App\Http\Resources\ProjectResource;
 use App\Models\Project;
 use App\Services\ProjectUserService;
+use Illuminate\Http\JsonResponse;
 
 class ProjectUserController extends Controller
 {
@@ -12,28 +14,41 @@ class ProjectUserController extends Controller
     {
     }
 
-    public function store(Project $project, ProjectUserCreateRequest $request)
+    /**
+     * Add users to a project.
+     *
+     * @param Project $project
+     * @param ProjectUserCreateRequest $request
+     * @return JsonResponse
+     */
+    public function store(Project $project, ProjectUserCreateRequest $request): JsonResponse
     {
         $data = $request->validated();
         $data['auth_id'] = auth()->guard('api')->id();
 
-        $members = $this->projectUserService->createProjectUser($project, $data);
+        $project = $this->projectUserService->createProjectUser($project, $data);
 
         return response()->json([
             'success' => true,
-            'data' => [
-                'members' => $members,
-            ],
+            'data' => new ProjectResource($project),
         ], 200);
     }
 
-    public function destroy(Project $project, int $memberId)
+    /**
+     * Remove a user from a project.
+     *
+     * @param Project $project
+     * @param int $memberId
+     * @return JsonResponse
+     */
+    public function destroy(Project $project, int $memberId): JsonResponse
     {
-        $this->projectUserService->removeProjectUser($project, $memberId);
+        $project = $this->projectUserService->removeProjectUser($project, $memberId);
 
         return response()->json([
             'success' => true,
-            'message' => 'Successfully remove a member.'
+            'message' => 'Successfully remove a member.',
+            'data' => new ProjectResource($project),
         ], 200);
     }
 }

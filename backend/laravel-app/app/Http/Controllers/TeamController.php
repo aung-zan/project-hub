@@ -6,6 +6,7 @@ use App\Http\Requests\Team\TeamCreateRequest;
 use App\Http\Requests\Team\TeamUpdateRequest;
 use App\Models\Team;
 use App\Services\TeamService;
+use Illuminate\Http\Request;
 
 class TeamController extends Controller
 {
@@ -13,9 +14,12 @@ class TeamController extends Controller
     {
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $teams = $this->teamService->getAllTeam();
+        $data = $request->toArray();
+        $data['created_by'] = auth()->guard('api')->id();
+
+        $teams = $this->teamService->getAllTeam($data);
 
         return response()->json([
             'success' => true,

@@ -26,6 +26,8 @@ class ProjectRepository
     {
         $query = $this->project->query();
 
+        $query = $query->forUser($filters['user_id']);
+
         if ($search) {
             /**
              * dynamic local scopes.
@@ -35,8 +37,8 @@ class ProjectRepository
             $query = $query->orderWith($search);
         }
 
-        foreach ($filters as $column => $value) {
-            $query = $query->where($column, $value);
+        if (array_key_exists('status', $filters)) {
+            $query = $query->where('status', $filters['status']);
         }
 
         foreach ($sort as $column => $direction) {
@@ -47,7 +49,7 @@ class ProjectRepository
     }
 
     /**
-     * Create a resource in a table.
+     * Create a resource.
      *
      * @param array $data
      * @return Project

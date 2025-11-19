@@ -58,8 +58,8 @@ class UserRepository
      *
      * @return Illuminate\Support\Collection
      */
-    public function getAllUserIds(): Collection
+    public function getByIds(array $ids): Collection
     {
-        return $this->user->pluck('id');
+        return $this->user->whereIn('id', $ids)->pluck('id');
     }
 }

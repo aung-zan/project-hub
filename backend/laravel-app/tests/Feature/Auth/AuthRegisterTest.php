@@ -33,6 +33,8 @@ class AuthRegisterTest extends TestCase
             ->assertJsonFragments([
                 ['success' => false],
                 ['error' => 'VALIDATION_FALIED'],
+                ['email' => ['The email field is required.']],
+                ['password' => ['The password field is required.']],
             ]);
     }
 
@@ -115,9 +117,9 @@ class AuthRegisterTest extends TestCase
     }
 
     /**
-     * Test for user can register with unique right request.
+     * Test for user can register with unique right data.
      */
-    public function testUserCanRegisterWithUniqueRightRequest(): void
+    public function testUserCanRegisterWithUniqueRightData(): void
     {
         $request = $this->request;
 

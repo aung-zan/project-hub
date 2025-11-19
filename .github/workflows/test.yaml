@@ -20,8 +20,8 @@ jobs:
             composer install &&
             cp .env.example .env &&
             php artisan key:generate &&
-            SECRET=\$(openssl rand -base64 32) &&
-            echo JWT_SECRET=\\\"\${SECRET}\\\" >> .env &&
+            php artisan config:clear &&
+            php artisan jwt:secret &&
             php artisan test --filter=Feature"
 
       - name: Clean up and remove the container

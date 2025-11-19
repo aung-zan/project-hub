@@ -3,6 +3,7 @@
 namespace Tests\Feature\Project;
 
 use App\Models\Project;
+use App\Models\ProjectUser;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -45,14 +46,12 @@ class ProjectDestroyTest extends FeatureTestCase
      */
     public function testUserCannotDeleteAResourceWithUnauthorizedId(): void
     {
-        $user = User::factory()->create();
+        list($token, $id) = $this->login();
 
         $projectData = $this->projectData;
-        $projectData['created_by'] = $user->id;
+        $projectData['created_by'] = $id;
 
         $project = Project::factory()->create($projectData);
-
-        list($token) = $this->login();
 
         $response = $this->withHeader('Authorization', "Bearer $token")
             ->deleteJson($this->getRealURL($this->search, [$project->id]));
@@ -75,6 +74,13 @@ class ProjectDestroyTest extends FeatureTestCase
         $projectData['created_by'] = $id;
 
         $project = Project::factory()->create($projectData);
+
+        ProjectUser::factory()->create([
+            'project_id' => $project->id,
+            'user_id' => $id,
+            'role' => 'owner',
+            'created_by' => $id,
+        ]);
 
         $response = $this->withHeader('Authorization', "Bearer $token")
             ->deleteJson($this->getRealURL($this->search, [$project->id]));

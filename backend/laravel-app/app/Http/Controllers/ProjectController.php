@@ -5,8 +5,11 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Project\ProjectCreateRequest;
 use App\Http\Requests\Project\ProjectIndexRequest;
 use App\Http\Requests\Project\ProjectUpdateRequest;
+use App\Http\Resources\ProjectCollectionResource;
+use App\Http\Resources\ProjectResource;
 use App\Models\Project;
 use App\Services\ProjectService;
+use Illuminate\Http\JsonResponse;
 
 class ProjectController extends Controller
 {
@@ -14,20 +17,32 @@ class ProjectController extends Controller
     {
     }
 
-    public function index(ProjectIndexRequest $request)
+    /**
+     * List the projects.
+     *
+     * @param ProjectIndexRequest $request
+     * @return JsonResponse
+     */
+    public function index(ProjectIndexRequest $request): JsonResponse
     {
         $data = $request->validated();
-        $id = auth()->guard('api')->id();
+        $data['user_id'] = auth()->guard('api')->id();
 
-        $projects = $this->projectService->getProjects($id, $data);
+        $projects = $this->projectService->getProjects($data);
 
         return response()->json([
             'success' => true,
-            'data' => $projects,
+            'data' => new ProjectCollectionResource($projects),
         ]);
     }
 
-    public function store(ProjectCreateRequest $request)
+    /**
+     * Store a project data.
+     *
+     * @param ProjectCreateRequest $request
+     * @return JsonResponse
+     */
+    public function store(ProjectCreateRequest $request): JsonResponse
     {
         $data = $request->validated();
         $data['created_by'] = auth()->guard('api')->id();
@@ -36,21 +51,34 @@ class ProjectController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => $project,
+            'data' => new ProjectResource($project),
         ]);
     }
 
-    public function show(Project $project)
+    /**
+     * Show a project.
+     *
+     * @param Project $project
+     * @return JsonResponse
+     */
+    public function show(Project $project): JsonResponse
     {
         $project = $this->projectService->getProject($project);
 
         return response()->json([
             'success' => true,
-            'data' => $project,
+            'data' => new ProjectResource($project),
         ]);
     }
 
-    public function update(Project $project, ProjectUpdateRequest $request)
+    /**
+     * Update a project data.
+     *
+     * @param Project $project
+     * @param ProjectUpdateRequest $request
+     * @return JsonResponse
+     */
+    public function update(Project $project, ProjectUpdateRequest $request): JsonResponse
     {
         $data = $request->validated();
 
@@ -58,17 +86,23 @@ class ProjectController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => $project,
+            'data' => new ProjectResource($project),
         ]);
     }
 
-    public function destroy(Project $project)
+    /**
+     * Delete a project.
+     *
+     * @param Project $project
+     * @return JsonResponse
+     */
+    public function destroy(Project $project): JsonResponse
     {
         $project = $this->projectService->deleteProject($project);
 
         return response()->json([
             'success' => true,
-            'data' => $project,
+            'data' => new ProjectResource($project),
         ]);
     }
 }

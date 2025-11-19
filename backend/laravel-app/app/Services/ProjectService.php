@@ -6,6 +6,7 @@ use App\Models\Project;
 use App\Repositories\ProjectRepository;
 use App\Repositories\ProjectUserRepository;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 
 class ProjectService
@@ -20,23 +21,22 @@ class ProjectService
     }
 
     /**
-     * Find and filtered the resources.
+     * Find and filtered the projects that a user belongs to.
      *
-     * @param int $id
      * @param array $data
      * @return Collection
      */
-    public function getProjects(int $id, array $data): Collection
+    public function getProjects(array $data): Collection
     {
         $search = '';
-        $filters['created_by'] = $id;
+        $filters['user_id'] = $data['user_id'];
 
         if (array_key_exists('search', $data)) {
             $search = $data['search'];
         }
 
         if (array_key_exists('status', $data)) {
-            $filters['status'] = $data;
+            $filters['status'] = $data['status'];
         }
 
         // TODO: implement date search.
@@ -54,29 +54,31 @@ class ProjectService
     }
 
     /**
-     * Create the resource.
+     * Create a project.
      *
      * @param array $data
      * @return Project
      */
     public function createProject(array $data): Project
     {
-        $project = $this->projectRepo->create($data);
+        return DB::transaction(function () use ($data) {
+            $project = $this->projectRepo->create($data);
 
-        // for pivot data
-        $member = [$data['created_by'] => [
-            // pivot additional info
-            'created_by' => $data['created_by'],
-            'role' => 'owner'
-        ]];
+            // for pivot data
+            $member = [$data['created_by'] => [
+                // pivot additional info
+                'created_by' => $data['created_by'],
+                'role' => 'owner'
+            ]];
 
-        $this->projectUserRepo->create($project, $member);
+            $this->projectUserRepo->create($project, $member);
 
-        return $project;
+            return $project;
+        });
     }
 
     /**
-     * Find the resource and check the authorization.
+     * Find a project that a user belongs to.
      *
      * @param Project $project
      * @return Project
@@ -88,11 +90,11 @@ class ProjectService
     {
         Gate::authorize('view', $project);
 
-        return $project;
+        return $project->loadUsersWithSpecificColumns();
     }
 
     /**
-     * Find the resource, check the authorization and update it.
+     * Update a project that a user belongs to.
      *
      * @param Project $project
      * @param array $data
@@ -104,13 +106,11 @@ class ProjectService
      */
     public function updateProject(Project $project, array $data): Project
     {
-        Gate::authorize('update', $project);
-
         return $this->projectRepo->update($project, $data);
     }
 
     /**
-     * Find the resource, check the authorization and delete it.
+     * Delete a project that a user belongs to.
      *
      * @param Project $project
      * @return Project
