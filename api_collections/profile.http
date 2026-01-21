@@ -1,4 +1,4 @@
-@token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImlhdCI6MTc2MDYwNDgwNywiZXhwIjoxNzYwNjA4NDA3LCJuYmYiOjE3NjA2MDQ4MDd9.389-r4ofGMqngmjI_GQtY2jjPSdR_a5_Hd5iqILH_HU
+@token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImlhdCI6MTc2ODkxNjg4NSwiZXhwIjoxNzY4OTE3MTg1LCJuYmYiOjE3Njg5MTY4ODV9.SjZugztCyHeJawibjSIoLMf7twbtjnnWOIFdZk2Lc7o
 
 GET http://localhost/api/profile
 Authorization: Bearer {{token}}
