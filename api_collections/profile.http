@@ -1,9 +1,9 @@
-@token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImlhdCI6MTc2ODkxNjg4NSwiZXhwIjoxNzY4OTE3MTg1LCJuYmYiOjE3Njg5MTY4ODV9.SjZugztCyHeJawibjSIoLMf7twbtjnnWOIFdZk2Lc7o
+@token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImlhdCI6MTc2OTAwODc1NSwiZXhwIjoxNzY5MDA5MDU1LCJuYmYiOjE3NjkwMDg3NTV9.MXUmInmzQyNXRQAPqieCv0ZcwQuCIeGKVeuHLYM6ZHM
 
-GET http://localhost/api/profile
+GET http://localhost:3000/api/profile
 Authorization: Bearer {{token}}
 ###
-PUT http://localhost/api/profile
+PUT http://localhost:3000/api/profile
 Authorization: Bearer {{token}}
 Content-Type: application/json
 

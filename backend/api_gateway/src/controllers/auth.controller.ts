@@ -1,13 +1,13 @@
 import type { Request, Response } from "express";
 import type { ResponseT, UserCreate, UserLogin } from "../Types/types.js";
 import AppError from "../services/appError.service.js";
-import { HEADERS } from "../utils/constants.js";
+import { getHeaders } from "../utils/helpers.js";
 
 const register = async (req: Request, res: Response) => {
   const request = req.body as UserCreate;
 
   const response = await fetch(`${process.env.APP_URL}/register`, {
-    headers: HEADERS,
+    headers: getHeaders({}),
     method: "POST",
     body: JSON.stringify(request),
   });
@@ -25,7 +25,7 @@ const login = async (req: Request, res: Response) => {
   const request = req.body as UserLogin;
 
   const response = await fetch(`${process.env.APP_URL}/login`, {
-    headers: HEADERS,
+    headers: getHeaders({}),
     method: "POST",
     body: JSON.stringify(request),
   });

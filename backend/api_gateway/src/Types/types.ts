@@ -21,3 +21,9 @@ export interface UserLogin {
   email: string;
   password: string;
 }
+
+export interface UserUpdate {
+  name?: string;
+  password?: string;
+  confirm_password?: string;
+}
