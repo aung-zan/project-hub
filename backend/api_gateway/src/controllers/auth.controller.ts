@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
 import type { ResponseT, UserCreate, UserLogin } from "../Types/types.js";
 import AppError from "../services/appError.service.js";
-import { getHeaders } from "../utils/helpers.js";
+import { getHeaders, resolveResponse } from "../utils/helpers.js";
 
 const register = async (req: Request, res: Response) => {
   const request = req.body as UserCreate;
@@ -12,13 +12,7 @@ const register = async (req: Request, res: Response) => {
     body: JSON.stringify(request),
   });
 
-  const status = response.status;
-  const data = (await response.json()) as ResponseT;
-
-  if (data.success === false)
-    throw new AppError(status, data.message || "Something went wrong.");
-
-  return res.status(200).json(data);
+  return await resolveResponse(response, res);
 };
 
 const login = async (req: Request, res: Response) => {
@@ -30,13 +24,7 @@ const login = async (req: Request, res: Response) => {
     body: JSON.stringify(request),
   });
 
-  const status = response.status;
-  const data = (await response.json()) as ResponseT;
-
-  if (data.success === false)
-    throw new AppError(status, data.message || "Something went wrong.");
-
-  return res.status(200).json(data);
+  return await resolveResponse(response, res);
 };
 
 const logout = async (req: Request, res: Response) => {};
