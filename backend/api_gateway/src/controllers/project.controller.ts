@@ -63,14 +63,12 @@ const update = async (req: Request<ProjectParams>, res: Response) => {
 const destroy = async (req: Request<ProjectParams>, res: Response) => {
   const token = req.headers.authorization!;
   const id = Number.parseInt(req.params.id);
-  const request = req.body as ProjectUpdate;
 
   if (Number.isNaN(id)) throw new AppError(400, "Invalid project ID.");
 
   const response = await fetch(`${process.env.APP_URL}/projects/${id}`, {
     headers: getHeaders({ authorization: token }),
     method: "delete",
-    body: JSON.stringify(request),
   });
 
   return await resolveResponse(response, res);

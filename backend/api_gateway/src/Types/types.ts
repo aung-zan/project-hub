@@ -48,3 +48,17 @@ export interface ProjectUpdate {
   start_date?: string;
   end_date?: string;
 }
+
+export interface ProjectMemberInfo {
+  id: string;
+  role: string;
+}
+
+export interface ProjectMembers {
+  members: Array<ProjectMemberInfo>;
+}
+
+export interface ProjectMemberParams {
+  id: string;
+  memberId: string;
+}

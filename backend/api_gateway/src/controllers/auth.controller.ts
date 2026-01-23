@@ -1,6 +1,5 @@
 import type { Request, Response } from "express";
-import type { ResponseT, UserCreate, UserLogin } from "../Types/types.js";
-import AppError from "../services/appError.service.js";
+import type { UserCreate, UserLogin } from "../Types/types.js";
 import { getHeaders, resolveResponse } from "../utils/helpers.js";
 
 const register = async (req: Request, res: Response) => {
