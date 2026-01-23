@@ -1,4 +1,4 @@
-@token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjIsImlhdCI6MTc2MjMzNTU2NCwiZXhwIjoxNzYyMzM5MTY0LCJuYmYiOjE3NjIzMzU1NjR9.ZfbTjY0dnMb8rx9fdgGEzpiZfWMHNop6Ntu-rud_AEQ
+@token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImlhdCI6MTc2OTE1MDExMywiZXhwIjoxNzY5MTUwNDEzLCJuYmYiOjE3NjkxNTAxMTN9.99vH9Ns1uhjgOgfvbLaCJCamlctzmTpYH1lVGLwtgUY
 
 GET http://localhost/api/projects/1/tasks
 Authorization: Bearer {{token}}
@@ -11,7 +11,7 @@ Content-Type: application/json
 
 {
     "title": "testing",
-    "assigned_to": 3
+    "assigned_to": 1
 }
 ###
 GET http://localhost/api/tasks/1

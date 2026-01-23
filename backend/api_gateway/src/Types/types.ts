@@ -62,3 +62,12 @@ export interface ProjectMemberParams {
   id: string;
   memberId: string;
 }
+
+export interface TaskCreate {}
+
+export interface TaskUpdate {}
+
+export interface TaskParams {
+  id: string;
+  taskId: string;
+}
