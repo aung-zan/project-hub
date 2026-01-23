@@ -63,11 +63,39 @@ export interface ProjectMemberParams {
   memberId: string;
 }
 
-export interface TaskCreate {}
-
-export interface TaskUpdate {}
+export interface TaskCreate {
+  title: string;
+  description?: string;
+  status?: string;
+  priority?: string;
+  assigned_to?: string;
+  due_date?: string;
+}
 
 export interface TaskParams {
   id: string;
   taskId: string;
 }
+
+export interface TaskUpdate {
+  title?: string;
+  description?: string;
+  status?: string;
+  priority?: string;
+  assigned_to?: string;
+  due_date?: string;
+}
+
+export interface CommentStoreParams {
+  id: string;
+}
+
+// TODO: update this code.
+export interface CommentStore {}
+
+export interface CommentUpdateParams extends CommentStoreParams {
+  commentId: string;
+}
+
+// TODO: update this code.
+export interface CommentUpdate {}

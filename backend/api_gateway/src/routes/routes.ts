@@ -1,4 +1,5 @@
 import authRoutes from "./auth.js";
+import commentsRoutes from "./comments.js";
 import profileRoutes from "./profile.js";
 import projectMembersRoutes from "./projectMembers.js";
 import projectsRoutes from "./projects.js";
@@ -12,6 +13,7 @@ const routes = [
   projectsRoutes,
   projectMembersRoutes,
   tasksRoutes,
+  commentsRoutes,
 ];
 
 export default routes;

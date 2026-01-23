@@ -11,6 +11,7 @@ projectMembersRoutes.post(
   "/projects/:id/members",
   projectMemberController.post,
 );
+
 projectMembersRoutes.delete(
   "/projects/:id/members/:memberId",
   projectMemberController.destroy,

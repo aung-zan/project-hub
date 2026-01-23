@@ -1,15 +1,23 @@
-POST http://localhost/api/tasks/1/comments
+@token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImlhdCI6MTc2OTE1NzkyNCwiZXhwIjoxNzY5MTU4MjI0LCJuYmYiOjE3NjkxNTc5MjR9.c-XskSmWedugMVJtpV6uaP4YEeCd6HYAnAcN27qghgY
+
+POST http://localhost:3000/api/tasks/1/comments
+Authorization: Bearer {{token}}
 Content-Type: application/json
+Accept: application/json
 
 {
     "name": "testing"
 }
 ###
-PUT http://localhost/api/tasks/1/comments/1
+PUT http://localhost:3000/api/tasks/1/comments/1
+Authorization: Bearer {{token}}
 Content-Type: application/json
+Accept: application/json
 
 {
     "name": "Testing"
 }
 ###
-DELETE http://localhost/api/tasks/1/comments/1
+DELETE http://localhost:3000/api/tasks/1/comments/1
+Authorization: Bearer {{token}}
+Accept: application/json
