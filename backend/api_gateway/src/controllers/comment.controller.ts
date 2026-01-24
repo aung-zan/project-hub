@@ -1,20 +1,16 @@
 import type { Request, Response } from "express";
 
-import AppError from "../services/appError.service.js";
 import { getHeaders, resolveResponse } from "../utils/helpers.js";
 import type {
+  CommentParams,
   CommentStore,
-  CommentStoreParams,
   CommentUpdate,
-  CommentUpdateParams,
 } from "../Types/types.js";
 
-const store = async (req: Request<CommentStoreParams>, res: Response) => {
+const store = async (req: Request<CommentParams>, res: Response) => {
   const token = req.headers.authorization!;
-  const id = Number.parseInt(req.params.id);
+  const id = req.params.id;
   const request = req.body as CommentStore;
-
-  if (Number.isNaN(id)) throw new AppError(400, "Invalid task ID.");
 
   const response = await fetch(`${process.env.APP_URL}/tasks/${id}/comments`, {
     headers: getHeaders({ authorization: token }),
@@ -25,42 +21,28 @@ const store = async (req: Request<CommentStoreParams>, res: Response) => {
   return await resolveResponse(response, res);
 };
 
-const update = async (req: Request<CommentUpdateParams>, res: Response) => {
+const update = async (req: Request<CommentParams>, res: Response) => {
   const token = req.headers.authorization!;
-  const id = Number.parseInt(req.params.id);
-  const commentId = Number.parseInt(req.params.commentId);
+  const id = req.params.id;
   const request = req.body as CommentUpdate;
 
-  if (Number.isNaN(id) || Number.isNaN(commentId))
-    throw new AppError(400, "Invalid ID.");
-
-  const response = await fetch(
-    `${process.env.APP_URL}/tasks/${id}/comments/${commentId}`,
-    {
-      headers: getHeaders({ authorization: token }),
-      method: "put",
-      body: JSON.stringify(request),
-    },
-  );
+  const response = await fetch(`${process.env.APP_URL}/comments/${id}`, {
+    headers: getHeaders({ authorization: token }),
+    method: "put",
+    body: JSON.stringify(request),
+  });
 
   return await resolveResponse(response, res);
 };
 
-const destroy = async (req: Request<CommentUpdateParams>, res: Response) => {
+const destroy = async (req: Request<CommentParams>, res: Response) => {
   const token = req.headers.authorization!;
-  const id = Number.parseInt(req.params.id);
-  const commentId = Number.parseInt(req.params.commentId);
+  const id = req.params.id;
 
-  if (Number.isNaN(id) || Number.isNaN(commentId))
-    throw new AppError(400, "Invalid ID.");
-
-  const response = await fetch(
-    `${process.env.APP_URL}/tasks/${id}/comments/${commentId}`,
-    {
-      headers: getHeaders({ authorization: token }),
-      method: "delete",
-    },
-  );
+  const response = await fetch(`${process.env.APP_URL}/comments/${id}`, {
+    headers: getHeaders({ authorization: token }),
+    method: "delete",
+  });
 
   return await resolveResponse(response, res);
 };

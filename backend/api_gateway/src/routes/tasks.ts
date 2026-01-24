@@ -10,10 +10,10 @@ tasksRoutes.get("/projects/:id/tasks", taskController.index);
 
 tasksRoutes.post("/projects/:id/tasks", taskController.store);
 
-tasksRoutes.get("/projects/:id/tasks/taskId", taskController.show);
+tasksRoutes.get("/tasks/:id", taskController.show);
 
-tasksRoutes.put("/projects/:id/tasks/taskId", taskController.update);
+tasksRoutes.put("/tasks/:id", taskController.update);
 
-tasksRoutes.delete("/projects/:id/tasks/taskId", taskController.destroy);
+tasksRoutes.delete("/tasks/:id", taskController.destroy);
 
 export default tasksRoutes;

@@ -1,4 +1,4 @@
-@token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImlhdCI6MTc2OTE1NzkyNCwiZXhwIjoxNzY5MTU4MjI0LCJuYmYiOjE3NjkxNTc5MjR9.c-XskSmWedugMVJtpV6uaP4YEeCd6HYAnAcN27qghgY
+@token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImlhdCI6MTc2OTIzMDQzOCwiZXhwIjoxNzY5MjMwNzM4LCJuYmYiOjE3NjkyMzA0Mzh9.Tchrnj5S7LpQwSnlEHXz-sx2TjlSSzxBT5b5QIz5pRE
 
 POST http://localhost:3000/api/tasks/1/comments
 Authorization: Bearer {{token}}
@@ -9,7 +9,7 @@ Accept: application/json
     "name": "testing"
 }
 ###
-PUT http://localhost:3000/api/tasks/1/comments/1
+PUT http://localhost:3000/api/comments/1
 Authorization: Bearer {{token}}
 Content-Type: application/json
 Accept: application/json
@@ -18,6 +18,6 @@ Accept: application/json
     "name": "Testing"
 }
 ###
-DELETE http://localhost:3000/api/tasks/1/comments/1
+DELETE http://localhost:3000/api/comments/1
 Authorization: Bearer {{token}}
 Accept: application/json

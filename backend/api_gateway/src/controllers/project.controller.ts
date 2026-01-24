@@ -33,9 +33,7 @@ const store = async (req: Request, res: Response) => {
 
 const show = async (req: Request<ProjectParams>, res: Response) => {
   const token = req.headers.authorization!;
-  const id = Number.parseInt(req.params.id);
-
-  if (Number.isNaN(id)) throw new AppError(400, "Invalid project ID.");
+  const id = req.params.id;
 
   const response = await fetch(`${process.env.APP_URL}/projects/${id}`, {
     headers: getHeaders({ authorization: token }),
@@ -46,10 +44,8 @@ const show = async (req: Request<ProjectParams>, res: Response) => {
 
 const update = async (req: Request<ProjectParams>, res: Response) => {
   const token = req.headers.authorization!;
-  const id = Number.parseInt(req.params.id);
+  const id = req.params.id;
   const request = req.body as ProjectUpdate;
-
-  if (Number.isNaN(id)) throw new AppError(400, "Invalid project ID.");
 
   const response = await fetch(`${process.env.APP_URL}/projects/${id}`, {
     headers: getHeaders({ authorization: token }),
@@ -62,9 +58,7 @@ const update = async (req: Request<ProjectParams>, res: Response) => {
 
 const destroy = async (req: Request<ProjectParams>, res: Response) => {
   const token = req.headers.authorization!;
-  const id = Number.parseInt(req.params.id);
-
-  if (Number.isNaN(id)) throw new AppError(400, "Invalid project ID.");
+  const id = req.params.id;
 
   const response = await fetch(`${process.env.APP_URL}/projects/${id}`, {
     headers: getHeaders({ authorization: token }),

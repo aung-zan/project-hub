@@ -1,4 +1,4 @@
-@token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImlhdCI6MTc2OTE1MDExMywiZXhwIjoxNzY5MTUwNDEzLCJuYmYiOjE3NjkxNTAxMTN9.99vH9Ns1uhjgOgfvbLaCJCamlctzmTpYH1lVGLwtgUY
+@token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImlhdCI6MTc2OTIzMDEyNCwiZXhwIjoxNzY5MjMwNDI0LCJuYmYiOjE3NjkyMzAxMjR9.vcqMNV_TyOu5NKmmUUn-BiBb0LuiPH7GRfuSn3h-56c
 
 GET http://localhost:3000/api/projects
 Authorization: Bearer {{token}}

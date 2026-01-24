@@ -74,7 +74,6 @@ export interface TaskCreate {
 
 export interface TaskParams {
   id: string;
-  taskId: string;
 }
 
 export interface TaskUpdate {
@@ -86,16 +85,12 @@ export interface TaskUpdate {
   due_date?: string;
 }
 
-export interface CommentStoreParams {
+export interface CommentParams {
   id: string;
 }
 
 // TODO: update this code.
 export interface CommentStore {}
-
-export interface CommentUpdateParams extends CommentStoreParams {
-  commentId: string;
-}
 
 // TODO: update this code.
 export interface CommentUpdate {}

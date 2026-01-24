@@ -1,6 +1,5 @@
 import type { Request, Response } from "express";
 
-import AppError from "../services/appError.service.js";
 import { getHeaders, resolveResponse } from "../utils/helpers.js";
 import type {
   ProjectParams,
@@ -11,9 +10,7 @@ import type {
 
 const index = async (req: Request<ProjectParams>, res: Response) => {
   const token = req.headers.authorization!;
-  const id = Number.parseInt(req.params.id);
-
-  if (Number.isNaN(id)) throw new AppError(400, "Invalid task ID.");
+  const id = req.params.id;
 
   const response = await fetch(`${process.env.APP_URL}/projects/${id}/tasks`, {
     headers: getHeaders({ authorization: token }),
@@ -24,10 +21,8 @@ const index = async (req: Request<ProjectParams>, res: Response) => {
 
 const store = async (req: Request<ProjectParams>, res: Response) => {
   const token = req.headers.authorization!;
-  const id = Number.parseInt(req.params.id);
+  const id = req.params.id;
   const request = req.body as TaskCreate;
-
-  if (Number.isNaN(id)) throw new AppError(400, "Invalid task ID.");
 
   const response = await fetch(`${process.env.APP_URL}/projects/${id}/tasks`, {
     headers: getHeaders({ authorization: token }),
@@ -40,58 +35,37 @@ const store = async (req: Request<ProjectParams>, res: Response) => {
 
 const show = async (req: Request<TaskParams>, res: Response) => {
   const token = req.headers.authorization!;
-  const id = Number.parseInt(req.params.id);
-  const taskId = Number.parseInt(req.params.taskId);
+  const id = req.params.id;
 
-  if (Number.isNaN(id) || Number.isNaN(taskId))
-    throw new AppError(400, "Invalid ID.");
-
-  const response = await fetch(
-    `${process.env.APP_URL}/projects/${id}/tasks${taskId}`,
-    {
-      headers: getHeaders({ authorization: token }),
-    },
-  );
+  const response = await fetch(`${process.env.APP_URL}/tasks/${id}`, {
+    headers: getHeaders({ authorization: token }),
+  });
 
   return await resolveResponse(response, res);
 };
 
 const update = async (req: Request<TaskParams>, res: Response) => {
   const token = req.headers.authorization!;
-  const id = Number.parseInt(req.params.id);
-  const taskId = Number.parseInt(req.params.taskId);
+  const id = req.params.id;
   const request = req.body as TaskUpdate;
 
-  if (Number.isNaN(id) || Number.isNaN(taskId))
-    throw new AppError(400, "Invalid ID.");
-
-  const response = await fetch(
-    `${process.env.APP_URL}/projects/${id}/tasks${taskId}`,
-    {
-      headers: getHeaders({ authorization: token }),
-      method: "put",
-      body: JSON.stringify(request),
-    },
-  );
+  const response = await fetch(`${process.env.APP_URL}/tasks/${id}`, {
+    headers: getHeaders({ authorization: token }),
+    method: "put",
+    body: JSON.stringify(request),
+  });
 
   return await resolveResponse(response, res);
 };
 
 const destroy = async (req: Request<TaskParams>, res: Response) => {
   const token = req.headers.authorization!;
-  const id = Number.parseInt(req.params.id);
-  const taskId = Number.parseInt(req.params.taskId);
+  const id = req.params.id;
 
-  if (Number.isNaN(id) || Number.isNaN(taskId))
-    throw new AppError(400, "Invalid ID.");
-
-  const response = await fetch(
-    `${process.env.APP_URL}/projects/${id}/tasks/${taskId}`,
-    {
-      headers: getHeaders({ authorization: token }),
-      method: "delete",
-    },
-  );
+  const response = await fetch(`${process.env.APP_URL}/tasks/${id}`, {
+    headers: getHeaders({ authorization: token }),
+    method: "delete",
+  });
 
   return await resolveResponse(response, res);
 };

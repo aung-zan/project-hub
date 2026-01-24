@@ -8,11 +8,8 @@ commentsRoutes.use(tokenHandler);
 
 commentsRoutes.post("/tasks/:id/comments", commentController.store);
 
-commentsRoutes.put("/tasks/:id/comments/:commentId", commentController.update);
+commentsRoutes.put("/comments/:commentId", commentController.update);
 
-commentsRoutes.delete(
-  "/tasks/:id/comments/:commentId",
-  commentController.destroy,
-);
+commentsRoutes.delete("/comments/:commentId", commentController.destroy);
 
 export default commentsRoutes;
