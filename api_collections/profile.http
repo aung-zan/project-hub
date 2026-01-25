@@ -1,4 +1,4 @@
-@token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImlhdCI6MTc2OTE1MDExMywiZXhwIjoxNzY5MTUwNDEzLCJuYmYiOjE3NjkxNTAxMTN9.99vH9Ns1uhjgOgfvbLaCJCamlctzmTpYH1lVGLwtgUY
+@token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImlhdCI6MTc2OTI0NTA3OCwiZXhwIjoxNzY5MjQ1Mzc4LCJuYmYiOjE3NjkyNDUwNzh9.puGkV8oMmLZwSB4kliIQhn79OX1AiDCk1JrjF5pZI6o
 
 GET http://localhost:3000/api/profile
 Authorization: Bearer {{token}}

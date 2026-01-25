@@ -1,4 +1,5 @@
 import type { Request, Response } from "express";
+
 import type { UserUpdate } from "../Types/types.js";
 import { getHeaders, resolveResponse } from "../utils/helpers.js";
 

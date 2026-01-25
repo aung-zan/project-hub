@@ -1,19 +1,11 @@
 import type { Request, Response } from "express";
-import AppError from "../services/appError.service.js";
+
+import { resolveResponse } from "../utils/helpers.js";
 
 const test = async (req: Request, res: Response) => {
-  const response = await fetch("http://localhost/api/test");
+  const response = await fetch(`${process.env.APP_URL}/test`);
 
-  const data = await response.json();
-
-  if (data.success === false) {
-    throw new AppError(402, "Bad Data.");
-  }
-
-  return res.status(200).json({
-    success: true,
-    data,
-  });
+  return await resolveResponse(response, res);
 };
 
 export default { test };

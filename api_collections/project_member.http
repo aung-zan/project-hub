@@ -1,4 +1,4 @@
-@token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImlhdCI6MTc2OTE0MzQzMCwiZXhwIjoxNzY5MTQzNzMwLCJuYmYiOjE3NjkxNDM0MzB9.sS8Oo3PAegLor2cLFfcPVDAOV8khOV7gG0cTophCxig
+@token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImlhdCI6MTc2OTI0NTA3OCwiZXhwIjoxNzY5MjQ1Mzc4LCJuYmYiOjE3NjkyNDUwNzh9.puGkV8oMmLZwSB4kliIQhn79OX1AiDCk1JrjF5pZI6o
 
 POST http://localhost:3000/api/projects/1/members
 Authorization: Bearer {{token}}

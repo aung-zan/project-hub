@@ -6,7 +6,6 @@ import type {
   ProjectParams,
   ProjectUpdate,
 } from "../Types/types.js";
-import AppError from "../services/appError.service.js";
 
 const index = async (req: Request, res: Response) => {
   const token = req.headers.authorization!;
