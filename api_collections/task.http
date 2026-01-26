@@ -1,24 +1,24 @@
-@token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjIsImlhdCI6MTc2MjMzNTU2NCwiZXhwIjoxNzYyMzM5MTY0LCJuYmYiOjE3NjIzMzU1NjR9.ZfbTjY0dnMb8rx9fdgGEzpiZfWMHNop6Ntu-rud_AEQ
+@token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImlhdCI6MTc2OTI0NTA3OCwiZXhwIjoxNzY5MjQ1Mzc4LCJuYmYiOjE3NjkyNDUwNzh9.puGkV8oMmLZwSB4kliIQhn79OX1AiDCk1JrjF5pZI6o
 
-GET http://localhost/api/projects/1/tasks
+GET http://localhost:3000/api/projects/1/tasks
 Authorization: Bearer {{token}}
 Accept: application/json
 ###
-POST http://localhost/api/projects/1/tasks
+POST http://localhost:3000/api/projects/1/tasks
 Authorization: Bearer {{token}}
 Accept: application/json
 Content-Type: application/json
 
 {
     "title": "testing",
-    "assigned_to": 3
+    "assigned_to": 1
 }
 ###
-GET http://localhost/api/tasks/1
+GET http://localhost:3000/api/tasks/1
 Authorization: Bearer {{token}}
 Accept: application/json
 ###
-PUT http://localhost/api/tasks/1
+PUT http://localhost:3000/api/tasks/1
 Authorization: Bearer {{token}}
 Accept: application/json
 Content-Type: application/json
@@ -28,6 +28,6 @@ Content-Type: application/json
     "status": "complete"
 }
 ###
-DELETE http://localhost/api/tasks/1
+DELETE http://localhost:3000/api/tasks/1
 Authorization: Bearer {{token}}
 Accept: application/json

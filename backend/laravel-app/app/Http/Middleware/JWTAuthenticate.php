@@ -12,6 +12,7 @@ class JWTAuthenticate
     private $except = [
         'api/register',
         'api/login',
+        'api/test',
     ];
 
     /**

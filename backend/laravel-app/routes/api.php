@@ -47,7 +47,9 @@ Route::prefix('projects/{project}')
         Route::delete('members/{user_id}', 'destroy');
     });
 
-Route::apiResource('projects.tasks', TaskController::class)->shallow();
+Route::apiResource('projects.tasks', TaskController::class)->shallow()
+    ->whereNumber(['project', 'task']);
 
 Route::apiResource('tasks.comments', CommentController::class)->shallow()
-    ->except(['index', 'show']);
+    ->except(['index', 'show'])
+    ->whereNumber(['task', 'comment']);
