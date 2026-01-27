@@ -1,6 +1,6 @@
 @token=abc
 
-POST http://localhost:3000/api/register
+POST http://localhost/api/register
 Content-Type: application/json
 Accept: application/json
 
@@ -12,7 +12,7 @@ Accept: application/json
     "confirm_password": "password"
 }
 ###
-POST http://localhost:3000/api/login
+POST http://localhost/api/login
 Content-Type: application/json
 Accept: application/json
 
@@ -21,7 +21,7 @@ Accept: application/json
     "password": "password"
 }
 ###
-POST http://localhost:3000/api/logout
+POST http://localhost/api/logout
 Authorization: Bearer {{token}}
 Content-Type: application/json
 Accept: application/json

@@ -13,7 +13,8 @@ app.use("/api", routes);
 app.use(errorHandler);
 
 const server = createServer(app);
+const port = process.env.SERVER_PORT;
 
-server.listen(process.env.SERVER_PORT, () => {
-  console.log("server is running on http://localhost:3000");
+server.listen(port, () => {
+  console.log(`server is running on http://localhost:${port}`);
 });
