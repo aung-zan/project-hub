@@ -1,6 +1,6 @@
-@token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImlhdCI6MTc2OTI0NTA3OCwiZXhwIjoxNzY5MjQ1Mzc4LCJuYmYiOjE3NjkyNDUwNzh9.puGkV8oMmLZwSB4kliIQhn79OX1AiDCk1JrjF5pZI6o
+@token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImlhdCI6MTc2OTQ5OTU3NSwiZXhwIjoxNzY5NDk5ODc1LCJuYmYiOjE3Njk0OTk1NzV9.Nu-ERX6HKACu-w3BAPqnCAe4YpBbWc5DibuFQGlFpOY
 
-POST http://localhost:3000/api/projects/1/members
+POST http://localhost/api/projects/1/members
 Authorization: Bearer {{token}}
 Content-Type: application/json
 Accept: application/json
@@ -19,6 +19,6 @@ Accept: application/json
 }
 ###
 
-DELETE http://localhost:3000/api/projects/1/members/3
+DELETE http://localhost/api/projects/1/members/3
 Authorization: Bearer {{token}}
 Accept: application/json
