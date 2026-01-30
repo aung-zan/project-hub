@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import Auth from "../layouts/Auth";
 import { useState } from "react";
-import type { UserCreate } from "app/types";
+import type { Response, UserCreate } from "app/types";
 import { Input } from "@/components/ui/input";
 import Required from "@/components/ui/required";
 import { FieldError } from "@/components/ui/field";
@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import { ArrowRight, Lock, Mail, User } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useNavigate } from "react-router";
+import { connectToServer } from "app/utils/helper";
 
 const Register = () => {
   const naviate = useNavigate();
@@ -30,12 +31,29 @@ const Register = () => {
       }));
     };
 
-  const formHandler = (e: React.SubmitEvent) => {
+  const formHandler = async (e: React.SubmitEvent) => {
     e.preventDefault();
 
-    console.log(formData);
+    try {
+      const response = await connectToServer({
+        path: "register",
+        method: "post",
+        data: formData,
+        token: false,
+      });
 
-    naviate("login");
+      const data = (await response.json()) as Response;
+
+      if (data.success === true) {
+        naviate("login");
+      }
+
+      if (data.message && typeof data.message === "object") {
+        setError(data.message);
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -56,6 +74,7 @@ const Register = () => {
                 placeholder="John Doe"
                 required
                 onChange={inputHandler("name")}
+                aria-invalid={!!error.name}
                 className="pl-10 border-gray-300 focus:border-black focus:ring-black"
               />
             </div>
@@ -75,6 +94,7 @@ const Register = () => {
                 placeholder="John Doe"
                 required
                 onChange={inputHandler("username")}
+                aria-invalid={!!error.username}
                 className="pl-10 border-gray-300 focus:border-black focus:ring-black"
               />
             </div>
@@ -94,6 +114,7 @@ const Register = () => {
                 placeholder="John Doe"
                 required
                 onChange={inputHandler("email")}
+                aria-invalid={!!error.email}
                 className="pl-10 border-gray-300 focus:border-black focus:ring-black"
               />
             </div>
@@ -113,6 +134,7 @@ const Register = () => {
                 placeholder="John Doe"
                 required
                 onChange={inputHandler("password")}
+                aria-invalid={!!error.password}
                 className="pl-10 border-gray-300 focus:border-black focus:ring-black"
               />
             </div>
@@ -132,6 +154,7 @@ const Register = () => {
                 placeholder="John Doe"
                 required
                 onChange={inputHandler("confirm_password")}
+                aria-invalid={!!error.confirm_password}
                 className="pl-10 border-gray-300 focus:border-black focus:ring-black"
               />
             </div>
