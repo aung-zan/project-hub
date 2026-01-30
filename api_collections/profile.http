@@ -1,9 +1,9 @@
 @token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImlhdCI6MTc2OTQ5OTU3NSwiZXhwIjoxNzY5NDk5ODc1LCJuYmYiOjE3Njk0OTk1NzV9.Nu-ERX6HKACu-w3BAPqnCAe4YpBbWc5DibuFQGlFpOY
 
-GET http://localhost/api/profile
+GET http://localhost:3000/api/profile
 Authorization: Bearer {{token}}
 ###
-PUT http://localhost/api/profile
+PUT http://localhost:3000/api/profile
 Authorization: Bearer {{token}}
 Content-Type: application/json
 

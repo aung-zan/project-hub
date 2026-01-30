@@ -1,10 +1,10 @@
 @token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImlhdCI6MTc2OTQ5OTU3NSwiZXhwIjoxNzY5NDk5ODc1LCJuYmYiOjE3Njk0OTk1NzV9.Nu-ERX6HKACu-w3BAPqnCAe4YpBbWc5DibuFQGlFpOY
 
-GET http://localhost/api/projects/1/tasks
+GET http://localhost:3000/api/projects/1/tasks
 Authorization: Bearer {{token}}
 Accept: application/json
 ###
-POST http://localhost/api/projects/1/tasks
+POST http://localhost:3000/api/projects/1/tasks
 Authorization: Bearer {{token}}
 Accept: application/json
 Content-Type: application/json
@@ -14,11 +14,11 @@ Content-Type: application/json
     "assigned_to": 1
 }
 ###
-GET http://localhost/api/tasks/1
+GET http://localhost:3000/api/tasks/1
 Authorization: Bearer {{token}}
 Accept: application/json
 ###
-PUT http://localhost/api/tasks/1
+PUT http://localhost:3000/api/tasks/1
 Authorization: Bearer {{token}}
 Accept: application/json
 Content-Type: application/json
@@ -28,6 +28,6 @@ Content-Type: application/json
     "status": "complete"
 }
 ###
-DELETE http://localhost/api/tasks/1
+DELETE http://localhost:3000/api/tasks/1
 Authorization: Bearer {{token}}
 Accept: application/json
