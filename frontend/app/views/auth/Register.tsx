@@ -2,19 +2,24 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import Auth from "../layouts/Auth";
 import { useState } from "react";
-import type { Response, UserCreate } from "app/types";
+import type { UserCreate } from "app/types";
 import { Input } from "@/components/ui/input";
 import Required from "@/components/ui/required";
 import { FieldError } from "@/components/ui/field";
 import { Label } from "@/components/ui/label";
 import { ArrowRight, Lock, Mail, User } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useNavigate } from "react-router";
-import { connectToServer } from "app/utils/helper";
+import { useNavigate, type MetaFunction } from "react-router";
+import useRegister from "app/hooks/useRegister";
+
+// eslint-disable-next-line react-refresh/only-export-components
+export const meta: MetaFunction = () => {
+  return [{ title: "Register - Project Hub" }];
+};
 
 const Register = () => {
-  const naviate = useNavigate();
-  const [error, setError] = useState<Record<string, string[]>>({});
+  const navigate = useNavigate();
+  const { userRegister, error } = useRegister();
   const [formData, setFormData] = useState<UserCreate>({
     name: "",
     username: "",
@@ -35,21 +40,10 @@ const Register = () => {
     e.preventDefault();
 
     try {
-      const response = await connectToServer({
-        path: "register",
-        method: "post",
-        data: formData,
-        token: false,
-      });
-
-      const data = (await response.json()) as Response;
+      const data = await userRegister(formData);
 
       if (data.success === true) {
-        naviate("login");
-      }
-
-      if (data.message && typeof data.message === "object") {
-        setError(data.message);
+        navigate("/login");
       }
     } catch (error) {
       console.error(error);

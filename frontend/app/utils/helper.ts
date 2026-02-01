@@ -19,3 +19,11 @@ export const connectToServer = async (config: ConnectionConfig) => {
 
   return await fetch(url, options);
 };
+
+export const getHeaders = (headers: Record<string, string>) => {
+  return {
+    "content-type": "application/json",
+    accept: "application/json",
+    ...headers,
+  };
+};

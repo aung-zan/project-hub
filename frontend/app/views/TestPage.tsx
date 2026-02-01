@@ -1,7 +1,12 @@
 import { Card } from "@/components/ui/card";
 import Auth from "./layouts/Auth";
-import { NavLink } from "react-router";
+import { NavLink, type MetaFunction } from "react-router";
 import { Button } from "@/components/ui/button";
+
+// eslint-disable-next-line react-refresh/only-export-components
+export const meta: MetaFunction = () => {
+  return [{ title: "Test Page - Project Hub" }];
+};
 
 const TestPage = () => {
   return (

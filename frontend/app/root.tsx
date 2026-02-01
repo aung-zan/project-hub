@@ -10,7 +10,6 @@ export default function Root() {
         <Meta />
         <link rel="icon" type="image/svg+xml" href="./src/assets/hub.svg" />
         <Links />
-        <title>Project Hub</title>
       </head>
       <body>
         <Outlet />

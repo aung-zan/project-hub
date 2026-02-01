@@ -5,6 +5,19 @@ export interface Response {
   data?: object;
 }
 
+export interface ErrorResponse {
+  success: false;
+  error?: string;
+  message: string | Record<string, string[]>;
+}
+
+export interface ConnectionConfig {
+  path: string;
+  method: "post" | "put" | "get";
+  data?: UserCreate | UserAuth;
+  token: boolean;
+}
+
 export interface UserCreate {
   name: string;
   username: string;
@@ -13,9 +26,4 @@ export interface UserCreate {
   confirm_password: string;
 }
 
-export interface ConnectionConfig {
-  path: string;
-  method: "post" | "put" | "get";
-  data?: UserCreate;
-  token: boolean;
-}
+export type UserAuth = Pick<UserCreate, "email" | "password">;
