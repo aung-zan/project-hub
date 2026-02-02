@@ -7,7 +7,7 @@ export interface ResponseT {
   success: boolean;
   error?: string;
   message?: string | object;
-  data?: object;
+  data?: Record<string, string>;
 }
 
 export interface UserCreate {

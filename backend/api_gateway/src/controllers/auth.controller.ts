@@ -24,7 +24,7 @@ const login = async (req: Request, res: Response) => {
     body: JSON.stringify(request),
   });
 
-  return await resolveResponse(response, res);
+  return await resolveResponse(response, res, true);
 };
 
 const logout = async (req: Request, res: Response) => {};
