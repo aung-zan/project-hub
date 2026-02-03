@@ -1,8 +1,8 @@
 import { Card } from "@/components/ui/card";
-import Auth from "./layouts/Auth";
 import { NavLink, type MetaFunction } from "react-router";
 import { Button } from "@/components/ui/button";
 import { useEffect } from "react";
+import Home from "./layouts/Home";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const meta: MetaFunction = () => {
@@ -24,14 +24,16 @@ const TestPage = () => {
   }, []);
 
   return (
-    <Auth>
-      <Card className="p-8 border-gray-200 shadow-sm">
-        Test page
-        <Button variant="link">
-          <NavLink to="/">To Register</NavLink>
-        </Button>
-      </Card>
-    </Auth>
+    <Home>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <Card className="p-8 border-gray-200 shadow-sm">
+          Test page
+          <Button variant="link">
+            <NavLink to="/">To Register</NavLink>
+          </Button>
+        </Card>
+      </div>
+    </Home>
   );
 };
 
