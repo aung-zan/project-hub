@@ -15,6 +15,7 @@ export const login = async (data: UserAuth): Promise<Response> => {
   const response = await fetch(`${import.meta.env.VITE_APP_URL}/login`, {
     headers: getHeaders({}),
     method: "post",
+    credentials: "include",
     body: JSON.stringify(data),
   });
 

@@ -1,6 +1,14 @@
 import type { Response } from "express";
 import type { ResponseT } from "../Types/types.js";
 import AppError from "../services/appError.service.js";
+import type { CorsOptions } from "cors";
+
+export const getCorsOptions = () => {
+  return {
+    origin: ["http://localhost:5173"],
+    credentials: true,
+  } as CorsOptions;
+};
 
 export const getHeaders = (header: {}) => {
   return {
@@ -23,12 +31,12 @@ export const resolveResponse = async (
 
   if (cookie && cookie === true) {
     const token = data.data?.access_token;
-    console.log(token);
 
     return res
       .cookie("access_token", token, {
         httpOnly: true,
-        secure: true,
+        // secure: true,
+        sameSite: "lax",
         maxAge: 3600000,
       })
       .status(200)
