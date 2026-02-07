@@ -1,4 +1,5 @@
-import { FolderKanban } from "lucide-react";
+import { CheckSquare, FolderKanban } from "lucide-react";
+import { Link } from "react-router";
 
 const Sidebar = () => {
   return (
@@ -13,9 +14,16 @@ const Sidebar = () => {
       </div>
 
       <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
-        <button className="w-full flex items-center gap-3 px-4 py-3 rounded-lg bg-gray-900 text-white">
-          <FolderKanban className="w-5 h-5" />
-          <span className="font-medium">Project</span>
+        <Link to="/project">
+          <button className="w-full flex items-center gap-3 px-4 py-3 rounded-lg bg-gray-200">
+            <FolderKanban className="w-5 h-5" />
+            <span className="font-bold">Project</span>
+          </button>
+        </Link>
+
+        <button className="w-full flex items-center gap-3 px-4 py-3 rounded-lg">
+          <CheckSquare className="w-5 h-5" />
+          <span className="font-medium">Task</span>
         </button>
       </nav>
     </div>

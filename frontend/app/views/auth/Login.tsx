@@ -8,7 +8,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import type { UserAuth } from "app/types";
-import { NavLink, useNavigate, type MetaFunction } from "react-router";
+import { Link, useNavigate, type MetaFunction } from "react-router";
 import { FieldError } from "@/components/ui/field";
 import useLogin from "app/hooks/useLogin";
 
@@ -39,7 +39,7 @@ const Login = () => {
     try {
       const data = await userLogin(formData);
       if (data.success === true) {
-        navigate("/test");
+        navigate("/project");
       }
     } catch (error) {
       console.error(error);
@@ -115,12 +115,9 @@ const Login = () => {
         <div className="mt-6 text-center">
           <p className="text-gray-600">
             Don't have an account?{" "}
-            <NavLink
-              to="/"
-              className="text-gray-900 font-medium hover:underline"
-            >
+            <Link to="/" className="text-gray-900 font-medium hover:underline">
               Sign up
-            </NavLink>
+            </Link>
           </p>
         </div>
       </Card>

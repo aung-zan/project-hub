@@ -9,7 +9,7 @@ import { FieldError } from "@/components/ui/field";
 import { Label } from "@/components/ui/label";
 import { ArrowRight, Lock, Mail, User } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useNavigate, type MetaFunction } from "react-router";
+import { Link, useNavigate, type MetaFunction } from "react-router";
 import useRegister from "app/hooks/useRegister";
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -183,7 +183,12 @@ const Register = () => {
         <div className="mt-6 text-center">
           <p className="text-gray-600">
             Already have an account?{" "}
-            <button className="text-gray-900 hover:underline">Sign in</button>
+            <Link
+              to="/login"
+              className="text-gray-900 font-medium hover:underline"
+            >
+              Sign in
+            </Link>
           </p>
         </div>
       </Card>

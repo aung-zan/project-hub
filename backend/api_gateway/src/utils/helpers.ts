@@ -3,11 +3,25 @@ import type { ResponseT } from "../Types/types.js";
 import AppError from "../services/appError.service.js";
 import type { CorsOptions } from "cors";
 
-export const getCorsOptions = () => {
+export const getCorsOptions = (): CorsOptions => {
+  const origins = new Set(["http://localhost:5173"]);
+
   return {
-    origin: ["http://localhost:5173"],
+    origin(requestOrigin, callback) {
+      console.log(requestOrigin);
+      if (!requestOrigin) {
+        return callback(null, true);
+      }
+
+      if (origins.has(requestOrigin)) {
+        return callback(null, true);
+      }
+
+      console.log(`Unknown or blocked origin: ${requestOrigin}`);
+      return callback(new Error("Not allowed by CORS."));
+    },
     credentials: true,
-  } as CorsOptions;
+  };
 };
 
 export const getHeaders = (header: {}) => {

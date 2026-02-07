@@ -11,7 +11,7 @@ import { getCorsOptions } from "./utils/helpers.js";
 const app = express();
 
 app.use(express.json());
-app.use(cors(getCorsOptions));
+app.use(cors(getCorsOptions()));
 app.use(cookieParser());
 app.use(limiter);
 
