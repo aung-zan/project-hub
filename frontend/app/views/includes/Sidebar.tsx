@@ -1,3 +1,4 @@
+import { Label } from "@/components/ui/label";
 import { CheckSquare, FolderKanban } from "lucide-react";
 import { Link } from "react-router";
 
@@ -13,17 +14,19 @@ const Sidebar = () => {
         <h1 className="text-xl font-bold text-gray-900">Project Hub</h1>
       </div>
 
-      <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
+      <nav className="flex-1 py-4 space-y-1 overflow-y-auto">
+        <Label className="px-7 pb-2 text-gray-400">Workspace</Label>
+
         <Link to="/project">
-          <button className="w-full flex items-center gap-3 px-4 py-3 rounded-lg bg-gray-200">
+          <button className="w-full flex items-center gap-3 mb-2 px-7 py-3 border-l-3 border-black bg-gray-200 cursor-pointer">
             <FolderKanban className="w-5 h-5" />
-            <span className="font-bold">Project</span>
+            <span className="font-medium">Project</span>
           </button>
         </Link>
 
-        <button className="w-full flex items-center gap-3 px-4 py-3 rounded-lg">
+        <button className="w-full flex items-center gap-3 px-7 py-3 hover:bg-gray-200 cursor-pointer">
           <CheckSquare className="w-5 h-5" />
-          <span className="font-medium">Task</span>
+          <span className="text-gray-600">Task</span>
         </button>
       </nav>
     </div>
