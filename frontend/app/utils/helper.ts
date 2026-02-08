@@ -1,4 +1,5 @@
 import type { ConnectionConfig } from "app/types";
+import { CheckSquare, FolderKanban } from "lucide-react";
 
 export const connectToServer = async (config: ConnectionConfig) => {
   const url = `${import.meta.env.VITE_APP_URL}/${config.path}`;
@@ -26,4 +27,24 @@ export const getHeaders = (headers: Record<string, string>) => {
     accept: "application/json",
     ...headers,
   };
+};
+
+export const getRoutesList = () => {
+  return [
+    {
+      title: "Workspace",
+      routes: [
+        {
+          id: "project",
+          icon: FolderKanban,
+          label: "Project",
+        },
+        {
+          id: "task",
+          icon: CheckSquare,
+          label: "Task",
+        },
+      ],
+    },
+  ];
 };
